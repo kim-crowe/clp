@@ -10,26 +10,25 @@ body {
     padding-right: 15px;
 }
 
-/* Carousel */
-.carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
-}
-
-/* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
-    width: 100%;
-}
-
-/* QR code generator */
-#qrCode {
-    margin: 15px;
-}
-
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */
     .carousel-caption {
         display: none;
     }
+}
+
+/* Bordered form
+form {
+    border: 3px solid #f1f1f1;
+}*/
+
+/* Full-width inputs */
+input[type=text], input[type=password] {
+    width: 50%;
+    padding: 5px 20px;
+    margin: 8px 0;
+    display:grid;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
 }

@@ -1,0 +1,12 @@
+C:\Code\KimProjects\clp\Cogslite\CogsLite.BasicStore\obj\Debug\netcoreapp2.0\CogsLite.BasicStore.csproj.CoreCompileInputs.cache
+C:\Code\KimProjects\clp\Cogslite\CogsLite.BasicStore\obj\Debug\netcoreapp2.0\CogsLite.BasicStore.AssemblyInfoInputs.cache
+C:\Code\KimProjects\clp\Cogslite\CogsLite.BasicStore\obj\Debug\netcoreapp2.0\CogsLite.BasicStore.AssemblyInfo.cs
+C:\Code\KimProjects\clp\Cogslite\CogsLite.BasicStore\bin\Debug\netcoreapp2.0\CogsLite.Core.dll
+C:\Code\KimProjects\clp\Cogslite\CogsLite.BasicStore\obj\Debug\netcoreapp2.0\CogsLite.BasicStore.csprojResolveAssemblyReference.cache
+C:\Code\KimProjects\clp\Cogslite\CogsLite.BasicStore\bin\Debug\netcoreapp2.0\CogsLite.BasicStore.deps.json
+C:\Code\KimProjects\clp\Cogslite\CogsLite.BasicStore\bin\Debug\netcoreapp2.0\CogsLite.BasicStore.dll
+C:\Code\KimProjects\clp\Cogslite\CogsLite.BasicStore\bin\Debug\netcoreapp2.0\CogsLite.BasicStore.pdb
+C:\Code\KimProjects\clp\Cogslite\CogsLite.BasicStore\bin\Debug\netcoreapp2.0\CogsLite.Core.pdb
+C:\Code\KimProjects\clp\Cogslite\CogsLite.BasicStore\obj\Debug\netcoreapp2.0\CogsLite.BasicStore.csproj.CopyComplete
+C:\Code\KimProjects\clp\Cogslite\CogsLite.BasicStore\obj\Debug\netcoreapp2.0\CogsLite.BasicStore.dll
+C:\Code\KimProjects\clp\Cogslite\CogsLite.BasicStore\obj\Debug\netcoreapp2.0\CogsLite.BasicStore.pdb

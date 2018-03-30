@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Cogslite.Pages
 {
-    public class IndexModel : PageModel
+    public class SignOutModel : CogsPageModel
     {
-        public void OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
-
+            await HttpContext.SignOutAsync();
+            return Redirect("Home");
         }
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Cogslite.Pages
 {
-    public class ErrorModel : PageModel
+    public class ErrorModel : CogsPageModel
     {
         public string RequestId { get; set; }
 

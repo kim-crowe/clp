@@ -1,0 +1,29 @@
+﻿@page
+@model SignInModel
+@{
+    ViewData["Title"] = "SignIn";
+}
+
+<h2>Sign In</h2>
+
+
+<br />
+<form method="post">
+    
+        <div class="alert alert-danger @ViewData.WhenContains("Message", "", "collapse")">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>@ViewData["Message"]</strong>
+        </div>
+        <p>
+            <label for="username"><b>Username</b></label>
+            <input type="text" name="username" required>
+        </p>
+        <p>
+            <label for="password"><b>Password</b></label>
+            <input type="password" name="password" required>
+        </p>
+        <input type="submit" class="btn btn-primary" value="Sign In" />
+    
+</form>

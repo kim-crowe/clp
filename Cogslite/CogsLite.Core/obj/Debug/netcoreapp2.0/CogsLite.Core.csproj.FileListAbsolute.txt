@@ -1,0 +1,9 @@
+C:\Code\KimProjects\clp\Cogslite\CogsLite.Core\obj\Debug\netcoreapp2.0\CogsLite.Core.csproj.CoreCompileInputs.cache
+C:\Code\KimProjects\clp\Cogslite\CogsLite.Core\obj\Debug\netcoreapp2.0\CogsLite.Core.AssemblyInfoInputs.cache
+C:\Code\KimProjects\clp\Cogslite\CogsLite.Core\obj\Debug\netcoreapp2.0\CogsLite.Core.AssemblyInfo.cs
+C:\Code\KimProjects\clp\Cogslite\CogsLite.Core\bin\Debug\netcoreapp2.0\CogsLite.Core.deps.json
+C:\Code\KimProjects\clp\Cogslite\CogsLite.Core\bin\Debug\netcoreapp2.0\CogsLite.Core.dll
+C:\Code\KimProjects\clp\Cogslite\CogsLite.Core\bin\Debug\netcoreapp2.0\CogsLite.Core.pdb
+C:\Code\KimProjects\clp\Cogslite\CogsLite.Core\obj\Debug\netcoreapp2.0\CogsLite.Core.csprojResolveAssemblyReference.cache
+C:\Code\KimProjects\clp\Cogslite\CogsLite.Core\obj\Debug\netcoreapp2.0\CogsLite.Core.dll
+C:\Code\KimProjects\clp\Cogslite\CogsLite.Core\obj\Debug\netcoreapp2.0\CogsLite.Core.pdb
