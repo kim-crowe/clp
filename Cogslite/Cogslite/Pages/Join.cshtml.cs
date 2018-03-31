@@ -17,19 +17,20 @@ namespace Cogslite.Pages
             _userStore = userStore ?? throw new ArgumentNullException(nameof(userStore));
         }
 
-        public void OnGet(string message)
+        public void OnGet(string message, string username)
         {
             ViewData["Message"] = message;
+            ViewData["UserName"] = username;
         }
 
         public async Task<IActionResult> OnPostAsync(string username, string password, string confirmPassword)
         {
             var existingUser = _userStore.Get(username);
             if (existingUser != null)
-                return RedirectToAction("Join", new { message = "A user with this username already exists" });
+                return RedirectToAction("Join", new { message = "A user with this username already exists", username });
 
             if (password != confirmPassword)
-                return RedirectToAction("Join", new { message = "Password and confirmation password do not match"});
+                return RedirectToAction("Join", new { message = "Password and confirmation password do not match", username});
 
 
             User newUser = new User
@@ -40,7 +41,7 @@ namespace Cogslite.Pages
 
             if (!_userStore.TryAdd(newUser))
             {
-                return RedirectToAction("Join", new { message = "A user with this username already exists" });
+                return RedirectToAction("Join", new { message = "A user with this username already exists", username });
             }
             
             return Redirect("SignIn");

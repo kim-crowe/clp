@@ -1,0 +1,12 @@
+C:\Code\KimProjects\clp\Cogslite\CogsLite.MongoStore\bin\Debug\netcoreapp2.0\CogsLite.MongoStore.deps.json
+C:\Code\KimProjects\clp\Cogslite\CogsLite.MongoStore\bin\Debug\netcoreapp2.0\CogsLite.MongoStore.dll
+C:\Code\KimProjects\clp\Cogslite\CogsLite.MongoStore\bin\Debug\netcoreapp2.0\CogsLite.Core.dll
+C:\Code\KimProjects\clp\Cogslite\CogsLite.MongoStore\bin\Debug\netcoreapp2.0\CogsLite.Core.pdb
+C:\Code\KimProjects\clp\Cogslite\CogsLite.MongoStore\obj\Debug\netcoreapp2.0\CogsLite.MongoStore.csprojResolveAssemblyReference.cache
+C:\Code\KimProjects\clp\Cogslite\CogsLite.MongoStore\obj\Debug\netcoreapp2.0\CogsLite.MongoStore.csproj.CoreCompileInputs.cache
+C:\Code\KimProjects\clp\Cogslite\CogsLite.MongoStore\obj\Debug\netcoreapp2.0\CogsLite.MongoStore.AssemblyInfoInputs.cache
+C:\Code\KimProjects\clp\Cogslite\CogsLite.MongoStore\obj\Debug\netcoreapp2.0\CogsLite.MongoStore.AssemblyInfo.cs
+C:\Code\KimProjects\clp\Cogslite\CogsLite.MongoStore\obj\Debug\netcoreapp2.0\CogsLite.MongoStore.csproj.CopyComplete
+C:\Code\KimProjects\clp\Cogslite\CogsLite.MongoStore\bin\Debug\netcoreapp2.0\CogsLite.MongoStore.pdb
+C:\Code\KimProjects\clp\Cogslite\CogsLite.MongoStore\obj\Debug\netcoreapp2.0\CogsLite.MongoStore.dll
+C:\Code\KimProjects\clp\Cogslite\CogsLite.MongoStore\obj\Debug\netcoreapp2.0\CogsLite.MongoStore.pdb
