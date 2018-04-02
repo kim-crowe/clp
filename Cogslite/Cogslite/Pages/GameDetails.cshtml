@@ -7,7 +7,7 @@
 <h2>Game Details</h2>
 
 <br />
-<form method="post" asp-page="GameDetails">
+<form method="post" enctype="multipart/form-data" asp-page="GameDetails">
 
     <div class="alert alert-danger @ViewData.WhenContains("Message", "", "collapse")">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -19,6 +19,10 @@
     <p>
         <label for="name"><b>Game Name</b></label>
         <input type="text" name="name" value="@ViewData["Name"]" required />
+    </p>
+    <p>
+        <label for="image"><b>Card back image</b></label>
+        <input type="file" name="image" accept="image/*"/>
     </p>
 
    <input type="submit" class="btn btn-primary" value="Add Game" />

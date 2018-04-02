@@ -18,7 +18,10 @@
     <ul class="game_list">
         @foreach(var game in Model.Games)
         {
-            <li>@game.Name (@game.Owner.Username)</li>
+        <li>
+            <img src="@Url.Page("/Image", new { imageId = game.Id })" width="100" height="140" />
+            @game.Name (@game.Owner.Username)
+        </li>
         }
     </ul>
 
