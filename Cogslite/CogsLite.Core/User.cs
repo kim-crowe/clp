@@ -1,11 +1,7 @@
-﻿using System;
-
-namespace CogsLite.Core
+﻿namespace CogsLite.Core
 {
-    public class User
+    public class User : Member 
     {
-        public Guid Id { get; set; }
-        public string Username { get; set; }
         public string Password { get; set; }
     }
 }

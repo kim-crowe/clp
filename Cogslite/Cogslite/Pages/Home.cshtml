@@ -4,3 +4,22 @@
     ViewData["Title"] = "Home page";
 }
 
+<br />
+<div class="container">
+    <div style="display: inline-block; float: right; margin-top: 8px;">
+        @if (Model.IsSignedIn)
+        {
+            <a asp-page="/GameDetails" class="btn btn-primary">Add Game</a>
+        }
+    </div>
+
+<br />
+
+    <ul class="game_list">
+        @foreach(var game in Model.Games)
+        {
+            <li>@game.Name (@game.Owner.Username)</li>
+        }
+    </ul>
+
+</div>

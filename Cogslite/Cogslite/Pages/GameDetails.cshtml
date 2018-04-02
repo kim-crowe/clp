@@ -1,0 +1,27 @@
+﻿@page
+@model GameDetailsModel
+@{
+    ViewData["Title"] = "GameDetails";
+}
+
+<h2>Game Details</h2>
+
+<br />
+<form method="post" asp-page="GameDetails">
+
+    <div class="alert alert-danger @ViewData.WhenContains("Message", "", "collapse")">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>@ViewData["Message"]</strong>
+    </div>
+
+    <p>
+        <label for="name"><b>Game Name</b></label>
+        <input type="text" name="name" value="@ViewData["Name"]" required />
+    </p>
+
+   <input type="submit" class="btn btn-primary" value="Add Game" />
+
+</form>
+

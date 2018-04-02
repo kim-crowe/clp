@@ -30,7 +30,12 @@ namespace Cogslite.Pages
 
             if (user != null && user.Password == password)
             {
-                var claims = new List<Claim> { new Claim(ClaimTypes.Email, username), new Claim("CogsMember", "Yes") };
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Email, username),
+                    new Claim("CogsMember", "Yes"),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                };
                 var claimsIdentity = new ClaimsIdentity(claims, "login");
                 var claimPrincipal = new ClaimsPrincipal(claimsIdentity);
                 await HttpContext.SignInAsync(claimPrincipal);
