@@ -9,6 +9,7 @@
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -18,31 +19,37 @@
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">                
-                <a asp-page="/Home" class="navbar-brand">Cogslite</a>
-                <div style="display: inline-block; float: right; margin-top: 8px;">
-                    @if (Model.IsSignedIn)
-                    {
+    <header>
+        <nav class="header-inner">
+            <h1><a asp-page="/Home" class="link"/>Welcome to COGS</h1>
+            <div class="header-form">
+                @if (Model.IsSignedIn)
+                {
                     <a asp-page="/SignOut" class="btn btn-primary">Sign out</a>
-                    }
-                    else
-                    {
-                        <a asp-page="/SignIn" class="btn btn-primary">Sign in</a>
-                        <a asp-page="/Join" class="btn btn-default">Join</a>
-                    }
-                </div>
-            </div>         
-        </div>
-    </nav>
-    <div class="container body-content">
+                }
+                else
+                {
+                    <a asp-page="/SignIn" class="btn btn-primary">Sign In</a>
+                    <a asp-page="/Join" class="btn btn-default">Join</a>
+                }   
+            </div>
+            <div class="input-group" style="width: 240px;float: right; padding: 10px;">
+                <input type="text" class="form-control" placeholder="Find a game..." />
+                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+            </div>
+        </nav>
+    </header>
+
         @RenderBody()
+    
         <hr />
-        <footer>
-            <p>&copy; 2018 - Cogslite</p>
-        </footer>
-    </div>
+        <div class="main">
+            <footer>
+                <p>&copy; 2018 - Cogslite</p>
+            </footer>
+        </div>
+
+
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

@@ -3,35 +3,30 @@
 @{
     ViewData["Title"] = "Join";
 }
-
-<h2>Join</h2>
-
-<br />
-<form method="post" asp-page="Join">
-
+<div class="main">
+    <h2>Join</h2>
+    <br />
     <div class="alert alert-danger @ViewData.WhenContains("Message", "", "collapse")">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
         <strong>@ViewData["Message"]</strong>
     </div>
-
-    <p>
-        <label for="username"><b>Username</b></label>
-        <input type="text" name="username" value="@ViewData["UserName"]" required />
-    </p>
-
-    <p>
-        <label for="password"><b>Password</b></label>
-        <input type="password" name="password" required />
-    </p>
-
-    <p>
-        <label for="confirmPassword"><b>Confirm password</b></label>
-        <input type="password" name="confirmPassword" required />
-    </p>
-
-    <input type="submit" class="btn btn-primary" value="Join" />
-
-</form>
+    <form method="post" asp-page="Join" class="form">
+        <p class="form-paragraph">
+            <label for="username" class="form-label"><b>Username</b></label>
+            <input type="text" name="username" value="@ViewData["UserName"]" required class="form-input" />
+        </p>
+        <p class="form-paragraph">
+            <label for="password" class="form-label"><b>Password</b></label>
+            <input type="password" name="password" required class="form-input" />
+        </p>
+        <p class="form-paragraph">
+            <label for="confirmPassword" class="form-label"><b>Confirm password</b></label>
+            <input type="password" name="confirmPassword" required class="form-input" />
+        </p>
+        <br />
+        <input type="submit" class="btn btn-primary" value="Join" />
+    </form>
+</div>
 
