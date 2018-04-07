@@ -1,6 +1,6 @@
 using System;
 
-namespace Cogslite
+namespace Cogslite.Json
 {
     public class Deck
     {

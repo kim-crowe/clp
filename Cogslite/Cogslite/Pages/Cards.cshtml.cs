@@ -44,7 +44,7 @@ namespace Cogslite.Pages
             return new JsonResult(cards);
         }
 
-        public JsonResult OnPostDeck(Deck deck)
+        public JsonResult OnPostDeck(Json.Deck deck)
         {
             // TODO: Save the deck
             return new JsonResult(deck.name);
