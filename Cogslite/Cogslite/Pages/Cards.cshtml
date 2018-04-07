@@ -1,8 +1,10 @@
 @page
+
 @model CardsPageModel
 @{
-    ViewData["Title"] = "Cards - @Model.Game.Name";
+    ViewData["Title"] = "Cards - " + Model.Game.Name;
 }
+<input type="hidden" id="gameId" value="@Model.Game.Id"/>
 <script type="text/javascript">
 
 var cogsModule = angular.module("cogs", []);
@@ -10,14 +12,15 @@ var cogsModule = angular.module("cogs", []);
 cogsModule.factory('cardsService', function($http){
     var cardsService = {
         antiForgeryToken: '@Html.AntiForgeryTokenOnly()',
-        getCards: function() {
-            var promise = $http.get('/Cards?handler=Cards')
+        getCards: function () {
+            var gameId = $('#gameId').val();
+            var promise = $http.get('/Cards?handler=Cards&gameId=' + gameId)
                 .then(function (response) {
                     return response.data;
                 });
             return promise;
         },
-        saveDeck: function(deck) {            
+        saveDeck: function(deck) {
             var url = '/Cards?handler=Deck'
             var promise = $http
                 .post(url, {deck: deck }, { headers: {'XSRF-TOKEN': this.antiForgeryToken}})
@@ -35,19 +38,19 @@ cogsModule.controller("cardsController", function($scope, cardsService) {
    $scope.cards = [];
    cardsService.getCards().then(function(data){
        $scope.cards = data
-   });            
+   });
 
    $scope.deck = { id: '', name: "My First Deck", items: [], isSaved: true, isLoaded: false };
 
    $scope.saveDeck = function() {
        cardsService.saveDeck($scope.deck).then(function(data) {
-           // todo: display deck saved, copy url to clipboard           
+           // todo: display deck saved, copy url to clipboard
            $scope.deck.id = data
        });
    }
 
    $scope.removeCard = function(cardId) {
-       
+
        var existingItem = $scope.deck.items.filter(function(item) {
            return item.card.id == cardId;
        });
@@ -60,7 +63,7 @@ cogsModule.controller("cardsController", function($scope, cardsService) {
             }
        }
    };
-   
+
    $scope.imageUrl = function(card) {
        return "/Image?imageId="+card.id;
    }
@@ -83,46 +86,47 @@ cogsModule.controller("cardsController", function($scope, cardsService) {
             $scope.deck.items.push({card: card, count: 1});
         }
         else {
-            existingItem[0].count++;            
-        }       
+            existingItem[0].count++;
+        }
    };
 });
 
 </script>
 <div ng-app="cogs" ng-controller="cardsController">
-    <div class="cardsPanel">            
-            <div style="overflow: none;">
-                <img src="@Url.Page("/Image", new { imageId = @Model.Game.Id })" width="100" height="140" style="float: left"/>
-                <div class="card-game-title"><span>@Model.Game.Name</span>
-                @if(Model.IsSignedIn)                    
+    <div class="cardsPanel">
+        <div style="overflow: none;">
+            <img src="@Url.Page("/Image", new { imageId = @Model.Game.Id })" width="100" height="140" style="float: left" />
+            <div class="card-game-title">
+                <span>@Model.Game.Name</span>
+                @if (Model.IsSignedIn)
                 {
                     <span style="float: right; margin:3px;">
                         <a asp-page="/UploadCards" asp-route-id="@Model.Game.Id" class="btn btn-primary">Upload cards</a>
                     </span>
                 }
-                </div>
-                <div class="card-game-subtitle">Card List</div>                
             </div>
-            <ul class="card-list">                
-                <li class="card-info" ng-repeat="card in cards">
-                    <div class="card-image">                        
-                        <img src="{{imageUrl(card)}}" width="200" height="280" />
-                        <div class="card-options">                                
-                            <a href class="btn btn-default" ng-click="addCard(card.id)">Add to Deck</a>    
-                        </div>
-                    </div>
-                    <div class="card-details">
-                        <div>{{card.Name}}</div>                       
-                    </div>
-                </li>
-            </ul>            
+            <div class="card-game-subtitle">Card List</div>
         </div>
+        <ul class="card-list">
+            <li class="card-info" ng-repeat="card in cards">
+                <div class="card-image">
+                    <img src="{{imageUrl(card)}}" width="200" height="280" />
+                    <div class="card-options">
+                        <a href class="btn btn-default" ng-click="addCard(card.id)">Add to Deck</a>
+                    </div>
+                </div>
+                <div class="card-details">
+                    <div>{{card.Name}}</div>
+                </div>
+            </li>
+        </ul>
+    </div>
     <div class="deckPanel">
         <div class="deck-title">Deck List</div>
         <div class="deck-subtitle">{{deck.name}}</div>
         <ul class="deck-list">
             <li ng-repeat="item in deck.items">
-                    <div class="input-group">
+                <div class="input-group">
                     <div class="input-group-addon">{{item.count}} x</div>
                     <input readonly type="text" class="form-control" id="exampleInputAmount" placeholder="{{item.card.name}}">
                     <div class="input-group-addon"><a href ng-click="removeCard(item.card.id)"><i class="fa fa-minus-square-o"></i></a></div>

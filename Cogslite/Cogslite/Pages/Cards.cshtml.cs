@@ -15,7 +15,6 @@ namespace Cogslite.Pages
         private readonly IGameStore _gameStore;
         private readonly ICardStore _cardStore;
         private Game _game;
-        private List<Card> _cards;
 
         public CardsPageModel(IGameStore gameStore, ICardStore cardStore)
         {
@@ -32,6 +31,7 @@ namespace Cogslite.Pages
 
         public JsonResult OnGetCards(Guid gameId)
         {
+            _game = _gameStore.GetSingle(gameId);
             var cards = _cardStore.Get(gameId);
             return new JsonResult(cards);
         }

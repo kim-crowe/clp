@@ -49,7 +49,7 @@ namespace CogsLite.MongoStore
             var database = GetDatabase();
             var gamesCollection = database.GetCollection<Game>("Games");
             var filter = Builders<Game>.Filter.Where(g => g.Id == gameId);
-            return gamesCollection.Find(filter).SingleOrDefault();
+            return gamesCollection.Find(filter).Single();
         }
     }
 }    
