@@ -46,7 +46,7 @@ namespace Cogslite.Pages
             }
 
             //_gameStore.UpdateOne(gameId, g => g.CardCount += cardCount);
-            return RedirectToPage("/Home");
+            return RedirectToPage("/Cards", new { gameId = gameId });
         }        
     }
 }

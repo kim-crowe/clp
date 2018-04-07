@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Linq;
@@ -12,11 +13,14 @@ namespace Cogslite.Pages
     public class CardsPageModel : CogsPageModel
     {
         private readonly IGameStore _gameStore;
+        private readonly ICardStore _cardStore;
         private Game _game;
+        private List<Card> _cards;
 
-        public CardsPageModel(IGameStore gameStore)
+        public CardsPageModel(IGameStore gameStore, ICardStore cardStore)
         {
             _gameStore = gameStore ?? throw new ArgumentNullException(nameof(gameStore));
+            _cardStore = cardStore ?? throw new ArgumentNullException(nameof(cardStore));
         }
 
         public Game Game => _game;
@@ -28,19 +32,7 @@ namespace Cogslite.Pages
 
         public JsonResult OnGetCards(Guid gameId)
         {
-            var cards = new []
-            {
-                new { id = Guid.NewGuid(),  name = "Alpha Base", },
-                new { id = Guid.NewGuid(),  name = "Beta Gun", },
-                new { id = Guid.NewGuid(),  name = "Charlie", },
-                new { id = Guid.NewGuid(),  name = "Demon Upper", },
-                new { id = Guid.NewGuid(),  name = "Edge of the galaxy", },
-                new { id = Guid.NewGuid(),  name = "Fist of fury", },
-                new { id = Guid.NewGuid(),  name = "Gorgebear", },
-                new { id = Guid.NewGuid(),  name = "Halt!", },
-                new { id = Guid.NewGuid(),  name = "Iguana", }                
-            };
-
+            var cards = _cardStore.Get(gameId);
             return new JsonResult(cards);
         }
 

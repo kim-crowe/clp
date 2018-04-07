@@ -23,7 +23,8 @@ namespace CogsLite.MongoStore
         {
             var database = GetDatabase();
             var cardsCollection = database.GetCollection<Card>("Cards");
-            return cardsCollection.Find(FilterDefinition<Card>.Empty).ToList();
+            var filter = Builders<Card>.Filter.Where(c => c.GameId == gameId);
+            return cardsCollection.Find(filter).ToList();
         }
     }
 }
