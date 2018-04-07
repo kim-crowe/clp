@@ -1,0 +1,120 @@
+@page
+@model CardsPageModel
+@{
+    ViewData["Title"] = "Cards - @Model.Game.Name";
+}
+<script type="text/javascript">
+
+var cogsModule = angular.module("cogs", []);
+
+cogsModule.factory('cardsService', function($http){
+    var cardsService = {
+        antiForgeryToken: '@Html.AntiForgeryTokenOnly()',
+        getCards: function() {
+            var promise = $http.get('/Cards?handler=Cards')
+                .then(function (response) {
+                    return response.data;
+                });
+            return promise;
+        },
+        saveDeck: function(deck) {            
+            var url = '/Cards?handler=Deck'
+            var promise = $http
+                .post(url, {deck: deck }, { headers: {'XSRF-TOKEN': this.antiForgeryToken}})
+                .then(function (response) {
+                    return response.data;
+                });
+            return promise;
+        }
+    };
+
+    return cardsService;
+});
+
+cogsModule.controller("cardsController", function($scope, cardsService) {
+   $scope.cards = [];
+   cardsService.getCards().then(function(data){
+       $scope.cards = data
+   });            
+
+   $scope.deck = { id: '', name: "My First Deck", items: [], isSaved: true, isLoaded: false };
+
+   $scope.saveDeck = function() {
+       cardsService.saveDeck($scope.deck).then(function(data) {
+           // todo: display deck saved, copy url to clipboard           
+           $scope.deck.id = data
+       });
+   }
+
+   $scope.removeCard = function(cardId) {
+       
+       var existingItem = $scope.deck.items.filter(function(item) {
+           return item.card.id == cardId;
+       });
+
+       if(existingItem.length > 0) {
+           existingItem[0].count--;
+           if(existingItem[0].count < 1) {
+                var index = $scope.deck.items.indexOf(existingItem[0]);
+                $scope.deck.items.splice(index, 1);
+            }
+       }
+   };
+
+   $scope.addCard = function(cardId) {
+
+       var existingItem = $scope.deck.items.filter(function(item) {
+           return item.card.id == cardId;
+       });
+
+       if(existingItem.length == 0) {
+           var card = $scope.cards.filter(function(item) {
+                return item.id == cardId;
+            })[0];
+
+            $scope.deck.items.push({card: card, count: 1});
+        }
+        else {
+            existingItem[0].count++;            
+        }       
+   };
+});
+
+</script>
+<div ng-app="cogs" ng-controller="cardsController">
+    <div class="cardsPanel">            
+            <div style="overflow: none;">
+                <img src="@Url.Page("/Image", new { imageId = @Model.Game.Id })" width="100" height="140" style="float: left"/>
+                <div class="card-game-title"><span>@Model.Game.Name</span><span style="float: right; margin:3px;"><a class="btn btn-primary" href="#">Upload cards</a></span></div>
+                <div class="card-game-subtitle">Card List</div>                
+            </div>
+            <ul class="card-list">                
+                <li class="card-info" ng-repeat="card in cards">
+                    <div class="card-image">
+                        <img src="/Image/}" width="200" height="280" />
+                        <div class="card-options">                                
+                            <a href class="btn btn-default" ng-click="addCard(card.id)">Add to Deck</a>    
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <div>{{card.name}}</div>                       
+                    </div>
+                </li>
+            </ul>            
+        </div>
+    <div class="deckPanel">
+        <div class="deck-title">Deck List</div>
+        <div class="deck-subtitle">{{deck.name}}</div>
+        <ul class="deck-list">
+            <li ng-repeat="item in deck.items">
+                    <div class="input-group">
+                    <div class="input-group-addon">{{item.count}} x</div>
+                    <input readonly type="text" class="form-control" id="exampleInputAmount" placeholder="{{item.card.name}}">
+                    <div class="input-group-addon"><a href ng-click="removeCard(item.card.id)"><i class="fa fa-minus-square-o"></i></a></div>
+                    <div class="input-group-addon"><a href ng-click="addCard(item.card.id)"><i class="fa fa-plus-square-o"></i></a></div>
+                </div>
+            </li>
+        </ul>
+        <a href ng-click="saveDeck()" class="btn btn-primary">Save Deck</a>
+    </div>
+</div>

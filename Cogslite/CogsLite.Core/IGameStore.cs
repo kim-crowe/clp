@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CogsLite.Core
 {
@@ -7,5 +8,7 @@ namespace CogsLite.Core
         void Add(Game game);
         bool TryAdd(Game game);
         IEnumerable<Game> Get();
+
+        Game GetSingle(Guid gameId);
     }
 }

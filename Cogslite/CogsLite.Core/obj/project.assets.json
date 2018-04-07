@@ -664,25 +664,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Kim Crowe\\.nuget\\packages\\": {},
+    "C:\\Users\\Vincent\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Code\\KimProjects\\clp\\Cogslite\\CogsLite.Core\\CogsLite.Core.csproj",
+      "projectUniqueName": "C:\\Users\\Vincent\\source\\repos\\clp\\Cogslite\\CogsLite.Core\\CogsLite.Core.csproj",
       "projectName": "CogsLite.Core",
-      "projectPath": "C:\\Code\\KimProjects\\clp\\Cogslite\\CogsLite.Core\\CogsLite.Core.csproj",
-      "packagesPath": "C:\\Users\\Kim Crowe\\.nuget\\packages\\",
-      "outputPath": "C:\\Code\\KimProjects\\clp\\Cogslite\\CogsLite.Core\\obj\\",
+      "projectPath": "C:\\Users\\Vincent\\source\\repos\\clp\\Cogslite\\CogsLite.Core\\CogsLite.Core.csproj",
+      "packagesPath": "C:\\Users\\Vincent\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Vincent\\source\\repos\\clp\\Cogslite\\CogsLite.Core\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Kim Crowe\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Vincent\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
       ],

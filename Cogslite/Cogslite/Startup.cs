@@ -29,6 +29,8 @@ namespace Cogslite
                 opt.Conventions.AddPageRoute("/Home", "");
             });
 
+            services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {

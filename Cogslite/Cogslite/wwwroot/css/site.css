@@ -176,3 +176,46 @@ header {
     display:table-row;
     width:auto
 }
+
+.cardsPanel {
+    padding: 10px;
+    width: 75%;
+    float: left;
+}
+
+.deckPanel {
+    padding: 10px;
+    width: 25%;
+    float: left;
+}
+
+.deck-title {
+    background: #61578a;   
+    margin-left: 10px;
+    padding-left: 10px;
+    font-size: 2em;
+    color: gold;
+}
+
+.deck-subtitle {
+    background: lightslategray;   
+    margin-left: 10px;
+    padding-left: 10px;
+    font-size: 1.4em;
+    color: white;   
+}
+
+ul.deck-list {
+    margin-top: 10px;
+    list-style-type: none;
+    margin-right: 20px;
+}
+
+ul.deck-list li {
+    margin: 5px 0;
+}
+
+ul.deck-list > li input[readonly] {
+    background: white;
+    color: black;
+}

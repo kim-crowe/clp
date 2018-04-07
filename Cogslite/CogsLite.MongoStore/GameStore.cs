@@ -43,6 +43,14 @@ namespace CogsLite.MongoStore
             var gamesCollection = database.GetCollection<Game>("Games");
             return gamesCollection.Find(FilterDefinition<Game>.Empty).ToList();
         }
+
+        public Game GetSingle(Guid gameId)
+        {
+            var database = GetDatabase();
+            var gamesCollection = database.GetCollection<Game>("Games");
+            var filter = Builders<Game>.Filter.Where(g => g.Id == gameId);
+            return gamesCollection.Find(filter).SingleOrDefault();
+        }
     }
 }    
 
