@@ -1,0 +1,33 @@
+﻿@page
+@model UploadCardsModel
+@{
+    ViewData["Title"] = "UploadCards";
+}
+
+<div class="main">
+    <h2>Upload cards for @Model.Game.Name</h2>
+    <br />
+    <div class="alert alert-danger @ViewData.WhenContains("Message", "", "collapse")">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>@ViewData["Message"]</strong>
+    </div>
+    <form method="post" enctype="multipart/form-data" asp-page="UploadCards" class="form">
+        <p class="form-paragraph">
+            <label for="cardsPerRow" class="form-label"><b>Cards per row</b></label>
+            <input type="number" name="cardsPerRow" required class="form-input" />
+        </p>
+        <p class="form-paragraph">
+            <label for="cardCount" class="form-label"><b>Number of cards</b></label>
+            <input type="number" name="cardCount" required class="form-input" />
+        </p>
+        <p class="form-paragraph">
+            <label for="cardSheet" class="form-label"><b>Upload a card sheet</b></label>
+            <input type="file" name="cardSheet" required class="form-input" />
+        </p>
+        <input type="hidden" name="gameId" value="@Model.Game.Id" />
+        <br />
+        <input type="submit" class="btn btn-primary" value="Add Cards" />
+    </form>
+</div>
