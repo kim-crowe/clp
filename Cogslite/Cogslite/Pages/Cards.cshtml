@@ -41,7 +41,7 @@ cogsModule.controller("cardsController", function($scope, cardsService) {
        $scope.cards = data
    });
 
-   $scope.deck = { id: '', name: "My First Deck", items: [] };
+   $scope.deck = { id: '', gameid: $('#gameId').val(),  name: "My First Deck", items: [] };
 
    $scope.saveDeck = function() {
        cardsService.saveDeck($scope.deck).then(function (data) {
