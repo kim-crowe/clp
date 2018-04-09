@@ -14,8 +14,12 @@
     </div>
     <form method="post" asp-page="Join" class="form">
         <p class="form-paragraph">
-            <label for="username" class="form-label"><b>Username</b></label>
-            <input type="text" name="username" value="@ViewData["UserName"]" required class="form-input" />
+            <label for="emailAddress" class="form-label"><b>Email Address</b></label>
+            <input type="text" name="emailAddress" value="@ViewData["EmailAddress"]" required class="form-input" />
+        </p>
+        <p class="form-paragraph">
+            <label for="displayName" class="form-label"><b>Display Name</b></label>
+            <input type="text" name="DisplayName" value="@ViewData["DisplayName"]" required class="form-input" />
         </p>
         <p class="form-paragraph">
             <label for="password" class="form-label"><b>Password</b></label>

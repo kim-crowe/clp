@@ -17,31 +17,30 @@ namespace Cogslite.Pages
             _userStore = userStore ?? throw new ArgumentNullException(nameof(userStore));
         }
 
-        public void OnGet(string message, string username)
+        public void OnGet(string message, string emailAddress, string displayName)
         {
             ViewData["Message"] = message;
-            ViewData["UserName"] = username;
+            ViewData["EmailAddress"] = emailAddress;
+            ViewData["DisplayName"] = displayName;
         }
 
-        public async Task<IActionResult> OnPostAsync(string username, string password, string confirmPassword)
+        public async Task<IActionResult> OnPostAsync(string emailAddress, string displayName, string password, string confirmPassword)
         {
-            var existingUser = _userStore.Get(username);
-            if (existingUser != null)
-                return RedirectToAction("Join", new { message = "A user with this username already exists", username });
-
             if (password != confirmPassword)
-                return RedirectToAction("Join", new { message = "Password and confirmation password do not match", username});
+                return RedirectToAction("Join", new { message = "Password and confirmation password do not match", emailAddress, displayName});
 
-
-            User newUser = new User
+            try
             {
-                Username = username,
-                Password = password
-            };
-
-            if (!_userStore.TryAdd(newUser))
+                _userStore.Add(new User
+                {
+                    EmailAddress = emailAddress,
+                    DisplayName = displayName,
+                    Password = password
+                });
+            }
+            catch(InvalidOperationException ex)
             {
-                return RedirectToAction("Join", new { message = "A user with this username already exists", username });
+                return RedirectToAction("Join", new { message = ex.Message, emailAddress, displayName });
             }
             
             return Redirect("SignIn");

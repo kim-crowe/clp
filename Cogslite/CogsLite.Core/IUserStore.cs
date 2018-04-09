@@ -4,8 +4,8 @@ namespace CogsLite.Core
 {
     public interface IUserStore
     {
-        User Get(String username);
+        User GetByEmailAddress(String emailAddress);
+        User GetByDisplayName(String displayName);
         void Add(User user);
-        bool TryAdd(User user);
     }
 }

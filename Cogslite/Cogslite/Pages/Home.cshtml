@@ -24,7 +24,7 @@
                 <div class="game-details">
                     <h3>@game.Name</h3>
                     <div>Created: <span>@game.CreatedOn</span></div>
-                    <div>Uploaded by:<span>@game.Owner.Username</span> </div>
+                    <div>Uploaded by:<span>@game.Owner.DisplayName</span> </div>
                     <div style="display: inline-block; float: right; margin-top: 8px;">
                         @if (Model.IsSignedIn)
                         {

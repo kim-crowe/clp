@@ -3,9 +3,9 @@
 namespace CogsLite.Core
 {
     public class Member : BaseObject
-    {        
-        public string Username { get; set; }
-
+    {
+        public string EmailAddress { get; set; }
+        public string DisplayName { get; set; }
         public override bool Equals(object obj)
         {
             if (obj is Member member)

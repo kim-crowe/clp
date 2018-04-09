@@ -29,7 +29,7 @@ namespace CogsLite.MongoStore
             {
                 return GetDatabase().GetCollection<T>(_collectionName);
             });
-        }
+        }        
 
         protected IMongoDatabase GetDatabase()
         {

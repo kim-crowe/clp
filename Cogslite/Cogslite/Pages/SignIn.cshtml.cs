@@ -24,17 +24,18 @@ namespace Cogslite.Pages
             ViewData["Message"] = message;
         }
 
-        public async Task<IActionResult> OnPostAsync(string username, string password)
+        public async Task<IActionResult> OnPostAsync(string emailAddress, string password)
         {
-            var user = _userStore.Get(username);
+            var user = _userStore.GetByEmailAddress(emailAddress);
 
             if (user != null && user.Password == password)
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Email, username),
+                    new Claim(ClaimTypes.Email, emailAddress),
                     new Claim("CogsMember", "Yes"),
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.DisplayName)
                 };
                 var claimsIdentity = new ClaimsIdentity(claims, "login");
                 var claimPrincipal = new ClaimsPrincipal(claimsIdentity);
@@ -42,7 +43,7 @@ namespace Cogslite.Pages
                 return Redirect("Home");
             }
             else
-                return RedirectToAction("SignIn", new { message = "Invalid username or password" });
+                return RedirectToAction("SignIn", new { message = "Invalid email address or password was entered" });
         }
     }
 }

@@ -32,7 +32,7 @@ namespace CogsLite.BasicStore
             }
         }
 
-        public User Get(string username)
+        public User GetByDisplayName(string username)
         {
             return GetUsers().SingleOrDefault(usr => usr.Username == username);
         }
