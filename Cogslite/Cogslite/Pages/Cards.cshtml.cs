@@ -59,6 +59,7 @@ namespace Cogslite.Pages
         public JsonResult OnPostDeck([FromBody]DeckData deck)
         {
 			var realDeck = deck.ToDeck();
+			realDeck.Owner = SignedInUser;
 			_deckStore.Save(realDeck);
 			return new JsonResult(Url.Page("/Cards", "Deck", new { deckId = realDeck.Id }));
         }
@@ -68,6 +69,7 @@ namespace Cogslite.Pages
 	{
 		public string id { get; set; }
 		public string name { get; set; }
+		public string gameid { get; set; }
 		public DeckItemData[] items { get; set; }
 
 		public Deck ToDeck()
@@ -75,6 +77,7 @@ namespace Cogslite.Pages
 			return new Deck
 			{
 				Id = ParseOrCreateGuid(id),
+				GameId = ParseOrCreateGuid(gameid),
 				Name = name,
 				Items = items.Select(i => new DeckItem
 				{
