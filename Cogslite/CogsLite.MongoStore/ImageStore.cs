@@ -7,25 +7,20 @@ using System.IO;
 
 namespace CogsLite.MongoStore
 {
-    public class ImageStore : BaseMongoStore, IImageStore
+    public class ImageStore : BaseMongoStore<ImageData>, IImageStore
     {
-        public ImageStore(IConfiguration configuration) : base(configuration)
+        public ImageStore(IConfiguration configuration) : base("Images", configuration)
         {
         }
 
         public void Add(ImageData imageData)
         {
-            var database = GetDatabase();
-            var imagesCollection = database.GetCollection<ImageData>("Images");
-            imagesCollection.InsertOne(imageData);
+            Insert(imageData);            
         }
 
         public ImageData Get(Guid id)
         {
-            var database = GetDatabase();
-            var imagesCollection = database.GetCollection<ImageData>("Images");
-            var filter = Builders<ImageData>.Filter.Where(x => x.Id == id);
-            return imagesCollection.Find(filter).SingleOrDefault();
+            return FindById(id);
         }
     }
 }

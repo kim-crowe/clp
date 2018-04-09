@@ -35,25 +35,30 @@ namespace Cogslite
             }
         }
 
-        public static void Composite()
+        public static byte[] Composite(IEnumerable<byte[]> imageData, int count)
         {
-            var finalImage = new Image<Rgba32>(300, 249);
+			Image<Rgba32> finalImage = null;
+			var counter = 0;
 
-            var files = Directory.GetFiles(@"c:\utilities\split\");
-            var counter = 0;
-
-            foreach (var file in files)
+            foreach (var image in imageData)
             {
-                var cardImage = Image.Load(file);
-                var row = counter / 5;
-                var column = counter % 5;
+				var cardImage = Image.Load(image);
+
+				if (finalImage == null)
+					finalImage = new Image<Rgba32>(cardImage.Width * 10, cardImage.Height * 7);
+                
+                var row = counter / 10;
+                var column = counter % 10;
 
                 finalImage.Mutate(x => x.DrawImage(cardImage, new Size(cardImage.Width, cardImage.Height), new Point(column * cardImage.Width, row * cardImage.Height), GraphicsOptions.Default));
                 counter++;
             }
 
-            using (var fileStream = File.OpenWrite(@"c:\utilities\split\comp.png"))
-                finalImage.SaveAsPng(fileStream);
+			using (var imageStream = new MemoryStream())
+			{
+				finalImage.SaveAsPng(imageStream);
+				return imageStream.GetBuffer();
+			}
         }
     }
 }

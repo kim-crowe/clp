@@ -2,26 +2,24 @@
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace CogsLite.MongoStore
 {
-    public class GameStore : BaseMongoStore, IGameStore
+    public class GameStore : BaseMongoStore<Game>, IGameStore
     {
-        public GameStore(IConfiguration configuration) : base(configuration)
+        public GameStore(IConfiguration configuration) : base("Games", configuration)
         {
         }
 
         public void Add(Game game)
         {
-            var database = GetDatabase();
-            var gamesCollection = database.GetCollection<Game>("Games");
-
-            var filter = Builders<Game>.Filter.Where(g => g.Name == game.Name && g.Owner == game.Owner);
-            if (gamesCollection.Find(filter).Any())
+            var existing = FindWhere(g => g.Name == game.Name);
+            if (existing.Any())
                 throw new InvalidOperationException("A game with that name already exists");
 
-            gamesCollection.InsertOne(game);
+            Insert(game);
         }
 
         public bool TryAdd(Game game)
@@ -38,18 +36,13 @@ namespace CogsLite.MongoStore
         }
 
         public IEnumerable<Game> Get()
-        {
-            var database = GetDatabase();
-            var gamesCollection = database.GetCollection<Game>("Games");
-            return gamesCollection.Find(FilterDefinition<Game>.Empty).ToList();
+        {            
+            return Collection.Find(FilterDefinition<Game>.Empty).ToList();
         }
 
         public Game GetSingle(Guid gameId)
         {
-            var database = GetDatabase();
-            var gamesCollection = database.GetCollection<Game>("Games");
-            var filter = Builders<Game>.Filter.Where(g => g.Id == gameId);
-            return gamesCollection.Find(filter).Single();
+            return FindById(gameId);            
         }
     }
 }    

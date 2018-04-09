@@ -41,6 +41,7 @@ namespace Cogslite
             services.AddTransient<IGameStore, GameStore>();
             services.AddTransient<IImageStore, ImageStore>();
             services.AddTransient<ICardStore, CardStore>();
+            services.AddTransient<IDeckStore, DeckStore>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

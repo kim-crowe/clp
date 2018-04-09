@@ -23,7 +23,7 @@ cogsModule.factory('cardsService', function($http){
         saveDeck: function(deck) {
             var url = '/Cards?handler=Deck'
             var promise = $http
-                .post(url, {deck: deck }, { headers: {'XSRF-TOKEN': this.antiForgeryToken}})
+                .post(url, deck, { headers: {'XSRF-TOKEN': this.antiForgeryToken}})
                 .then(function (response) {
                     return response.data;
                 });
@@ -35,17 +35,17 @@ cogsModule.factory('cardsService', function($http){
 });
 
 cogsModule.controller("cardsController", function($scope, cardsService) {
-   $scope.cards = [];
+    $scope.cards = [];
+    $scope.deckUrl = '';
    cardsService.getCards().then(function(data){
        $scope.cards = data
    });
 
-   $scope.deck = { id: '', name: "My First Deck", items: [], isSaved: true, isLoaded: false };
+   $scope.deck = { id: '', name: "My First Deck", items: [] };
 
    $scope.saveDeck = function() {
-       cardsService.saveDeck($scope.deck).then(function(data) {
-           // todo: display deck saved, copy url to clipboard
-           $scope.deck.id = data
+       cardsService.saveDeck($scope.deck).then(function (data) {
+           $scope.deckUrl = data;
        });
    }
 
@@ -135,5 +135,6 @@ cogsModule.controller("cardsController", function($scope, cardsService) {
             </li>
         </ul>
         <a href ng-click="saveDeck()" class="btn btn-primary">Save Deck</a>
+        <input type="text" ng-model="deckUrl" />
     </div>
 </div>

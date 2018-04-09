@@ -6,25 +6,20 @@ using System.Collections.Generic;
 
 namespace CogsLite.MongoStore
 {
-    public class CardStore : BaseMongoStore, ICardStore
+    public class CardStore : BaseMongoStore<Card>, ICardStore
     {
-        public CardStore(IConfiguration configuration) : base(configuration)
+        public CardStore(IConfiguration configuration) : base("Cards", configuration)
         {
         }
 
         public void Add(Card card)
         {
-            var database = GetDatabase();
-            var cardsCollection = database.GetCollection<Card>("Cards");
-            cardsCollection.InsertOne(card);
+            Insert(card);
         }
 
         public IEnumerable<Card> Get(Guid gameId)
         {
-            var database = GetDatabase();
-            var cardsCollection = database.GetCollection<Card>("Cards");
-            var filter = Builders<Card>.Filter.Where(c => c.GameId == gameId);
-            return cardsCollection.Find(filter).ToList();
+            return FindWhere(c => c.GameId == gameId);            
         }
     }
 }
