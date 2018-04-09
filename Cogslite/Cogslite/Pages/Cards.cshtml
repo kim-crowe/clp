@@ -94,7 +94,7 @@ cogsModule.controller("cardsController", function($scope, cardsService) {
 </script>
 <div ng-app="cogs" ng-controller="cardsController">
     <div class="cardsPanel">
-        <div style="overflow: none;">
+        <div>
             <img src="@Url.Page("/Image", new { imageId = @Model.Game.Id })" width="100" height="140" style="float: left" />
             <div class="card-game-title">
                 <span>@Model.Game.Name</span>
