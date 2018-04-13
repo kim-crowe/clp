@@ -3,12 +3,10 @@ using System.Collections.Generic;
 
 namespace CogsLite.Core
 {
-    public interface IGameStore
+    public interface IGameStore : IBaseStore<Game>
     {
-        void Add(Game game);
         bool TryAdd(Game game);
         IEnumerable<Game> Get();
-
         Game GetSingle(Guid gameId);
     }
 }

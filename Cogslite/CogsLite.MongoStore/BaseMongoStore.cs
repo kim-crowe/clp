@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace CogsLite.MongoStore
 {
-    public abstract class BaseMongoStore<T> where T : CogsLite.Core.BaseObject
+    public abstract class BaseMongoStore<T> where T : Core.BaseObject
     {
         private readonly IConfiguration _configuration;
         private readonly Lazy<MongoConfiguration> _mongoConfiguration;
@@ -66,6 +66,15 @@ namespace CogsLite.MongoStore
             if(existing == null)
                 throw new InvalidOperationException("Unable to find item to replace");
             Collection.ReplaceOne(CreateFilter(x => x.Id == item.Id), item);
+        }
+
+        public void UpdateOne(Guid itemId, Action<T> action)
+        {
+            var item = FindById(itemId);
+            if (item == null)
+                throw new InvalidOperationException("Unable to find item");
+            action(item);
+            Update(item);
         }
 
         protected IMongoCollection<T> Collection => _getCollection.Value;    

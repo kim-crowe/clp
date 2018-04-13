@@ -2,35 +2,50 @@
 using SixLabors.Primitives;
 using SixLabors.ImageSharp;
 using System.Collections.Generic;
+using System;
 
 namespace Cogslite
 {
-    public static class ImageSlicer
+    public class ImageSlicer : IDisposable
     {
-        public static IEnumerable<byte[]> Slice(int cardsPerRow, int cardCount, Stream imageData)
+        private readonly int _cardCount;
+        private readonly int _rows;
+        private readonly int _cardsPerRow;
+        private readonly System.Drawing.Size _cardSize;
+        private readonly Image<Rgba32> _image;
+
+        public ImageSlicer(int cardsPerRow, int cardCount, Stream imageData)
         {
-            int rows = (cardCount / cardsPerRow);
+            _cardCount = cardCount;
+            _cardsPerRow = cardsPerRow;
+
+            _rows = (cardCount / cardsPerRow);
             if (cardCount % cardsPerRow > 0)
-                rows++;
+                _rows++;
 
-            var image = Image.Load(imageData);
-            //if (image.Width % cardsPerRow > 0 || image.Height % rows > 0)
-            //	throw new InvalidOperationException("Cannot split image into equal parts based on rows and columns supplied");
+            _image = Image.Load(imageData);
 
-            var splitWidth = image.Width / cardsPerRow;
-            var splitHeight = image.Height / rows;
+            _cardSize = new System.Drawing.Size(_image.Width / cardsPerRow, _image.Height / _rows);
+        }
 
-            for (int i = 0; i < cardCount; i++)
+        public System.Drawing.Size CardSize => _cardSize;
+
+        public IEnumerable<byte[]> Slices
+        {
+            get
             {
-                int row = i / cardsPerRow;
-                int column = i % cardsPerRow;
-
-                var splitImage = image.Clone(x => x.Crop(new Rectangle(column * splitWidth, row * splitHeight, splitWidth, splitHeight)));
-
-                using (var memoryStream = new MemoryStream())
+                for (int i = 0; i < _cardCount; i++)
                 {
-                    splitImage.SaveAsPng(memoryStream);
-                    yield return memoryStream.GetBuffer();
+                    int row = i / _cardsPerRow;
+                    int column = i % _cardsPerRow;
+
+                    var splitImage = _image.Clone(x => x.Crop(new Rectangle(column * _cardSize.Width, row * _cardSize.Height, _cardSize.Width, _cardSize.Height)));
+
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        splitImage.SaveAsPng(memoryStream);
+                        yield return memoryStream.GetBuffer();
+                    }
                 }
             }
         }
@@ -59,6 +74,26 @@ namespace Cogslite
 				finalImage.SaveAsPng(imageStream);
 				return imageStream.GetBuffer();
 			}
+        }
+
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _image.Dispose();
+                }
+                
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

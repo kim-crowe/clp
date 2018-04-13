@@ -1,0 +1,25 @@
+﻿@page
+@model Cogslite.Pages.CardSizeErrorModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CardSizeError</title>
+</head>
+<body>
+    <div class="main">
+        <h2>Card Size Information</h2>
+        <br />
+        <div class="alert alert-danger @ViewData.WhenContains("Message", "", "collapse")">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>@ViewData["Message"]</strong>
+        </div>
+</body>
+</html>

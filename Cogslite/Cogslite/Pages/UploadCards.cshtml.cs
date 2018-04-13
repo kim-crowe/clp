@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Drawing;
 
 namespace Cogslite.Pages
 {
@@ -31,22 +32,36 @@ namespace Cogslite.Pages
 
         public IActionResult OnPostAsync(Guid gameId, int cardsPerRow, int cardCount, IFormFile cardSheet)
         {
-            foreach (var imageData in ImageSlicer.Slice(cardsPerRow, cardCount, cardSheet.OpenReadStream()))
+            using (var imageSlicer = new ImageSlicer(cardsPerRow, cardCount, cardSheet.OpenReadStream()))
             {
-                var card = new Card
+                _game = _gameStore.Get().SingleOrDefault(g => g.Id == gameId);
+                if(_game.CardSize == Size.Empty)
                 {
-                    Id = Guid.NewGuid(),
-                    Name = String.Empty,
-                    GameId = gameId,
-                    CreatedOn = DateTime.Now
-                };
+                    _game.CardSize = imageSlicer.CardSize;
+                    _gameStore.UpdateOne(_game.Id, g => g.CardSize = imageSlicer.CardSize);
+                }
+                else if(_game.CardSize != imageSlicer.CardSize)
+                {
+                    // Problem, card sizes are different
+                    return RedirectToAction("UploadCards");
+                }
+                
+                foreach (var imageData in imageSlicer.Slices)
+                {
+                    var card = new Card
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = String.Empty,
+                        GameId = gameId,
+                        CreatedOn = DateTime.Now
+                    };
 
-                _cardStore.Add(card);
-                _imageStore.Add(new ImageData { Id = card.Id, Data = imageData, OriginalFileName = String.Empty });
+                    _cardStore.Add(card);
+                    _imageStore.Add(new ImageData { Id = card.Id, Data = imageData, OriginalFileName = String.Empty });
+                }
+
+                return RedirectToPage("/Cards", new { gameId = gameId });
             }
-
-            //_gameStore.UpdateOne(gameId, g => g.CardCount += cardCount);
-            return RedirectToPage("/Cards", new { gameId = gameId });
         }        
     }
 }
