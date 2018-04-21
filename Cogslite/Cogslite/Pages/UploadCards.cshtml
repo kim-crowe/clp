@@ -26,6 +26,10 @@
             <label for="cardSheet" class="form-label"><b>Upload a card sheet</b></label>
             <input type="file" name="cardSheet" required class="form-input" />
         </p>
+        <p class="form-paragraph">
+            <label for="cardSheet" class="form-label"><b>Upload an info sheet (optional)</b> <a href="">Learn about card info sheets</a></label>
+            <input type="file" name="infoSheet" class="form-input" />
+        </p>
         <input type="hidden" name="gameId" value="@Model.Game.Id" />
         <br />
         <input type="submit" class="btn btn-primary" value="Add Cards" />

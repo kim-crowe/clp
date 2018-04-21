@@ -5,6 +5,9 @@
     ViewData["Title"] = "Cards - " + Model.Game.Name;
 }
 <input type="hidden" id="gameId" value="@Model.Game.Id"/>
+
+@section Scripts
+{
 <script type="text/javascript">
 
 var cogsModule = angular.module("cogs", []);
@@ -12,9 +15,9 @@ var cogsModule = angular.module("cogs", []);
 cogsModule.factory('cardsService', function($http){
     var cardsService = {
         antiForgeryToken: '@Html.AntiForgeryTokenOnly()',
-        getCards: function () {
+        getCards: function (search) {
             var gameId = $('#gameId').val();
-            var promise = $http.get('/Cards?handler=Cards&gameId=' + gameId)
+            var promise = $http.post('/Cards?handler=CardSearch&gameId=' + gameId, search, { headers: { 'XSRF-TOKEN': this.antiForgeryToken } })
                 .then(function (response) {
                     return response.data;
                 });
@@ -32,16 +35,29 @@ cogsModule.factory('cardsService', function($http){
     };
 
     return cardsService;
-});
+    });    
 
-cogsModule.controller("cardsController", function($scope, cardsService) {
+cogsModule.controller("cardsController", function ($scope, cardsService) {
+    $scope.numberOfPages = 1;    
+    $scope.search = { page: 1, itemsPerPage: 20, cardName: '', cardType: -1, tags:  [] };
+    $scope.isSignedIn = @Model.IsSignedIn.ToString().ToLower();
     $scope.cards = [];
-    $scope.deckUrl = '';
-   cardsService.getCards().then(function(data){
-       $scope.cards = data
-   });
+    $scope.deckUrl = '';    
+    $scope.tags = ['One', 'Two', 'Three', 'Four'];
 
-   $scope.deck = { id: '', gameid: $('#gameId').val(),  name: "My First Deck", items: [] };
+    $scope.$watch('search.cardName', function () {
+        loadCards();
+    });
+
+    loadCards = function () {
+        cardsService.getCards($scope.search).then(function (data) {
+            $scope.cards = data.cards;
+            $scope.numberOfPages = data.numberOfPages;
+        });    
+    }
+
+    loadCards();
+    $scope.deck = { id: '', gameid: $('#gameId').val(),  name: "My First Deck", items: [] };
 
    $scope.saveDeck = function() {
        cardsService.saveDeck($scope.deck).then(function (data) {
@@ -66,12 +82,38 @@ cogsModule.controller("cardsController", function($scope, cardsService) {
 
    $scope.imageUrl = function(card) {
        return "/Image?imageId="+card.id;
-   }
+    }
 
-   $scope.stringify = function(card) {
-       return JSON.stringify(card);
-   }
+    $scope.firstPage = function () {
+        $scope.search.page = 1;
+        loadCards();
+    }
 
+    $scope.previousPage = function () {
+        if ($scope.search.page > 1) {
+            $scope.search.page--;
+            loadCards();
+        }
+    }
+
+    $scope.nextPage = function () {
+        if ($scope.search.page < $scope.numberOfPages) {
+            $scope.search.page++;
+            loadCards();
+        }
+    }
+
+    $scope.lastPage = function () {
+        $scope.search.page = $scope.numberOfPages;
+        loadCards();
+    }
+
+    $scope.applyFilter = function () {
+        $scope.search.cardName = $scope.searchText;
+        $scope.search.page = 1;
+        loadCards();
+    }
+   
    $scope.addCard = function(cardId) {
 
        var existingItem = $scope.deck.items.filter(function(item) {
@@ -89,25 +131,51 @@ cogsModule.controller("cardsController", function($scope, cardsService) {
             existingItem[0].count++;
         }
    };
-});
+    });    
 
 </script>
+}
+
 <div ng-app="cogs" ng-controller="cardsController">
-    <div class="cardsPanel">
+    <div class="cardsPanel" ng-class="{fullwidth: !isSignedIn}">
         <div>
             <img src="@Url.Page("/Image", new { imageId = @Model.Game.Id })" width="100" height="140" style="float: left" />
             <div class="card-game-title">
                 <span>@Model.Game.Name</span>
                 @if (Model.IsSignedIn)
-                {
-                    <span style="float: right; margin:3px;">
-                        <a asp-page="/UploadCards" asp-route-id="@Model.Game.Id" class="btn btn-primary">Upload cards</a>
-                    </span>
-                }
+            {
+                <span style="float: right; margin:3px;">
+                    <a asp-page="/UploadCards" asp-route-id="@Model.Game.Id" class="btn btn-primary">Upload cards</a>
+                </span>
+        }
             </div>
             <div class="card-game-subtitle">Card List</div>
         </div>
-        <ul class="card-list">
+        <div class="form-inline" style="margin: 10px;">
+            <span>&nbsp;</span>
+            <span style="font-size: 1.3em;margin-right: 10px;">Filter options</span>
+            <input type="text" placeholder="Filter on card name..." ng-model="search.cardName" ng-model-options="{ debounce: 500 }" class="form-control" />
+            <select ng-model="search.cardType" ng-change="applyFilter()" class="form-control">
+                <option value="-1" selected>All cards types</option>
+                @foreach (var type in Model.Game.CardTypes.IndexedList())
+        {
+            <option value="@type.Index">@type.Value</option>
+}
+            </select>
+            
+            <ul class="pagination" style="float: right; margin-top: -2px;">
+                <li class="page-item">
+                    <a class="page-link" href ng-click="firstPage()" aria-label="First">
+                        <i class="fa fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item"><a class="page-link" href ng-click="previousPage()"><i class="fa fa-angle-left"></i></a></li>
+                <li class="page-item active"><span>Page {{search.page}} of {{numberOfPages}}</span></li>
+                <li class="page-item"><a class="page-link" href ng-click="nextPage()"><i class="fa fa-angle-right"></i></a></li>
+                <li class="page-item"><a href ng-click="lastPage()"><i class="fa fa-angle-double-right"></i></a></li>
+            </ul>
+        </div>        
+        <ul class="card-list" style="clear: both">
             <li class="card-info" ng-repeat="card in cards">
                 <div class="card-image">
                     <img src="{{imageUrl(card)}}" width="200" height="280" />
@@ -116,12 +184,12 @@ cogsModule.controller("cardsController", function($scope, cardsService) {
                     </div>
                 </div>
                 <div class="card-details">
-                    <div>{{card.Name}}</div>
+                    <div>{{card.name}}</div>
                 </div>
             </li>
-        </ul>
-    </div>
-    <div class="deckPanel">
+        </ul>        
+    </div>    
+    <div class="deckPanel" ng-class="{collapsed: !isSignedIn}">
         <div class="deck-title">Deck List</div>
         <div class="deck-subtitle">{{deck.name}}</div>
         <ul class="deck-list">

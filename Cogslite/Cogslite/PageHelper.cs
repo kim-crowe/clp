@@ -26,5 +26,17 @@ namespace Cogslite
             var tokenValue = XElement.Parse(antiForgeryInputTag).Attribute("value").Value;
             return new HtmlString(tokenValue);
         }
+
+		public static IEnumerable<(int Index, T Value)> IndexedList<T>(this IEnumerable<T> items)
+		{
+			var result = new List<(int, T)>();
+			var index = 0;
+			foreach (var item in items)
+			{
+				result.Add((index, item));
+				index++;
+			}
+			return result;
+		}	
     }
 }

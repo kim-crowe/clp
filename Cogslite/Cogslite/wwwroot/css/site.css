@@ -220,3 +220,16 @@ ul.deck-list > li input[readonly] {
     background: white;
     color: black;
 }
+
+.fullwidth {
+    width: 100% !important;
+}
+
+.collapsed {
+    width: 0;
+    overflow: hidden;
+}
+
+.filter-title {
+    font-size: 1.3em;
+}

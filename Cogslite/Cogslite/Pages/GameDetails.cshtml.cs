@@ -27,12 +27,14 @@ namespace Cogslite.Pages
 
         public async Task<IActionResult> OnPostAsync(string name, IFormFile image)
         {
-            Game newGame = new Game
-            {
-                Id = Guid.NewGuid(),
-                Name = name,
-                CreatedOn = DateTime.Now,
-                Owner = SignedInUser
+			Game newGame = new Game
+			{
+				Id = Guid.NewGuid(),
+				Name = name,
+				CreatedOn = DateTime.Now,
+				Owner = SignedInUser,
+				CardTypes = new string[0],
+				CardCount = 0
             };
 
             if (!_gameStore.TryAdd(newGame))
