@@ -31,10 +31,9 @@ cogsModule.factory('cardsService', function($http){
                 });
             return promise;
         },
-        saveDeck: function(deck) {
-            var url = '/Cards?handler=Deck'
-            var promise = $http
-                .post(url, deck, { headers: {'XSRF-TOKEN': this.antiForgeryToken}})
+        updateCard: function (cardUpdate) {
+            var gameId = $('#gameId').val();
+            var promise = $http.post('/Cards?handler=CardUpdate&gameId=' + gameId, cardUpdate, { headers: { 'XSRF-TOKEN': this.antiForgeryToken } })
                 .then(function (response) {
                     return response.data;
                 });
@@ -49,9 +48,11 @@ cogsModule.controller("cardsController", function ($scope, cardsService) {
     $scope.numberOfPages = 1;    
     $scope.search = { page: 1, itemsPerPage: 20, cardName: '', cardType: -1, tags:  [] };
     $scope.isSignedIn = @Model.IsSignedIn.ToString().ToLower();
-    $scope.cards = [];
-    $scope.deckUrl = '';    
+    $scope.isGameOwner = @Model.IsGameOwner.ToString().ToLower();
+    $scope.cards = [];    
     $scope.tags = [];
+    $scope.cardEdit = {};
+    $scope.selectedCard = null;
     $scope.isInitialised = false;
 
     $scope.$watch('search.cardName', function () {
@@ -78,15 +79,8 @@ cogsModule.controller("cardsController", function ($scope, cardsService) {
     }
 
     loadTags();
-    loadCards();
-    $scope.deck = { id: '', gameid: $('#gameId').val(), name: "My First Deck", items: [] };
+    loadCards();    
     $scope.isInitialised = true;
-
-   $scope.saveDeck = function() {
-       cardsService.saveDeck($scope.deck).then(function (data) {
-           $scope.deckUrl = data;
-       });
-   }
 
    $scope.removeCard = function(cardId) {
 
@@ -137,30 +131,32 @@ cogsModule.controller("cardsController", function ($scope, cardsService) {
         loadCards();
     }
    
-   $scope.addCard = function(cardId) {
+    $scope.showDetails = function (cardId) {
+        $scope.selectedCard = $scope.cards.filter(function (item) {
+            return item.id == cardId;
+        })[0];
 
-       var existingItem = $scope.deck.items.filter(function(item) {
-           return item.card.id == cardId;
-       });
+        $scope.cardEdit = { cardId: $scope.selectedCard.id, name: $scope.selectedCard.name, type: $scope.selectedCard.type, tags: $scope.tags.join() };
 
-       if(existingItem.length == 0) {
-           var card = $scope.cards.filter(function(item) {
-                return item.id == cardId;
-            })[0];
+       $('#cardDetails').modal({})
+    }
 
-            $scope.deck.items.push({card: card, count: 1});
-        }
-        else {
-            existingItem[0].count++;
-        }
-   };
-    });    
+    $scope.updateCard = function () {
+        cardsService.updateCard($scope.cardEdit).then(function (data) {
+            $scope.selectedCard.name = $scope.cardEdit.name;
+            $scope.selectedCard.type = $scope.cardEdit.type;
+            $scope.selectedCard.tags = $scope.cardEdit.tags.split(',');
+            $('#cardDetails').model('hide');
+        });
+
+    }
+});    
 
 </script>
 }
 
 <div ng-app="cogs" ng-controller="cardsController">
-    <div class="cardsPanel" ng-class="{fullwidth: !isSignedIn}">
+    <div class="cardsPanel fullwidth">
         <div>
             <img src="@Url.Page("/Image", new { imageId = @Model.Game.Id })" width="100" height="140" style="float: left" />
             <div class="card-game-title">
@@ -206,7 +202,7 @@ cogsModule.controller("cardsController", function ($scope, cardsService) {
                 <div class="card-image">
                     <img src="{{imageUrl(card)}}" width="200" height="280" />
                     <div class="card-options">
-                        <a href class="btn btn-default" ng-click="addCard(card.id)">Add to Deck</a>
+                        <a href class="btn btn-default" ng-click="showDetails(card.id)">Details</a>
                     </div>
                 </div>
                 <div class="card-details">
@@ -215,20 +211,36 @@ cogsModule.controller("cardsController", function ($scope, cardsService) {
             </li>
         </ul>        
     </div>    
-    <div class="deckPanel" ng-class="{collapsed: !isSignedIn}">
-        <div class="deck-title">Deck List</div>
-        <div class="deck-subtitle">{{deck.name}}</div>
-        <ul class="deck-list">
-            <li ng-repeat="item in deck.items">
-                <div class="input-group">
-                    <div class="input-group-addon">{{item.count}} x</div>
-                    <input readonly type="text" class="form-control" id="exampleInputAmount" placeholder="{{item.card.name}}">
-                    <div class="input-group-addon"><a href ng-click="removeCard(item.card.id)"><i class="fa fa-minus-square-o"></i></a></div>
-                    <div class="input-group-addon"><a href ng-click="addCard(item.card.id)"><i class="fa fa-plus-square-o"></i></a></div>
+    <div class="modal fade" id="cardDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #61578a;">
+                    <h2 class="modal-title" style="color: goldenrod;" id="exampleModalLongTitle">{{selectedCard.name}}</h2>                    
                 </div>
-            </li>
-        </ul>
-        <a href ng-click="saveDeck()" class="btn btn-primary">Save Deck</a>
-        <input type="text" ng-model="deckUrl" />
+                <div class="modal-body">
+                    <div style="float: left; padding: 15px;">
+                        <img src="{{imageUrl(selectedCard)}}" style="float: left;" />
+                    </div>                    
+                    <div ng-show="!isGameOwner">
+                        <h3>Type</h3>
+                        <div>{{selectedCard.type}}</div>
+                        <h3>Tags</h3>
+                        <div>{{selectedCard.tags}}</div>
+                    </div>
+                    <div ng-show="isGameOwner" class="form-inline">
+                        <h3>Card Name</h3>
+                        <div><input type="text" class="form-control" ng-model="cardEdit.name"/></div>
+                        <h3>Type</h3>
+                        <div><input type="text" class="form-control" ng-model="cardEdit.type" /></div>
+                        <h3>Tags</h3>
+                        <div><input type="text" class="form-control" ng-model="cardEdit.tags"/></div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="clear: both">
+                    <button type="button" class="btn btn-primary" ng-show="isGameOwner" ng-click="updateCard()">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

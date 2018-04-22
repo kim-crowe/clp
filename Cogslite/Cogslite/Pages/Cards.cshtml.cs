@@ -14,7 +14,8 @@ namespace Cogslite.Pages
         private readonly IDeckStore _deckStore;
 		private readonly IImageStore _imageStore;
         
-        private Game _game;		
+        private Game _game;
+		private bool _isGameOwner;
 
         public CardsPageModel(IGameStore gameStore, ICardStore cardStore, IDeckStore deckStore, IImageStore imageStore)
         {
@@ -24,11 +25,14 @@ namespace Cogslite.Pages
 			_imageStore = imageStore ?? throw new ArgumentNullException(nameof(imageStore));
         }
 
-        public Game Game => _game;		
+        public Game Game => _game;
+
+		public bool IsGameOwner => _isGameOwner;
 
         public void OnGet(Guid gameId)
         {
-            _game = _gameStore.GetSingle(gameId);			
+            _game = _gameStore.GetSingle(gameId);
+			_isGameOwner = IsSignedIn && _game.Owner.Id == SignedInUser.Id;
         }		
 
 		public IActionResult OnGetTags(Guid gameId)
@@ -72,6 +76,17 @@ namespace Cogslite.Pages
 			return new JsonResult(result);
 		}
 
+		public IActionResult OnPostCardUpdate([FromBody] CardUpdate cardUpdate)
+		{
+			_cardStore.UpdateOne(cardUpdate.CardId, c =>
+			{
+				c.Name = cardUpdate.Name;
+				c.Type = cardUpdate.Type;
+				c.Tags = cardUpdate.Tags.Split(',');
+			});
+
+			return new JsonResult(true);
+		}
 					
 		public IActionResult OnGetDeck(Guid deckId)
 		{

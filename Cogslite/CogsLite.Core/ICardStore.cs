@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace CogsLite.Core
 {
-    public interface ICardStore
+    public interface ICardStore : IBaseStore<Card>
     {
-        void Add(Card card);
         IEnumerable<Card> Get(Guid gameId);
     }
 }

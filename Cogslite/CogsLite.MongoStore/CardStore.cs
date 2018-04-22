@@ -21,5 +21,10 @@ namespace CogsLite.MongoStore
         {
             return FindWhere(c => c.GameId == gameId);            
         }
+
+		public Card GetSingle(Guid cardId)
+		{
+			return FindById(cardId);
+		}
     }
 }
