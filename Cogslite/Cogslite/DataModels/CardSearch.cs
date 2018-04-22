@@ -9,6 +9,7 @@ namespace Cogslite.DataModels
     {
 		public string CardName { get; set; }
 		public int CardType { get; set; }
+		public string [] Tags { get; set; }
     }
 
 	public abstract class PagedDataSearch

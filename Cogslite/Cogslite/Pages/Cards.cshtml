@@ -10,7 +10,7 @@
 {
 <script type="text/javascript">
 
-var cogsModule = angular.module("cogs", []);
+var cogsModule = angular.module("cogs", ['ui.select','ngSanitize']);
 
 cogsModule.factory('cardsService', function($http){
     var cardsService = {
@@ -18,6 +18,14 @@ cogsModule.factory('cardsService', function($http){
         getCards: function (search) {
             var gameId = $('#gameId').val();
             var promise = $http.post('/Cards?handler=CardSearch&gameId=' + gameId, search, { headers: { 'XSRF-TOKEN': this.antiForgeryToken } })
+                .then(function (response) {
+                    return response.data;
+                });
+            return promise;
+        },
+        getTags: function () {
+            var gameId = $('#gameId').val();
+            var promise = $http.get('/Cards?handler=Tags&gameId=' + gameId)
                 .then(function (response) {
                     return response.data;
                 });
@@ -43,10 +51,17 @@ cogsModule.controller("cardsController", function ($scope, cardsService) {
     $scope.isSignedIn = @Model.IsSignedIn.ToString().ToLower();
     $scope.cards = [];
     $scope.deckUrl = '';    
-    $scope.tags = ['One', 'Two', 'Three', 'Four'];
+    $scope.tags = [];
+    $scope.isInitialised = false;
 
     $scope.$watch('search.cardName', function () {
-        loadCards();
+        if ($scope.isInitialised)
+            loadCards();
+    });
+
+    $scope.$watch('search.tags', function () {
+        if ($scope.isInitialised)
+            loadCards();
     });
 
     loadCards = function () {
@@ -56,8 +71,16 @@ cogsModule.controller("cardsController", function ($scope, cardsService) {
         });    
     }
 
+    loadTags = function () {
+        cardsService.getTags().then(function (data) {
+            $scope.tags = data;
+        });
+    }
+
+    loadTags();
     loadCards();
-    $scope.deck = { id: '', gameid: $('#gameId').val(),  name: "My First Deck", items: [] };
+    $scope.deck = { id: '', gameid: $('#gameId').val(), name: "My First Deck", items: [] };
+    $scope.isInitialised = true;
 
    $scope.saveDeck = function() {
        cardsService.saveDeck($scope.deck).then(function (data) {
@@ -162,7 +185,10 @@ cogsModule.controller("cardsController", function ($scope, cardsService) {
             <option value="@type.Index">@type.Value</option>
 }
             </select>
-            
+            <ui-select name="tags" multiple ng-model="search.tags" theme="bootstrap" style="min-width: 200px; padding: 4px;">
+                <ui-select-match placeholder="Filter on tags">{{$item}}</ui-select-match>
+                <ui-select-choices repeat="tag in tags | filter: $select.search">{{tag}}</ui-select-choices>                
+            </ui-select>
             <ul class="pagination" style="float: right; margin-top: -2px;">
                 <li class="page-item">
                     <a class="page-link" href ng-click="firstPage()" aria-label="First">

@@ -14,8 +14,7 @@ namespace Cogslite.Pages
         private readonly IDeckStore _deckStore;
 		private readonly IImageStore _imageStore;
         
-        private Game _game;
-		private IEnumerable<string> _tags;
+        private Game _game;		
 
         public CardsPageModel(IGameStore gameStore, ICardStore cardStore, IDeckStore deckStore, IImageStore imageStore)
         {
@@ -25,31 +24,38 @@ namespace Cogslite.Pages
 			_imageStore = imageStore ?? throw new ArgumentNullException(nameof(imageStore));
         }
 
-        public Game Game => _game;
-
-		public IEnumerable<string> Tags => _tags;
+        public Game Game => _game;		
 
         public void OnGet(Guid gameId)
         {
-            _game = _gameStore.GetSingle(gameId);
-			var cards = _cardStore.Get(gameId);
-			_tags = cards.Where(c => c.Tags != null).SelectMany(c => c.Tags).Distinct();
+            _game = _gameStore.GetSingle(gameId);			
         }		
 
-        public JsonResult OnPostCardSearch(Guid gameId, [FromBody] CardSearch cardSearch)
+		public IActionResult OnGetTags(Guid gameId)
+		{
+			var cards = _cardStore.Get(gameId);
+			return new JsonResult(cards.Where(c => c.Tags != null).SelectMany(c => c.Tags).Distinct());
+		}
+
+		public IActionResult OnPostCardSearch(Guid gameId, [FromBody] CardSearch cardSearch)
 		{
 			var pageIndex = cardSearch.Page - 1;
 			_game = _gameStore.GetSingle(gameId);
 			var cards = _cardStore.Get(gameId).ToList();
 
-			if(cardSearch.CardType > -1)
+			if (cardSearch.CardType > -1)
 			{
 				cards = cards.Where(c => !String.IsNullOrEmpty(c.Type) && c.Type == _game.CardTypes[cardSearch.CardType]).ToList();
 			}
 
-			if(!String.IsNullOrEmpty(cardSearch.CardName))
+			if (!String.IsNullOrEmpty(cardSearch.CardName))
 			{
 				cards = cards.Where(c => !String.IsNullOrEmpty(c.Name) && c.Name.ToLower().Contains(cardSearch.CardName.ToLower())).ToList();
+			}
+
+			foreach (var tag in cardSearch.Tags)
+			{
+				cards = cards.Where(c => c.Tags != null &&  c.Tags.Any(t => t == tag)).ToList();
 			}
 
 			var pageCount = cards.Count / cardSearch.ItemsPerPage;
