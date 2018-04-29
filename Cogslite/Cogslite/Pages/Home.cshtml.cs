@@ -28,7 +28,11 @@ namespace Cogslite.Pages
 
         public void OnGet()
         {
-            _games = _gameStore.Get().ToList();          
-        }
+            _games = _gameStore.Get().ToList();
+			_games.AddRange(_games);
+			_games.AddRange(_games);
+			_games.AddRange(_games);
+
+		}
     }
 }

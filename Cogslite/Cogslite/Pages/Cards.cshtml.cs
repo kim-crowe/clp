@@ -15,6 +15,7 @@ namespace Cogslite.Pages
 		private readonly IImageStore _imageStore;
         
         private Game _game;
+		private List<string> _tags;
 		private bool _isGameOwner;
 
         public CardsPageModel(IGameStore gameStore, ICardStore cardStore, IDeckStore deckStore, IImageStore imageStore)
@@ -27,19 +28,17 @@ namespace Cogslite.Pages
 
         public Game Game => _game;
 
+		public IEnumerable<string> Tags => _tags;
+
 		public bool IsGameOwner => _isGameOwner;
 
         public void OnGet(Guid gameId)
         {
             _game = _gameStore.GetSingle(gameId);
+			var cards = _cardStore.Get(gameId);
+			_tags = cards.Where(c => c.Tags != null).SelectMany(c => c.Tags).Distinct().ToList();
 			_isGameOwner = IsSignedIn && _game.Owner.Id == SignedInUser.Id;
         }		
-
-		public IActionResult OnGetTags(Guid gameId)
-		{
-			var cards = _cardStore.Get(gameId);
-			return new JsonResult(cards.Where(c => c.Tags != null).SelectMany(c => c.Tags).Distinct());
-		}
 
 		public IActionResult OnPostCardSearch(Guid gameId, [FromBody] CardSearch cardSearch)
 		{

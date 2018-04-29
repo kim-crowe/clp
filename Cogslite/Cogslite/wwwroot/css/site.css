@@ -24,17 +24,6 @@ header {
     margin-right: 20px;
 }
 
-.main {
-    width: 80%;
-    margin: auto;
-    padding: 10px;
-}
-
-.btn-primary {
-    background: gold;
-    color: #61578a
-}
-
 .link {
     color:gold;
 }
@@ -45,62 +34,11 @@ header {
     color: gold;
 }
 
-.game-info {
-    display: inline-block;
-    clear: both;
-    width: 45%;
-    margin: 5px;
-}
-
 .game-list {
     display: flex;
     flex-flow: row wrap;
     list-style: none;
 }
-
-.game-image {
-    float: left;
-}
-
-.game-details {
-    margin-top: -20px;
-    margin-left: 100px;
-    height: 140px;
-    background: lightslategray;
-    vertical-align: top;
-}
-
-    .game-details > h3 {
-        padding: 3px;
-        padding-left: 18px;
-        background: #61578a;
-        color: gold;
-    }
-
-    .game-details > div {
-        margin-top: -6px;
-        padding: 4px;
-        padding-left: 8px;
-        color: gold;
-    }
-
-        .game-details > div > span {
-            color: white;
-        }
-
-.card-info {
-    width: 220px;
-}
-
-.card-image {
-    padding: 20px;
-    position: relative;
-}
-
-    .card-image > image {
-        display: block;
-        height: auto;
-    }
 
 .card-list {
     display: flex;
@@ -132,20 +70,17 @@ header {
 }
 
 .card-options {
-    position:absolute;
-    bottom: 20px;
     background: rgb(0, 0, 0);
     background: rgba(0, 0, 0, 0.5); /* Black see-through */
-    color: #f1f1f1;
-    transition: .5s ease;
-    opacity: 0;
-    padding: 10px;
-    height: auto;
-    margin: 0px;
-    width:200px;
+    color: #f1f1f1;       
 }
 
-.card-image:hover .card-options {
+.show-on-hover {
+    transition: .5s ease;
+    opacity: 0;
+}
+
+.show-on-hover:hover {
     opacity: 1;
 }
 
@@ -176,60 +111,4 @@ header {
 .form-paragraph {
     display:table-row;
     width:auto
-}
-
-.cardsPanel {
-    padding: 10px;
-    width: 75%;
-    float: left;
-}
-
-.deckPanel {
-    padding: 10px;
-    width: 25%;
-    float: left;
-}
-
-.deck-title {
-    background: #61578a;   
-    margin-left: 10px;
-    padding-left: 10px;
-    font-size: 2em;
-    color: gold;
-}
-
-.deck-subtitle {
-    background: lightslategray;   
-    margin-left: 10px;
-    padding-left: 10px;
-    font-size: 1.4em;
-    color: white;   
-}
-
-ul.deck-list {
-    margin-top: 10px;
-    list-style-type: none;
-    margin-right: 20px;
-}
-
-ul.deck-list li {
-    margin: 5px 0;
-}
-
-ul.deck-list > li input[readonly] {
-    background: white;
-    color: black;
-}
-
-.fullwidth {
-    width: 100% !important;
-}
-
-.collapsed {
-    width: 0;
-    overflow: hidden;
-}
-
-.filter-title {
-    font-size: 1.3em;
 }

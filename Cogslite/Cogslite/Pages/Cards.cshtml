@@ -8,153 +8,9 @@
 
 @section Scripts
 {
-<script type="text/javascript">
-
-var cogsModule = angular.module("cogs", ['ui.select','ngSanitize']);
-
-cogsModule.factory('cardsService', function($http){
-    var cardsService = {
-        antiForgeryToken: '@Html.AntiForgeryTokenOnly()',
-        getCards: function (search) {
-            var gameId = $('#gameId').val();
-            var promise = $http.post('/Cards?handler=CardSearch&gameId=' + gameId, search, { headers: { 'XSRF-TOKEN': this.antiForgeryToken } })
-                .then(function (response) {
-                    return response.data;
-                });
-            return promise;
-        },
-        getTags: function () {
-            var gameId = $('#gameId').val();
-            var promise = $http.get('/Cards?handler=Tags&gameId=' + gameId)
-                .then(function (response) {
-                    return response.data;
-                });
-            return promise;
-        },
-        updateCard: function (cardUpdate) {
-            var gameId = $('#gameId').val();
-            var promise = $http.post('/Cards?handler=CardUpdate&gameId=' + gameId, cardUpdate, { headers: { 'XSRF-TOKEN': this.antiForgeryToken } })
-                .then(function (response) {
-                    return response.data;
-                });
-            return promise;
-        }
-    };
-
-    return cardsService;
-    });    
-
-cogsModule.controller("cardsController", function ($scope, cardsService) {
-    $scope.numberOfPages = 1;    
-    $scope.search = { page: 1, itemsPerPage: 20, cardName: '', cardType: -1, tags:  [] };
-    $scope.isSignedIn = @Model.IsSignedIn.ToString().ToLower();
-    $scope.isGameOwner = @Model.IsGameOwner.ToString().ToLower();
-    $scope.cards = [];    
-    $scope.tags = [];
-    $scope.cardEdit = {};
-    $scope.selectedCard = null;
-    $scope.isInitialised = false;
-
-    $scope.$watch('search.cardName', function () {
-        if ($scope.isInitialised)
-            loadCards();
-    });
-
-    $scope.$watch('search.tags', function () {
-        if ($scope.isInitialised)
-            loadCards();
-    });
-
-    loadCards = function () {
-        cardsService.getCards($scope.search).then(function (data) {
-            $scope.cards = data.cards;
-            $scope.numberOfPages = data.numberOfPages;
-        });    
-    }
-
-    loadTags = function () {
-        cardsService.getTags().then(function (data) {
-            $scope.tags = data;
-        });
-    }
-
-    loadTags();
-    loadCards();    
-    $scope.isInitialised = true;
-
-   $scope.removeCard = function(cardId) {
-
-       var existingItem = $scope.deck.items.filter(function(item) {
-           return item.card.id == cardId;
-       });
-
-       if(existingItem.length > 0) {
-           existingItem[0].count--;
-           if(existingItem[0].count < 1) {
-                var index = $scope.deck.items.indexOf(existingItem[0]);
-                $scope.deck.items.splice(index, 1);
-            }
-       }
-   };
-
-   $scope.imageUrl = function(card) {
-       return "/Image?imageId="+card.id;
-    }
-
-    $scope.firstPage = function () {
-        $scope.search.page = 1;
-        loadCards();
-    }
-
-    $scope.previousPage = function () {
-        if ($scope.search.page > 1) {
-            $scope.search.page--;
-            loadCards();
-        }
-    }
-
-    $scope.nextPage = function () {
-        if ($scope.search.page < $scope.numberOfPages) {
-            $scope.search.page++;
-            loadCards();
-        }
-    }
-
-    $scope.lastPage = function () {
-        $scope.search.page = $scope.numberOfPages;
-        loadCards();
-    }
-
-    $scope.applyFilter = function () {
-        $scope.search.cardName = $scope.searchText;
-        $scope.search.page = 1;
-        loadCards();
-    }
-   
-    $scope.showDetails = function (cardId) {
-        $scope.selectedCard = $scope.cards.filter(function (item) {
-            return item.id == cardId;
-        })[0];
-
-        $scope.cardEdit = { cardId: $scope.selectedCard.id, name: $scope.selectedCard.name, type: $scope.selectedCard.type, tags: $scope.tags.join() };
-
-       $('#cardDetails').modal({})
-    }
-
-    $scope.updateCard = function () {
-        cardsService.updateCard($scope.cardEdit).then(function (data) {
-            $scope.selectedCard.name = $scope.cardEdit.name;
-            $scope.selectedCard.type = $scope.cardEdit.type;
-            $scope.selectedCard.tags = $scope.cardEdit.tags.split(',');
-            $('#cardDetails').model('hide');
-        });
-
-    }
-});    
-
-</script>
+    <script type="text/javascript" src="~/js/card.js"></script>
 }
-
+<input type="hidden" id="af-token" value="@Html.AntiForgeryTokenOnly()"/>
 <div ng-app="cogs" ng-controller="cardsController">
     <div class="cardsPanel fullwidth">
         <div>
@@ -162,52 +18,71 @@ cogsModule.controller("cardsController", function ($scope, cardsService) {
             <div class="card-game-title">
                 <span>@Model.Game.Name</span>
                 @if (Model.IsSignedIn)
-            {
+                {
                 <span style="float: right; margin:3px;">
                     <a asp-page="/UploadCards" asp-route-id="@Model.Game.Id" class="btn btn-primary">Upload cards</a>
                 </span>
-        }
-            </div>
-            <div class="card-game-subtitle">Card List</div>
+                }
+            </div>            
         </div>
-        <div class="form-inline" style="margin: 10px;">
-            <span>&nbsp;</span>
-            <span style="font-size: 1.3em;margin-right: 10px;">Filter options</span>
-            <input type="text" placeholder="Filter on card name..." ng-model="search.cardName" ng-model-options="{ debounce: 500 }" class="form-control" />
-            <select ng-model="search.cardType" ng-change="applyFilter()" class="form-control">
-                <option value="-1" selected>All cards types</option>
-                @foreach (var type in Model.Game.CardTypes.IndexedList())
-        {
-            <option value="@type.Index">@type.Value</option>
-}
-            </select>
-            <ui-select name="tags" multiple ng-model="search.tags" theme="bootstrap" style="min-width: 200px; padding: 4px;">
-                <ui-select-match placeholder="Filter on tags">{{$item}}</ui-select-match>
-                <ui-select-choices repeat="tag in tags | filter: $select.search">{{tag}}</ui-select-choices>                
-            </ui-select>
-            <ul class="pagination" style="float: right; margin-top: -2px;">
-                <li class="page-item">
-                    <a class="page-link" href ng-click="firstPage()" aria-label="First">
-                        <i class="fa fa-angle-double-left"></i>
-                    </a>
-                </li>
-                <li class="page-item"><a class="page-link" href ng-click="previousPage()"><i class="fa fa-angle-left"></i></a></li>
-                <li class="page-item active"><span>Page {{search.page}} of {{numberOfPages}}</span></li>
-                <li class="page-item"><a class="page-link" href ng-click="nextPage()"><i class="fa fa-angle-right"></i></a></li>
-                <li class="page-item"><a href ng-click="lastPage()"><i class="fa fa-angle-double-right"></i></a></li>
+        <div class="form-inline">
+            <div class="form-group mt-2 mx-2">
+                <input type="text" placeholder="Filter on card name..." ng-model="search.cardName" ng-model-options="{ debounce: 500 }" class="form-control" />
+            </div>
+            <div class="form-group mt-2 mx-2">
+                <select ng-model="search.cardType" ng-change="applyFilter()" class="form-control">
+                    <option value="-1" selected>All cards types</option>
+                    @foreach (var type in Model.Game.CardTypes.IndexedList())
+            {
+                <option value="@type.Index">@type.Value</option>
+    }
+                </select>
+            </div>
+            <div class="form-group mt-2 mx-2">
+                <select class="selectpicker" id="tags" multiple title="Filter by tags..." data-live-search="true">
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <option>@tag</option>
+                    }
+                </select>
+            </div>            
+            <div class="btn-group btn-group-toggle mt-2" data-toggle="buttons">
+                <label class="btn btn-secondary active">
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked> All Cards
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="option2" autocomplete="off"> Deck Only
+                </label>
+            </div>
+            <span class="mx-auto"></span>
+            <div class="dropdown mt-2 mx-2">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Deck options
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">New deck</a>
+                    <a class="dropdown-item" href="#">Load Deck</a>
+                </div>
+            </div>
+            <ul class="pagination justify-content-center form-group mt-2">
+                <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-double-left"></i></a></li>
+                <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-left"></i></a></li>
+                <li class="page-item active"><a class="page-link" href="#">Page {{search.page}} of {{numberOfPages}}</a></li>
+                <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-right"></i></a></li>
+                <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-double-right"></i></a></li>
             </ul>
         </div>        
         <ul class="card-list" style="clear: both">
             <li class="card-info" ng-repeat="card in cards">
-                <div class="card-image">
-                    <img src="{{imageUrl(card)}}" width="200" height="280" />
-                    <div class="card-options">
-                        <a href class="btn btn-default" ng-click="showDetails(card.id)">Details</a>
+                <div class="card m-2" >
+                    <img class="card-img-top" src="{{imageUrl(card)}}" style="width: 210px; height: 280px;" />
+                    <div class="card-img-overlay show-on-hover card-options text-center">
+                        <button class="btn btn-warning" ng-click="showDetails(card)" style="margin-top: 180px;">Details</button>
                     </div>
-                </div>
-                <div class="card-details">
-                    <div>{{card.name}}</div>
-                </div>
+                    <div class="card-body p-0">
+                        <p class="text-center text-truncate mt-2">{{card.name}}</p>
+                    </div>
+                </div>                
             </li>
         </ul>        
     </div>    

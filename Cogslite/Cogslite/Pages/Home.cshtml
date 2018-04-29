@@ -4,35 +4,29 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="main">
-    <br />
-    <div style="display: inline-block; float: right; margin-top: 8px;">
-        @if (Model.IsSignedIn)
-        {
-            <a asp-page="/GameDetails" class="btn btn-primary">Add Game</a>
-        }
-    </div>
-    <ul class="game_list">
+<div class="row mx-auto">    
+    <ul class="game-list mx-auto mt-2" style="width: 90rem;">
         @foreach (var game in Model.Games)
-        {
-            <li class="game-info">
-                <div class="game-image">
-                <a href="@Url.Page("/Cards", new {gameId = game.Id})">
-                    <img src="@Url.Page("/Image", new { imageId = game.Id })" width="100" height="140" />
-                </a>
+    {
+        <li class="card" style="list-style: none; width: 40rem; display: inline-block; margin: 10px;">
+            <div class="card-header bg-light"><h5>Bloodwars</h5></div>
+            <div class="row no-gutters">
+                <div class="col-auto">
+                    <a href="@Url.Page("/Cards", new {gameId = game.Id})">
+                        <img src="@Url.Page("/Image", new { imageId = game.Id })" width="100" height="140" />
+                    </a>
                 </div>
-                <div class="game-details">
-                    <h3>@game.Name</h3>
-                    <div>Created: <span>@game.CreatedOn</span></div>
-                    <div>Uploaded by:<span>@game.Owner.DisplayName</span> </div>
-                    <div style="display: inline-block; float: right; margin-top: 8px;">
-                        @if (Model.IsSignedIn)
-                        {
-                            <a asp-page="/UploadCards" asp-route-id="@game.Id" class="btn btn-primary">Add cards</a>
-                        }
+                <div class="col">
+                    <div class="card-block px-2" style="font-size: 0.8em">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Uploaded by @game.Owner.DisplayName</li>
+                            <li class="list-group-item">Created on @game.CreatedOn.ToString("dd-MMM-yyyy")</li>
+                            <li class="list-group-item">Contains <b>@game.CardCount</b> cards</li>
+                        </ul>
                     </div>
                 </div>
-            </li>
-        }
+            </div>
+        </li>
+}        
     </ul>
 </div>
