@@ -37,7 +37,12 @@ namespace Cogslite
                 options.LoginPath = "/SignIn";
             });
 
-            services.AddTransient<IUserStore, UserStore>();
+			services.AddMvc().AddRazorOptions(options =>
+			{
+				options.PageViewLocationFormats.Add("/Pages/Dialogs/{0}.cshtml");
+			});
+
+			services.AddTransient<IUserStore, UserStore>();
             services.AddTransient<IGameStore, GameStore>();
             services.AddTransient<IImageStore, ImageStore>();
             services.AddTransient<ICardStore, CardStore>();

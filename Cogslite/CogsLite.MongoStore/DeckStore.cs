@@ -1,6 +1,6 @@
 using System;
+using System.Collections.Generic;
 using CogsLite.Core;
-using MongoDB.Driver;
 using Microsoft.Extensions.Configuration;
 
 namespace CogsLite.MongoStore
@@ -16,6 +16,11 @@ namespace CogsLite.MongoStore
         {
             return FindById(deckId);
         }
+
+		public IEnumerable<Deck> ByGameAndOwner(Guid gameId, Guid ownerId)
+		{
+			return FindWhere(d => d.GameId == gameId && d.Owner.Id == ownerId);
+		}
 
         public void Save(Deck deck)
         {            
