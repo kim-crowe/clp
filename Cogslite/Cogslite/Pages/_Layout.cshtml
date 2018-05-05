@@ -28,8 +28,23 @@
                             <span class="input-group-text"><i class="fa fa-search"></i></span>
                         </div>
                     </div>
-                    <a class="btn btn-outline-success my-2 my-sm-0" style="margin: 0px 12px" asp-page="/SignIn">Sign in</a>
-                    <a class="btn btn-outline-success my-2 my-sm-0" asp-page="/Join">Join</a>
+                    @if (Model.IsSignedIn)
+                    {
+                        <div class="dropdown my-2 mx-2">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                @Model.SignedInUser.DisplayName
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Sign Out</a>                                
+                            </div>
+                        </div>
+
+}
+else
+{
+                <a class="btn btn-outline-success my-2 my-sm-0" style="margin: 0px 12px" asp-page="/SignIn">Sign in</a>
+                <a class="btn btn-outline-success my-2 my-sm-0" asp-page="/Join">Join</a>
+}
                 </form>
             </div>
         </nav>

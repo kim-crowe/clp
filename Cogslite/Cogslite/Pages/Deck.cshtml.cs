@@ -23,12 +23,12 @@ namespace Cogslite.Pages
 			return new JsonResult(_deckStore.ByGameAndOwner(gameId, SignedInUser.Id).Select(DeckData.FromDeck));							
 		}
 
-		public IActionResult OnPostDeck([FromBody]DeckData deckData)
+		public IActionResult OnPostDeck([FromBody]DeckData deck)
 		{
-			var deck = deckData.ToDeck();
-			deck.Owner = SignedInUser;
-			_deckStore.Save(deck);
-			return new JsonResult(deck.Id);
+			var theDeck = deck.ToDeck();
+			theDeck.Owner = SignedInUser;
+			_deckStore.Save(theDeck);
+			return new JsonResult(DeckData.FromDeck(theDeck));
 		}
 	}
 }

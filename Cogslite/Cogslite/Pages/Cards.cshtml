@@ -6,28 +6,33 @@
 }
 @section Scripts
     {
+    <script type="text/javascript" src="~/js/components/ModalPrompt.js"></script>
+    <script type="text/javascript" src="~/js/components/DataForm.js"></script>
     <script type="text/javascript" src="~/js/services/cardservice.js"></script>
+    <script type="text/javascript" src="~/js/services/deckservice.js"></script>
+    <script type="text/javascript" src="~/js/debounce.js"></script>
     <script type="text/javascript" src="~/js/card.js"></script>
 }
 <input type="hidden" id="af-token" value="@Html.AntiForgeryTokenOnly()" />
 <input type="hidden" id="game-id" value="@Model.Game.Id" />
 <div id="cardApp">
+
+    <modal-form id="modal1" :options="dialog" v-on:confirm="confirmDialog($event)"></modal-form>
+
     <div class="cardsPanel fullwidth">
         <div>
             <img src="@Url.Page("/Image", new { imageId = @Model.Game.Id })" width="100" height="140" style="float: left" />
             <div class="card-game-title">
-                <span>@Model.Game.Name</span>
+                <span>@Model.Game.Name</span>                
                 @if (Model.IsSignedIn)
-                {
-                    <span style="float: right; margin:3px;">
-                        <a asp-page="/UploadCards" asp-route-id="@Model.Game.Id" class="btn btn-primary">Upload cards</a>
-                    </span>
+                {            
+                    <a asp-page="/UploadCards" asp-route-id="@Model.Game.Id" class="btn btn-sm btn-primary mb-2 ml-2">Upload cards</a>     
                 }
             </div>
         </div>
         <div class="form-inline">
             <div class="form-group mt-2 mx-2">
-                <input type="text" placeholder="Filter on card name..." v-model="search.cardName" class="form-control" />
+                <input type="text" placeholder="Filter on card name..." v-on:input="onSearchChange" class="form-control" />
             </div>
             <div class="form-group mt-2 mx-2">
                 <b-select v-model="search.cardType" class="form-control">
@@ -38,15 +43,7 @@
                     }
                 </b-select>
             </div>
-            <div class="form-group mt-2 mx-2">
-                <select class="selectpicker" id="tags" multiple title="Filter by tags..." data-live-search="true">
-                    @foreach (var tag in Model.Tags)
-                    {
-                        <option>@tag</option>
-                    }
-                </select>
-            </div>
-            <div class="btn-group btn-group-toggle mt-2" data-toggle="buttons">
+            <div v-if="hasDeck" class="btn-group btn-group-toggle mt-2" data-toggle="buttons">
                 <label class="btn btn-secondary active">
                     <input type="radio" name="options" id="option1" autocomplete="off" checked> All Cards
                 </label>
@@ -55,7 +52,7 @@
                 </label>
             </div>
             <span class="mx-auto"></span>
-            <div class="input-group mt-2 mx-2">
+            <div class="input-group mt-2 mx-2" v-if="hasDeck">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa fa-clone"></i></span>
                 </div>
@@ -66,11 +63,11 @@
                     Deck options
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#">New deck</a>
-                    <a class="dropdown-item" href="#">Load Deck</a>
+                    <a class="dropdown-item" href="#" v-on:click="newDeck">New deck</a>
+                    <a class="dropdown-item" href="#" v-on:Click="loadDeck">Load Deck</a>
                 </div>
             </div>
-            <ul class="pagination justify-content-center form-group mt-2">
+            <ul class="pagination justify-content-center form-group mt-2 mr-2">
                 <li class="page-item"><a class="page-link" href="#" v-on:click="firstPage"><i class="fa fa-angle-double-left"></i></a></li>
                 <li class="page-item"><a class="page-link" href="#" v-on:click="previousPage"><i class="fa fa-angle-left"></i></a></li>
                 <li class="page-item active"><a class="page-link" href="#">Page {{search.page}} of {{numberOfPages}}</a></li>
@@ -91,5 +88,5 @@
                 </div>
             </li>
         </ul>
-    </div>    
+    </div>
 </div>
