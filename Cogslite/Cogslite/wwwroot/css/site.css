@@ -112,3 +112,19 @@ header {
     display:table-row;
     width:auto
 }
+
+.card-count[data-card-count]:after {
+    content: attr(data-card-count);
+    position: absolute;
+    background: #61578a;
+    top: -10px;
+    right: -10px;
+    font-size: 1.2em;
+    color: white;
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    line-height: 26px;
+    border-radius: 50%;
+    box-shadow: 0 0 1px #333;
+}

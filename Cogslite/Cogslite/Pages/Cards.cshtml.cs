@@ -59,6 +59,11 @@ namespace Cogslite.Pages
 				cards = cards.Where(c => c.Tags != null &&  c.Tags.Any(t => t == tag)).ToList();
 			}
 
+			if(cardSearch.CardIds.Any())
+			{
+				cards = cards.Where(c => cardSearch.CardIds.Contains(c.Id.ToString())).ToList();
+			}
+
 			var pageCount = cards.Count / cardSearch.ItemsPerPage;
 
 			if (cards.Count % cardSearch.ItemsPerPage > 0)

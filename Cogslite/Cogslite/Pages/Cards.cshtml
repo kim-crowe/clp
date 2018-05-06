@@ -15,6 +15,7 @@
 }
 <input type="hidden" id="af-token" value="@Html.AntiForgeryTokenOnly()" />
 <input type="hidden" id="game-id" value="@Model.Game.Id" />
+<input type="hidden" id="is-signed-in" value="@Model.IsSignedIn" />
 <div id="cardApp">
 
     <modal-form id="modal1" :options="dialog" v-on:confirm="confirmDialog($event)"></modal-form>
@@ -43,22 +44,18 @@
                     }
                 </b-select>
             </div>
-            <div v-if="hasDeck" class="btn-group btn-group-toggle mt-2" data-toggle="buttons">
-                <label class="btn btn-secondary active">
-                    <input type="radio" name="options" id="option1" autocomplete="off" checked> All Cards
-                </label>
-                <label class="btn btn-secondary">
-                    <input type="radio" name="options" id="option2" autocomplete="off"> Deck Only
-                </label>
+            <div v-if="hasDeck" class="btn-group mt-2" data-toggle="buttons">                
+                <button v-bind:class="[ {'active': !deckFilterActive}, 'btn', 'btn-secondary']" v-on:click="filterByDeck(false)">All Cards</button>
+                <button v-bind:class="[ {'active': deckFilterActive}, 'btn', 'btn-secondary']" v-on:click="filterByDeck(true)">Deck Only</button>
             </div>
             <span class="mx-auto"></span>
             <div class="input-group mt-2 mx-2" v-if="hasDeck">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa fa-clone"></i></span>
                 </div>
-                <button class="btn btn-dark active">{{deck.name}} <span class="badge badge-light">{{deck.items.length}}</span></button>
+                <button class="btn btn-dark active">{{deck.name}} <span class="badge badge-light">{{cardsInDeck}}</span></button>
             </div>
-            <div class="dropdown mt-2 mx-2">
+            <div class="dropdown mt-2 mx-2" v-if="isSignedIn">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Deck options
                 </button>
@@ -77,10 +74,21 @@
         </div>
         <ul class="card-list" style="clear: both">
             <li class="card-info" v-for="card in cards">
-                <div class="card m-2">
+                <div v-bind:class="[{'card-count': cardCount(card) > 0}, 'card','m-2']" :data-card-count="cardCount(card)">
                     <img class="card-img-top" v-bind:src="imageUrl(card)" style="width: 210px; height: 280px;" />
-                    <div class="card-img-overlay show-on-hover card-options text-center">
-                        <button class="btn btn-warning" v-on:click="showDetails(card)" style="margin-top: 200px;">Details</button>
+                    <div class="card-img-overlay show-on-hover card-options text-center" style="height: 280px; padding-top: 170px;">
+                        <div class="input-group" v-if="hasDeck">
+                            <div class="input-group-prepend">
+                                <a class="input-group-text" href="#" v-on:click="removeCard(card)">
+                                    <i class="fa fa-minus"></i>
+                                </a>
+                            </div>
+                            <input type="text" class="form-control text-center" :value="cardCount(card)" readonly>
+                            <div class="input-group-append">
+                                <a class="input-group-text" href="#" v-on:click="addCard(card)"><i class="fa fa-plus"></i></a>
+                            </div>
+                        </div>
+                        <button class="btn btn-dark mt-2 px-4" v-on:click="showDetails(card)">Details</button>
                     </div>
                     <div class="card-body p-0">
                         <p class="text-center text-truncate mt-2">{{card.name}}</p>

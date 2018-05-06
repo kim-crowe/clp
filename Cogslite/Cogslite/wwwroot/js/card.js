@@ -5,28 +5,49 @@ var cardsVue = new Vue({
     mixins: [cardServiceFactory, deckServiceFactory, debouncer],
     data: {
         gameId: '',
+        isSignedIn: false,
         numberOfPages: 1,
-        search: { page: 1, itemsPerPage: 20, cardName: '', cardType: "-1", tags: [] },
+        search: { page: 1, itemsPerPage: 20, cardName: '', cardType: "-1", tags: [], cardIds: [] },
         cards: [],
         tags: [],
         decks: [],
+        deckFilterActive: false,
         deck: null,
         dialog: null
     },
     created: function () {
         this.gameId = $('#game-id').val();
+        this.isSignedIn = $('#is-signed-in').val();
         this.refreshCards();
         this.refreshDeckList();
     },
     computed: {
         hasDeck: function () {
             return this.deck != null;
+        },
+        cardsInDeck: function () {
+            if (this.deck != null && this.deck.items && this.deck.items.length > 0)
+                return this.deck.items.map(function (item) {
+                    return item.amount;
+                }).reduce(function (total, next) {
+                    return total + next;
+                });
+            else
+                return 0;
         }
     },
     methods: {
         onSearchChange: function (e) {
             this.search.cardName = e.target.value;
             this.debounce(this.refreshCards, 300);
+        },
+        filterByDeck: function (opt) {            
+            if (opt && this.deck && this.deck.items && this.deck.items.length > 0)
+                this.search.cardIds = this.deck.items.map(function (item) { return item.id });
+            else
+                this.search.cardIds = [];
+            this.refreshCards();
+            this.deckFilterActive = opt;
         },
         refreshCards: function () {
             this.cardService(this.$http).getCards(this.gameId, this.search).then(data => {                
@@ -110,6 +131,42 @@ var cardsVue = new Vue({
         confirmDialog: function (model) {
             this.dialog.onConfirm(model, this);
             $('#modal1').modal('hide');
-        }        
+        },
+        removeCard: function (card) {
+            var deckEntry = this.getDeckEntry(card);
+            deckEntry.amount--;
+
+            if (deckEntry.amount < 1) {
+                var index = this.deck.items.indexOf(deckEntry);
+                this.deck.items.splice(index, 1);
+            }
+            
+        },
+        addCard: function (card) {
+
+            var deckEntry = this.getDeckEntry(card);
+
+            if (deckEntry)
+                deckEntry.amount++;
+            else
+                this.deck.items.push({ id: card.id, amount: 1 });                
+        },
+        cardCount: function (card) {
+
+            if (!this.hasDeck)
+                return 0;
+
+            var deckEntry = this.getDeckEntry(card);
+
+            if (deckEntry)
+                return deckEntry.amount;
+            else
+                return 0;
+        },
+        getDeckEntry: function (card) {
+            return this.deck.items.find(function (c) {
+                return c.id == card.id;
+            });
+        }
     }
 });
