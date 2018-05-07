@@ -1,8 +1,10 @@
+using System;
+
 namespace CogsLite.Core
 {
     public class DeckItem
     {
-        public Card Card { get; set; }
-        public int Count { get; set; }
+        public Guid CardId { get; set; }
+        public int Amount { get; set; }
     }
 }

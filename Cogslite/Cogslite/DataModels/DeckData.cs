@@ -9,7 +9,8 @@ namespace Cogslite.DataModels
 		public string id { get; set; }
 		public string name { get; set; }
 		public string gameid { get; set; }
-		public DeckItemData[] items { get; set; }
+		public DeckDataItem[] items { get; set; }
+		public bool hasChanges { get; set; }
 
 		public Deck ToDeck()
 		{
@@ -20,12 +21,8 @@ namespace Cogslite.DataModels
 				Name = name,
 				Items = items.Select(i => new DeckItem
 				{
-					Card = new Card
-					{
-						Name = i.card.name,
-						Id = ParseOrCreateGuid(i.card.id)
-					},
-					Count = i.count
+					CardId = i.id,
+					Amount = i.amount
 				}).ToArray()
 			};
 		}
@@ -42,20 +39,15 @@ namespace Cogslite.DataModels
 				id = deck.Id.ToString(),
 				gameid = deck.GameId.ToString(),
 				name = deck.Name,
-				items = new DeckItemData[0]
+				items = deck.Items.Select(i => new DeckDataItem { id = i.CardId, amount = i.Amount }).ToArray(),
+				hasChanges = false
 			};
 		}
-	}
+	}	
 
-	public class DeckItemData
+	public class DeckDataItem
 	{
-		public CardData card { get; set; }
-		public int count { get; set; }
-	}
-
-	public class CardData
-	{
-		public string id { get; set; }
-		public string name { get; set; }
+		public Guid id { get; set; }
+		public int amount { get; set; }
 	}
 }

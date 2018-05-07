@@ -50,10 +50,10 @@
             </div>
             <span class="mx-auto"></span>
             <div class="input-group mt-2 mx-2" v-if="hasDeck">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fa fa-clone"></i></span>
+                <div class="input-group-prepend" v-if="deck.hasChanges">
+                    <button class="input-group-text" v-on:click="saveDeck">Save</button>
                 </div>
-                <button class="btn btn-dark active">{{deck.name}} <span class="badge badge-light">{{cardsInDeck}}</span></button>
+                <button v-bind:class="[{'btn-dark': !deck.hasChanges}, {'btn-warning': deck.hasChanges}, 'btn']">{{deck.name}} <span class="badge badge-light">{{cardsInDeck}}</span></button>
             </div>
             <div class="dropdown mt-2 mx-2" v-if="isSignedIn">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

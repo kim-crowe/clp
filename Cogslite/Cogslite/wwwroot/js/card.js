@@ -88,12 +88,11 @@ var cardsVue = new Vue({
             this.dialog = {                
                 title: "Create a new deck",
                 fields: [
-                    { name: "deckName", type: "text", placeholder: "Deck name..." }                    
+                    { name: "deckName", type: "text", placeholder: "Deck name..." }                 
                 ],
                 confirmText: 'Save deck',
                 onConfirm: function (model, parent) {
-                    var deck = { id: '', gameId: parent.gameId, name: model.deckName, items: [] };
-                    parent.saveDeck(deck)
+                    parent.deck = { id: '', gameId: parent.gameId, name: model.deckName, items: [], hasChanges: true };
                 }
             }
             
@@ -123,10 +122,12 @@ var cardsVue = new Vue({
 
             $('#modal1').modal();
         },
-        saveDeck: function (deck) {
-            this.deckService(this.$http).save(deck).then(function (response) {
-                this.deck = response.body;
-            })
+        saveDeck: function () {
+            if (this.deck.hasChanges) {
+                this.deckService(this.$http).save(this.deck).then(function (response) {
+                    this.deck = response.body;
+                })
+            }
         },
         confirmDialog: function (model) {
             this.dialog.onConfirm(model, this);
@@ -139,8 +140,9 @@ var cardsVue = new Vue({
             if (deckEntry.amount < 1) {
                 var index = this.deck.items.indexOf(deckEntry);
                 this.deck.items.splice(index, 1);
-            }
-            
+            }            
+
+            this.deck.hasChanges = true;
         },
         addCard: function (card) {
 
@@ -150,6 +152,8 @@ var cardsVue = new Vue({
                 deckEntry.amount++;
             else
                 this.deck.items.push({ id: card.id, amount: 1 });                
+
+            this.deck.hasChanges = true;
         },
         cardCount: function (card) {
 

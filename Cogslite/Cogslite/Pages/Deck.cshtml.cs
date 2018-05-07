@@ -23,6 +23,11 @@ namespace Cogslite.Pages
 			return new JsonResult(_deckStore.ByGameAndOwner(gameId, SignedInUser.Id).Select(DeckData.FromDeck));							
 		}
 
+		public IActionResult OnGet(Guid deckId)
+		{
+			return new JsonResult(DeckData.FromDeck(_deckStore.Get(deckId)));
+		}
+
 		public IActionResult OnPostDeck([FromBody]DeckData deck)
 		{
 			var theDeck = deck.ToDeck();
