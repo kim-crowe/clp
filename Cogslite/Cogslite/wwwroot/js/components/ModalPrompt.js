@@ -1,6 +1,6 @@
 ﻿Vue.component('modal-prompt',
     {
-        props: ['title', 'message', 'placeholder', 'confirmText', 'cancelText'],
+        props: ['title', 'message', 'placeholder', 'confirmText', 'cancelText', 'hideConfirmButton'],
         data: function () {
             return {
                 value: ''
@@ -19,6 +19,11 @@
                 if (this.cancelText)
                     return this.cancelText;
                 return "Cancel";
+            },
+            showConfirmButton: function () {
+                if (this.hideConfirmButton)
+                    return false;
+                return true;
             }
         },
         methods: {
@@ -41,7 +46,7 @@
         <input type="text" class="form-control" v-bind:placeholder="placeholder" v-model="value"/>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" v-on:click="confirm" data-dismiss="modal">{{confirmButtonText}}</button>
+        <button type="button" class="btn btn-primary" v-if="showConfirmButton" v-on:click="confirm" data-dismiss="modal">{{confirmButtonText}}</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">{{cancelButtonText}}</button>
       </div>
     </div>

@@ -3,27 +3,28 @@
 @{
     ViewData["Title"] = "GameDetails";
 }
-<div class="main">
-    <h2>Game Details</h2>
-    <br />
-    <div class="alert alert-danger @ViewData.WhenContains("Message", "", "collapse")">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <strong>@ViewData["Message"]</strong>
+<div class="card my-5 mx-auto" style="width: 500px;">
+    <div class="card-header text-center">
+        Game Details
     </div>
-    <form method="post" enctype="multipart/form-data" asp-page="GameDetails" class="form">
-        <p class="form-paragraph">
-            <label for="name" class="form-label"><b>Game Name</b></label>
-            <input type="text" name="name" value="@ViewData["Name"]" required class="form-input" />
-        </p>
-        <p class="form-paragraph">
-            <label for="image" class="form-label"><b>Card back image</b></label>
-            <input type="file" name="image" accept="image/*" class="form-input" />
-        </p>
-        <br />
-        <input type="submit" class="btn btn-primary" value="Add Game" />
-
-    </form>
+    <div class="card-body">
+        <div class="alert alert-danger @ViewData.WhenContains("Message", "", "collapse")">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>@ViewData["Message"]</strong>
+        </div>
+        <form method="post" class="form-signin">
+            <div class="form-group">
+                <label for="name"><b>Game Name</b></label>
+                <input type="text" name="name" value="@ViewData["Name"]" required class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="image" class="form-label"><b>Card back image</b></label>
+                <input type="file" name="image" accept="image/*" class="form-control" />
+            </div>                       
+            <br />
+            <div class="text-center"><input type="submit" class="btn btn-primary px-5" value="Create Game" /></div>
+        </form>
+    </div>
 </div>
-

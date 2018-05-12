@@ -44,9 +44,9 @@ namespace Cogslite.Pages
 			_game = _gameStore.GetSingle(gameId);
 			var cards = _cardStore.Get(gameId).ToList();
 
-			if (cardSearch.CardType > -1)
+			if (!String.IsNullOrEmpty(cardSearch.CardType))
 			{
-				cards = cards.Where(c => !String.IsNullOrEmpty(c.Type) && c.Type == _game.CardTypes[cardSearch.CardType]).ToList();
+				cards = cards.Where(c => !String.IsNullOrEmpty(c.Type) && c.Type == cardSearch.CardType).ToList();
 			}
 
 			if (!String.IsNullOrEmpty(cardSearch.CardName))
@@ -61,7 +61,8 @@ namespace Cogslite.Pages
 
 			if(cardSearch.CardIds.Any())
 			{
-				cards = cards.Where(c => cardSearch.CardIds.Contains(c.Id.ToString())).ToList();
+				var convertedCardIds = cardSearch.CardIds.Select(ShortGuid.Parse).Select(g => g.ToString());
+				cards = cards.Where(c => convertedCardIds.Contains(c.Id.ToString())).ToList();
 			}
 
 			var pageCount = cards.Count / cardSearch.ItemsPerPage;
@@ -71,7 +72,10 @@ namespace Cogslite.Pages
 
 			var result = new
 			{
-				cards = cards.Skip(pageIndex * cardSearch.ItemsPerPage).Take(cardSearch.ItemsPerPage),
+				cards = cards.Skip(pageIndex * cardSearch.ItemsPerPage).Take(cardSearch.ItemsPerPage).Select(c => new {
+					Id = c.Id.ToShortGuid(),
+					c.Name,
+					c.Type}),
 				numberOfPages = pageCount
 			};
 

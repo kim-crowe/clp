@@ -14,7 +14,7 @@
     <script type="text/javascript" src="~/js/card.js"></script>
 }
 <input type="hidden" id="af-token" value="@Html.AntiForgeryTokenOnly()" />
-<input type="hidden" id="game-id" value="@Model.Game.Id" />
+<input type="hidden" id="game-id" value="@Model.Game.Id.ToShortGuid()" />
 <input type="hidden" id="is-signed-in" value="@Model.IsSignedIn" />
 <div id="cardApp">
 
@@ -36,11 +36,11 @@
                 <input type="text" placeholder="Filter on card name..." v-on:input="onSearchChange" class="form-control" />
             </div>
             <div class="form-group mt-2 mx-2">
-                <b-select v-model="search.cardType" class="form-control">
-
-                    @foreach (var type in Model.Game.CardTypes.IndexedList())
+                <b-select class="form-control" v-on:input="onCardTypeChanged">
+                    <option value="">All card types</option>
+                    @foreach (var type in Model.Game.CardTypes)
                     {
-                        <option value="@type.Index">@type.Value</option>
+                        <option value="@type">@type</option>
                     }
                 </b-select>
             </div>
@@ -61,7 +61,8 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="#" v-on:click="newDeck">New deck</a>
-                    <a class="dropdown-item" href="#" v-on:Click="loadDeck">Load Deck</a>
+                    <a class="dropdown-item" href="#" v-on:Click="loadDeck">Load deck</a>
+                    <a class="dropdown-item" href="#" v-on:Click="showDeckUrls">Deck urls</a>
                 </div>
             </div>
             <ul class="pagination justify-content-center form-group mt-2 mr-2">

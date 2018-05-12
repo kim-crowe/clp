@@ -12,8 +12,8 @@
             <div class="card-header bg-light"><h5>Bloodwars</h5></div>
             <div class="row no-gutters">
                 <div class="col-auto">
-                    <a href="@Url.Page("/Cards", new {gameId = game.Id})">
-                        <img src="@Url.Page("/Image", new { imageId = game.Id })" width="100" height="140" />
+                    <a href="@Url.Page("/Cards", new {gameId = game.Id.ToShortGuid()})">
+                        <img src="@Url.Page("/Image", new { imageId = game.Id.ToShortGuid() })" width="100" height="140" />
                     </a>
                 </div>
                 <div class="col">

@@ -19,7 +19,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                <a class="navbar-brand" href="#">Welcome to COGS</a>
+                <a class="navbar-brand" asp-page="/Home">Welcome to COGS</a>
                 <span class="navbar-nav mr-auto mt-2 mt-lg-0">&nbsp;</span>
                 <form class="form-inline my-2 my-lg-0">
                     <div class="input-group">
@@ -30,12 +30,13 @@
                     </div>
                     @if (Model.IsSignedIn)
                     {
+                        <a asp-page="/GameDetails" class="btn btn-success my-2 mx-2"><i class="fa fa-plus"></i></a>
                         <div class="dropdown my-2 mx-2">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 @Model.SignedInUser.DisplayName
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">Sign Out</a>                                
+                                <a class="dropdown-item" asp-page="/SignOut">Sign Out</a>                                
                             </div>
                         </div>
 

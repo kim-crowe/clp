@@ -56,8 +56,8 @@ Vue.component('data-form',
                 this.model[dataElement] = value;
             }
         },
-        template: `<div class="form">
-    <div class="form-group" v-for="field in fields">
+        template: `<div>
+    <div v-for="field in fields">
         <component v-bind:is="componentFor(field.type)" v-bind:data="field" v-on:updated="updateModel(field['name'], $event)"></component>
     </div>
   </div>`
@@ -90,6 +90,26 @@ Vue.component('data-form-options',
         <label>{{data.label}}</label>
         <b-select :options="data.options" :select-size="5" v-model="selected" v-on:change="$emit('updated', $event)">
         </b-select>
+    </div>`
+    })
+
+Vue.component('data-form-copytext',
+    {
+        props: ['data'],
+        methods: {
+            copyData: function () {
+                $('#'+this.data.name).select();
+                document.execCommand('copy');
+            }
+        },
+        template: `<div class="form-group">
+        <label>{{data.label}}</label>
+        <div class="input-group">
+            <input type="text" class="form-control" :id="data.name" :value="data.value" readonly />
+            <div class="input-group-append">
+                <a href="#" class="input-group-text" v-on:click="copyData"><i class="fa fa-copy"></i></a>                
+            </div>
+        </div>
     </div>`
     })
 

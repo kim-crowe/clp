@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Cogslite
 {
@@ -37,9 +38,13 @@ namespace Cogslite
                 options.LoginPath = "/SignIn";
             });
 
-			services.AddMvc().AddRazorOptions(options =>
+			services.AddMvc(opts =>
 			{
-				options.PageViewLocationFormats.Add("/Pages/Dialogs/{0}.cshtml");
+				opts.UseShortGuids();
+			})
+			.AddRazorOptions(options =>
+			{
+				options.PageViewLocationFormats.Add("/Pages/Dialogs/{0}.cshtml");				
 			});
 
 			services.AddTransient<IUserStore, UserStore>();

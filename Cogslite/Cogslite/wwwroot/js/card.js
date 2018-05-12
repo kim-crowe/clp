@@ -7,7 +7,7 @@ var cardsVue = new Vue({
         gameId: '',
         isSignedIn: false,
         numberOfPages: 1,
-        search: { page: 1, itemsPerPage: 20, cardName: '', cardType: "-1", tags: [], cardIds: [] },
+        search: { page: 1, itemsPerPage: 20, cardName: '', cardType: "", tags: [], cardIds: [] },
         cards: [],
         tags: [],
         decks: [],
@@ -35,11 +35,15 @@ var cardsVue = new Vue({
             else
                 return 0;
         }
-    },
+    },    
     methods: {
         onSearchChange: function (e) {
             this.search.cardName = e.target.value;
-            this.debounce(this.refreshCards, 300);
+            this.refreshCards();
+        },
+        onCardTypeChanged: function (cardType) {
+            this.search.cardType = cardType;
+            this.refreshCards();
         },
         filterByDeck: function (opt) {            
             if (opt && this.deck && this.deck.items && this.deck.items.length > 0)
@@ -82,6 +86,19 @@ var cardsVue = new Vue({
         lastPage: function () {
             this.search.page = this.numberOfPages;
             this.refreshCards();
+        },
+        showDeckUrls: function () {
+            this.dialog = {
+                title: "Deck urls",
+                fields: [
+                    { name: "backUrl", type: "copytext", value: "http://"+window.location.host+"/Image?imageId="+this.gameId, label: "Card back" },
+                    { name: "deckUrl", type: "copytext", value: "http://"+window.location.host+"/Deck?handler=Sheet&deckId="+this.deck.id, label: "Cards"}
+                ],
+                hideConfirmButton: true,
+                cancelText: "Close"
+            }
+
+            $('#modal1').modal();
         },
         newDeck: function () {            
 

@@ -17,11 +17,11 @@ namespace Cogslite.DataModels
 			return new Deck
 			{
 				Id = ParseOrCreateGuid(id),
-				GameId = ParseOrCreateGuid(gameid),
+				GameId = ShortGuid.Parse(gameid),
 				Name = name,
 				Items = items.Select(i => new DeckItem
 				{
-					CardId = i.id,
+					CardId = ShortGuid.Parse(i.id),
 					Amount = i.amount
 				}).ToArray()
 			};
@@ -29,17 +29,17 @@ namespace Cogslite.DataModels
 
 		private Guid ParseOrCreateGuid(string id)
 		{
-			return String.IsNullOrEmpty(id) ? Guid.NewGuid() : Guid.Parse(id);
+			return String.IsNullOrEmpty(id) ? Guid.NewGuid() : ShortGuid.Parse(id);
 		}
 
 		public static DeckData FromDeck(Deck deck)
 		{
 			return new DeckData
 			{
-				id = deck.Id.ToString(),
-				gameid = deck.GameId.ToString(),
+				id = deck.Id.ToShortGuid(),
+				gameid = deck.GameId.ToShortGuid(),
 				name = deck.Name,
-				items = deck.Items.Select(i => new DeckDataItem { id = i.CardId, amount = i.Amount }).ToArray(),
+				items = deck.Items.Select(i => new DeckDataItem { id = i.CardId.ToShortGuid(), amount = i.Amount }).ToArray(),
 				hasChanges = false
 			};
 		}
@@ -47,7 +47,7 @@ namespace Cogslite.DataModels
 
 	public class DeckDataItem
 	{
-		public Guid id { get; set; }
+		public string id { get; set; }
 		public int amount { get; set; }
 	}
 }
