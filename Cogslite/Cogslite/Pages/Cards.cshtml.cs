@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cogslite.DataModels;
 using CogsLite.Core;
+using GorgleDevs.Mvc;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cogslite.Pages

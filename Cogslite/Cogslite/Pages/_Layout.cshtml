@@ -20,14 +20,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
                 <a class="navbar-brand" asp-page="/Home">Welcome to COGS</a>
-                <span class="navbar-nav mr-auto mt-2 mt-lg-0">&nbsp;</span>
-                <form class="form-inline my-2 my-lg-0">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for games..." aria-label="Search for games" />
-                        <div class="input-group-append">
-                            <span class="input-group-text"><i class="fa fa-search"></i></span>
-                        </div>
-                    </div>
+                <span class="navbar-nav mr-auto mt-2 mt-lg-0">&nbsp;</span>                
+                    
                     @if (Model.IsSignedIn)
                     {
                         <a asp-page="/GameDetails" class="btn btn-success my-2 mx-2"><i class="fa fa-plus"></i></a>
@@ -39,14 +33,12 @@
                                 <a class="dropdown-item" asp-page="/SignOut">Sign Out</a>                                
                             </div>
                         </div>
-
 }
-else
-{
+                    else
+                    {
                 <a class="btn btn-outline-success my-2 my-sm-0" style="margin: 0px 12px" asp-page="/SignIn">Sign in</a>
                 <a class="btn btn-outline-success my-2 my-sm-0" asp-page="/Join">Join</a>
 }
-                </form>
             </div>
         </nav>
     </header>

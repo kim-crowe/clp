@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CogsLite.Core", "CogsLite.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CogsLite.MongoStore", "CogsLite.MongoStore\CogsLite.MongoStore.csproj", "{57F87F7A-93CC-47DF-93C2-CBBF21451660}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GorgleDevs.Mvc", "GorgleDevs.Mvc\GorgleDevs.Mvc.csproj", "{4F14ED46-A44D-43AB-9A19-DDBD6892A82F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{57F87F7A-93CC-47DF-93C2-CBBF21451660}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57F87F7A-93CC-47DF-93C2-CBBF21451660}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57F87F7A-93CC-47DF-93C2-CBBF21451660}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F14ED46-A44D-43AB-9A19-DDBD6892A82F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F14ED46-A44D-43AB-9A19-DDBD6892A82F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F14ED46-A44D-43AB-9A19-DDBD6892A82F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F14ED46-A44D-43AB-9A19-DDBD6892A82F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

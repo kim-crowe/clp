@@ -14,5 +14,6 @@
   <ItemGroup>
     <ProjectReference Include="..\CogsLite.Core\CogsLite.Core.csproj" />
     <ProjectReference Include="..\CogsLite.MongoStore\CogsLite.MongoStore.csproj" />
+    <ProjectReference Include="..\GorgleDevs.Mvc\GorgleDevs.Mvc.csproj" />
   </ItemGroup>
 </Project>

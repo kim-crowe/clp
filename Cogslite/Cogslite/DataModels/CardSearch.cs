@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Cogslite.DataModels
+﻿namespace Cogslite.DataModels
 {
     public class CardSearch : PagedDataSearch
     {

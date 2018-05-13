@@ -19,7 +19,9 @@ namespace Cogslite.Pages
             _userStore = userStore ?? throw new ArgumentNullException(nameof(userStore));
         }
 
-        public void OnGet(string message)
+		public string MessageClass => String.IsNullOrEmpty((string)ViewData["Message"]) ? "collapse" : String.Empty;
+
+		public void OnGet(string message)
         {
             ViewData["Message"] = message;
         }

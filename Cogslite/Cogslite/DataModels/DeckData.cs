@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using CogsLite.Core;
+using GorgleDevs.Mvc;
 
 namespace Cogslite.DataModels
 {

@@ -19,7 +19,7 @@
             }
         },
         methods: {
-            confirm: function () {
+            confirm: function () {               
                 this.$emit('confirm', this.model);
                 this.model = {}
             }
@@ -72,7 +72,11 @@ Vue.component('data-form-text',
                 return JSON.stringify(this.data);
             }
         },
-        template: `<input type="text" class="form-control" :placeholder="data.placeholder" v-on:input="$emit('updated', $event.target.value)"/>`
+        template: `<div class="form-group">
+            <label v-if="data.label">{{data.label}}</label>
+            <input type="text" class="form-control" :placeholder="data.placeholder" v-on:input="$emit('updated', $event.target.value)"/>
+            </div>`
+
     })
 
 Vue.component('data-form-options',

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CogsLite.MongoStore;
 using CogsLite.Core;
+using GorgleDevs.Mvc;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

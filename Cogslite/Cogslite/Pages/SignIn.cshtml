@@ -9,6 +9,9 @@
         Sign in to COGS
     </div>
     <div class="card-body">
+        <div class="alert alert-danger @Model.MessageClass">
+            @ViewData["Message"]
+        </div>
         <form method="post" class="form-signin">
             <div class="form-group">
                 <label for="emailAddress"><b>Email Address</b></label>
@@ -19,7 +22,7 @@
                 <input type="password" name="password" required class="form-control">
             </div>
             <br />
-            <div class="text-center"><input type="submit" class="btn btn-primary px-5" value="Sign In" /></div>            
+            <div class="text-center"><input type="submit" class="btn btn-primary px-5" value="Sign In" /></div>
         </form>
     </div>            
 </div>

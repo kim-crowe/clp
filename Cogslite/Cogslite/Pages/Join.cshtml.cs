@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CogsLite.Core;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using GorgleDevs.Mvc;
 
 namespace Cogslite.Pages
 {
@@ -17,6 +14,8 @@ namespace Cogslite.Pages
             _userStore = userStore ?? throw new ArgumentNullException(nameof(userStore));
         }
 
+		public string MessageClass => String.IsNullOrEmpty((string)ViewData["Message"]) ? "collapse" : String.Empty;
+
         public void OnGet(string message, string emailAddress, string displayName)
         {
             ViewData["Message"] = message;
@@ -24,12 +23,18 @@ namespace Cogslite.Pages
             ViewData["DisplayName"] = displayName;
         }
 
-        public async Task<IActionResult> OnPostAsync(string emailAddress, string displayName, string password, string confirmPassword)
+        public IActionResult OnPost(string emailAddress, string displayName, string password, string confirmPassword)
         {
-            if (password != confirmPassword)
+			if (password != confirmPassword)
                 return RedirectToAction("Join", new { message = "Password and confirmation password do not match", emailAddress, displayName});
+			
+			if(emailAddress.IsEmailAddress() == false)
+				return RedirectToAction("Join", new { message = "Your email address doesn't look right", emailAddress, displayName });
 
-            try
+			if(PasswordAnalyser.PasswordStrength(password) <12)
+				return RedirectToAction("Join", new { message = "Your password is a bit weak, try adding capitals, numbers or special characters", emailAddress, displayName });
+
+			try
             {
                 _userStore.Add(new User
                 {
@@ -40,7 +45,7 @@ namespace Cogslite.Pages
             }
             catch(InvalidOperationException ex)
             {
-                return RedirectToAction("Join", new { message = ex.Message, emailAddress, displayName });
+                return RedirectToAction("Join", new { message = ex.Message.Replace(",", "<br>"), emailAddress, displayName });
             }
             
             return Redirect("SignIn");

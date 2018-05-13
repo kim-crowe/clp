@@ -17,14 +17,17 @@ namespace CogsLite.MongoStore
         {
             var errors = new List<string>();
 
+			if (user.EmailAddress.IsEmailAddress() == false)
+				errors.Add("Email address doesn't look right");
+
             if(EmailAddressExistsInStore(user))
-                errors.Add("Email Address");
+                errors.Add("Email Address is already registerd");
 
             if (DisplayNameExistsInStore(user))
-                errors.Add("Display Name");
+                errors.Add("User name is already in use");
 
             if(errors.Any())
-                throw new InvalidOperationException("One or more unique fields were not unique: " + String.Join(", ", errors));
+                throw new InvalidOperationException(String.Join(",", errors));
             
             user.Id = Guid.NewGuid();
             Insert(user);
