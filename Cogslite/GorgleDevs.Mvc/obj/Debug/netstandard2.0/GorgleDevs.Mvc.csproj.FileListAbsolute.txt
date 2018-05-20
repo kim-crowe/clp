@@ -1,9 +1,9 @@
 C:\Users\Vincent\source\repos\clp\Cogslite\GorgleDevs.Mvc\bin\Debug\netstandard2.0\GorgleDevs.Mvc.deps.json
 C:\Users\Vincent\source\repos\clp\Cogslite\GorgleDevs.Mvc\bin\Debug\netstandard2.0\GorgleDevs.Mvc.dll
-C:\Users\Vincent\source\repos\clp\Cogslite\GorgleDevs.Mvc\obj\Debug\netstandard2.0\GorgleDevs.Mvc.csprojResolveAssemblyReference.cache
 C:\Users\Vincent\source\repos\clp\Cogslite\GorgleDevs.Mvc\obj\Debug\netstandard2.0\GorgleDevs.Mvc.csproj.CoreCompileInputs.cache
 C:\Users\Vincent\source\repos\clp\Cogslite\GorgleDevs.Mvc\obj\Debug\netstandard2.0\GorgleDevs.Mvc.AssemblyInfoInputs.cache
 C:\Users\Vincent\source\repos\clp\Cogslite\GorgleDevs.Mvc\obj\Debug\netstandard2.0\GorgleDevs.Mvc.AssemblyInfo.cs
 C:\Users\Vincent\Source\Repos\clp\Cogslite\GorgleDevs.Mvc\bin\Debug\netstandard2.0\GorgleDevs.Mvc.pdb
 C:\Users\Vincent\Source\Repos\clp\Cogslite\GorgleDevs.Mvc\obj\Debug\netstandard2.0\GorgleDevs.Mvc.dll
 C:\Users\Vincent\Source\Repos\clp\Cogslite\GorgleDevs.Mvc\obj\Debug\netstandard2.0\GorgleDevs.Mvc.pdb
+C:\Users\Vincent\Source\Repos\clp\Cogslite\GorgleDevs.Mvc\obj\Debug\netstandard2.0\GorgleDevs.Mvc.csprojAssemblyReference.cache

@@ -16,6 +16,7 @@
 <input type="hidden" id="af-token" value="@Html.AntiForgeryTokenOnly()" />
 <input type="hidden" id="game-id" value="@Model.Game.Id.ToShortGuid()" />
 <input type="hidden" id="is-signed-in" value="@Model.IsSignedIn" />
+<input type="hidden" id="is-game-owner" value="@Model.IsGameOwner" />
 <div id="cardApp">
 
     <modal-form id="modal1" :options="dialog" v-on:confirm="confirmDialog($event)"></modal-form>
@@ -97,5 +98,5 @@
                 </div>
             </li>
         </ul>
-    </div>
+    </div>    
 </div>

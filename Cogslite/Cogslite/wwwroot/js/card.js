@@ -6,6 +6,7 @@ var cardsVue = new Vue({
     data: {
         gameId: '',
         isSignedIn: false,
+        isGameOwner: false,
         numberOfPages: 1,
         search: { page: 1, itemsPerPage: 20, cardName: '', cardType: "", tags: [], cardIds: [] },
         cards: [],
@@ -18,10 +19,11 @@ var cardsVue = new Vue({
     created: function () {
         this.gameId = $('#game-id').val();
         this.isSignedIn = $('#is-signed-in').val();
+        this.isGameOwner = $('#is-game-owner').val();
         this.refreshCards();
         this.refreshDeckList();
     },
-    computed: {
+    computed: {        
         hasDeck: function () {
             return this.deck != null;
         },
@@ -36,7 +38,7 @@ var cardsVue = new Vue({
                 return 0;
         }
     },    
-    methods: {
+    methods: {        
         onSearchChange: function (e) {
             this.search.cardName = e.target.value;
             this.refreshCards();
@@ -86,6 +88,26 @@ var cardsVue = new Vue({
         lastPage: function () {
             this.search.page = this.numberOfPages;
             this.refreshCards();
+        },
+        showDetails: function (card) {
+            this.dialog = {
+                title: card.name,
+                fields: [
+                    { type: "image", value: "http://" + window.location.host + "/Image?imageId=" + card.id },
+                    { name: "name", label: "Name", type: "text", value: card.name, readonly: !this.isGameOwner },
+                    { name: "type", label: "Type", type: "text", value: card.type, readonly: !this.isGameOwner }
+                ],
+                cancelText: "Close",
+                confirmText: "Save Changes",
+                hideConfirmButton: !this.isGameOwner,
+                onConfirm: function (model, vue) {
+                    card.name = model.name;
+                    card.type = model.type;
+                    vue.cardService(vue.$http).updateCard({CardId: card.id, Name: card.name, Type: card.type});
+                }
+            }
+
+            $('#modal1').modal();
         },
         showDeckUrls: function () {
             this.dialog = {

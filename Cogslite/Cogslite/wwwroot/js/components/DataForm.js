@@ -5,6 +5,11 @@
             return {
                 model: {}
             }
+        },        
+        watch: {
+            "options": function (val) {
+                this.initialise();
+            }
         },
         computed: {            
             confirmButtonText: function () {
@@ -19,6 +24,14 @@
             }
         },
         methods: {
+            initialise: function () {
+                this.model = {};                
+                for (var i = 0; i < this.options.fields.length; i++) {
+                    var option = this.options.fields[i];
+                    if (typeof option.value !== 'undefined' && typeof option.name !== 'undefined')
+                        this.model[option.name] = option.value;
+                }
+            },
             confirm: function () {               
                 this.$emit('confirm', this.model);
                 this.model = {}
@@ -64,17 +77,39 @@ Vue.component('data-form',
 
     })
 
+Vue.component('data-form-image',
+    {
+        props: ['data'],
+        template: `<div class="form-group"><img :src="data.value" class="mx-auto" style="display: block;" /></div>`
+    })
+
 Vue.component('data-form-text',
     {
         props: ['data'],
+        watch: {
+            "data": function (val) {
+                if (typeof val.data.value !== 'undefined')
+                    this.$emit('updated', val.data.value);
+            }
+        },
         computed: {
             dataJson: function () {
                 return JSON.stringify(this.data);
+            },
+            isReadOnly: function () {
+                if (this.data.readonly)
+                    return this.data.readonly;
+                return false;
+            },
+            initialValue: function () {
+                if (typeof this.data.value !== 'undefined')
+                    return this.data.value;
+                return '';
             }
         },
         template: `<div class="form-group">
             <label v-if="data.label">{{data.label}}</label>
-            <input type="text" class="form-control" :placeholder="data.placeholder" v-on:input="$emit('updated', $event.target.value)"/>
+            <input type="text" class="form-control" :placeholder="data.placeholder" :value="initialValue" v-on:input="$emit('updated', $event.target.value)" :readonly="isReadOnly" />
             </div>`
 
     })

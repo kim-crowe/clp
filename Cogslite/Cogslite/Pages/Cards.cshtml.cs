@@ -81,15 +81,14 @@ namespace Cogslite.Pages
 			};
 
 			return new JsonResult(result);
-		}
+		}		
 
 		public IActionResult OnPostCardUpdate([FromBody] CardUpdate cardUpdate)
 		{
-			_cardStore.UpdateOne(cardUpdate.CardId, c =>
+			_cardStore.UpdateOne(cardUpdate.Id, c =>
 			{
 				c.Name = cardUpdate.Name;
-				c.Type = cardUpdate.Type;
-				c.Tags = cardUpdate.Tags.Split(',');
+				c.Type = cardUpdate.Type;				
 			});
 
 			return new JsonResult(true);
