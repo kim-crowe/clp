@@ -28,17 +28,18 @@ namespace Cogslite.Pages
 
         public async Task<IActionResult> OnPostAsync(string emailAddress, string password)
         {
-            var user = _userStore.GetByEmailAddress(emailAddress);
+            var member = await _userStore.SignIn(emailAddress, password);
 
-            if (user != null && user.Password == password)
+            if (member != null)
             {
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Email, emailAddress),
                     new Claim("CogsMember", "Yes"),
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.DisplayName)
+                    new Claim(ClaimTypes.NameIdentifier, member.Id.ToString()),
+                    new Claim(ClaimTypes.Name, member.Username)
                 };
+
                 var claimsIdentity = new ClaimsIdentity(claims, "login");
                 var claimPrincipal = new ClaimsPrincipal(claimsIdentity);
                 await HttpContext.SignInAsync(claimPrincipal);

@@ -19,7 +19,7 @@ namespace CogsLite.MongoStore
 
 		public IEnumerable<Deck> ByGameAndOwner(Guid gameId, Guid ownerId)
 		{
-			return FindWhere(d => d.GameId == gameId && d.Owner.Id == ownerId);
+			return FindWhere(d => d.GameId == gameId && d.Owner.Id == ownerId).Result;
 		}
 
         public void Save(Deck deck)

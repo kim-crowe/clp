@@ -39,7 +39,7 @@ namespace Cogslite.Pages
                 _userStore.Add(new User
                 {
                     EmailAddress = emailAddress,
-                    DisplayName = displayName,
+                    Username = displayName,
                     Password = password
                 });
             }

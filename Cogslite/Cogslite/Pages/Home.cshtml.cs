@@ -26,7 +26,7 @@ namespace Cogslite.Pages
 			{
 				id = g.Id,
 				name = g.Name,
-				userName = g.Owner.DisplayName,
+				userName = g.Owner.Username,
 				createdOn = g.CreatedOn.ToString("yyyy-MM-dd"),
 				cardCount = g.CardCount
 			}).ToList();

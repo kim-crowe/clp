@@ -27,7 +27,7 @@
                         <a asp-page="/GameDetails" class="btn btn-success my-2 mx-2"><i class="fa fa-plus"></i></a>
                         <div class="dropdown my-2 mx-2">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                @Model.SignedInUser.DisplayName
+                                @Model.SignedInUser.Username
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" asp-page="/SignOut">Sign Out</a>                                

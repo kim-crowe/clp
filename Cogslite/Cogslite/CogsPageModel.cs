@@ -21,7 +21,7 @@ namespace Cogslite
                 {
                     Id = Guid.Parse(HttpContext.User.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value),
                     EmailAddress = HttpContext.User.Claims.Single(c => c.Type == ClaimTypes.Email).Value,
-                    DisplayName = HttpContext.User.Claims.Single(c => c.Type == ClaimTypes.Name).Value
+                    Username = HttpContext.User.Claims.Single(c => c.Type == ClaimTypes.Name).Value
                 };
             }
         }

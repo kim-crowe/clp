@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace CogsLite.MongoStore
 {
@@ -42,9 +43,10 @@ namespace CogsLite.MongoStore
             return Builders<T>.Filter.Where(predicate);
         }
 
-        protected List<T> FindWhere(Expression<Func<T, bool>> predicate)
+        protected async Task<List<T>> FindWhere(Expression<Func<T, bool>> predicate)
         {
-            return Collection.Find(CreateFilter(predicate)).ToList();
+            var results = await Collection.FindAsync(CreateFilter(predicate));
+            return results.ToList();
         }
 
         protected T FindById(Guid id)

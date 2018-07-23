@@ -15,7 +15,7 @@ namespace CogsLite.MongoStore
 
         public void Add(Game game)
         {
-            var existing = FindWhere(g => g.Name == game.Name);
+            var existing = FindWhere(g => g.Name == game.Name).Result;
             if (existing.Any())
                 throw new InvalidOperationException("A game with that name already exists");
 

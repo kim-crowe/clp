@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CogsLite.MongoStore
 {
@@ -13,17 +14,17 @@ namespace CogsLite.MongoStore
         {
         }
 
-        public void Add(User user)
+        public async Task Add(User user)
         {
             var errors = new List<string>();
 
 			if (user.EmailAddress.IsEmailAddress() == false)
 				errors.Add("Email address doesn't look right");
 
-            if(EmailAddressExistsInStore(user))
+            if(await EmailAddressExistsInStore(user))
                 errors.Add("Email Address is already registerd");
 
-            if (DisplayNameExistsInStore(user))
+            if (await UsernameExistsInStore(user))
                 errors.Add("User name is already in use");
 
             if(errors.Any())
@@ -33,37 +34,32 @@ namespace CogsLite.MongoStore
             Insert(user);
         }
 
-        private bool EmailAddressExistsInStore(User user)
+        private async Task<bool> EmailAddressExistsInStore(User user)
         {
-            return FindWhere(usr => usr.EmailAddress == user.EmailAddress).Any();
+            return (await FindWhere(usr => usr.EmailAddress == user.EmailAddress)).Any();
         }
 
-        private bool DisplayNameExistsInStore(User user)
+        private async Task<bool> UsernameExistsInStore(User user)
         {
-            return FindWhere(usr => usr.DisplayName == user.DisplayName).Any();
+            return (await FindWhere(usr => usr.Username == user.Username)).Any();
+        }        
+
+        public async Task<Member> GetByEmailAddress(string emailAddress)
+        {
+            return ( await FindWhere(usr => usr.EmailAddress == emailAddress)).SingleOrDefault();            
         }
 
-        public bool TryAdd(User user)
+        public async Task<Member> GetByUsername(string username)
         {
-            try
-            {
-                Add(user);
-                return true;
-            }
-            catch (InvalidOperationException)
-            {
-                return false;
-            }
+            return ( await FindWhere(usr => usr.Username == username)).SingleOrDefault();
         }
 
-        public User GetByEmailAddress(string emailAddress)
+        public async Task<Member> SignIn(string emailAddress, string password)
         {
-            return FindWhere(usr => usr.EmailAddress == emailAddress).SingleOrDefault();            
-        }
-
-        public User GetByDisplayName(string displayName)
-        {
-            return FindWhere(usr => usr.DisplayName == displayName).SingleOrDefault();
+            var member = (await FindWhere(usr => usr.EmailAddress == emailAddress)).SingleOrDefault();
+            if (member?.Password == password)
+                return member;
+            return null;
         }
     }
 }

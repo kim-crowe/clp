@@ -19,7 +19,7 @@ namespace CogsLite.MongoStore
 
         public IEnumerable<Card> Get(Guid gameId)
         {
-            return FindWhere(c => c.GameId == gameId);            
+            return FindWhere(c => c.GameId == gameId).Result;            
         }
 
 		public Card GetSingle(Guid cardId)

@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace CogsLite.Core
 {
     public interface IUserStore
     {
-        User GetByEmailAddress(String emailAddress);
-        User GetByDisplayName(String displayName);
-        void Add(User user);
+        Task<Member> GetByEmailAddress(string emailAddress);
+        Task<Member> GetByUsername(string username);
+        Task Add(User user);
+        Task<Member> SignIn(string emailAddress, string password);
     }
 }
