@@ -2,16 +2,15 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/Cogslite/.vs/Cogslite/v15
-/Cogslite/Cogslite/obj
-/Cogslite/.vs/config
-/Cogslite/Cogslite/bin/Debug/netcoreapp2.0
-/.vs
-/.vscode
-/Cogslite/CogsLite.BasicStore
-/Cogslite/CogsLite.Core/bin/Debug/netcoreapp2.0
-/Cogslite/CogsLite.Core/obj/Debug/netcoreapp2.0
-/Cogslite/CogsLite.Core/obj
-/Cogslite/CogsLite.MongoStore/bin/Debug/netcoreapp2.0
-/Cogslite/CogsLite.MongoStore/obj/Debug/netcoreapp2.0
-/Cogslite/CogsLite.MongoStore/obj
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+.vscode
+.vs
