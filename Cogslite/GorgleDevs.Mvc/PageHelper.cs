@@ -3,12 +3,13 @@ using System.Text.Encodings.Web;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace GorgleDevs.Mvc
 {
     public static class PageHelper
     {
-        public static string WhenContains(this IDictionary<string, object> dictionary, string key, string positiveResult, string negativeResult = "")
+        public static string WhenContains(this ViewDataDictionary dictionary, string key, string positiveResult, string negativeResult = "")
         {
             if (dictionary.ContainsKey(key) && dictionary[key] != null)
                 return positiveResult;

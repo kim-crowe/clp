@@ -42,7 +42,7 @@ namespace Cogslite
 			services.AddMvc(opts =>
 			{
 				opts.UseShortGuids();
-			})
+			})            
 			.AddRazorOptions(options =>
 			{
 				options.PageViewLocationFormats.Add("/Pages/Dialogs/{0}.cshtml");				
@@ -58,16 +58,7 @@ namespace Cogslite
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseBrowserLink();
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-            }
-
+            app.UseDeveloperExceptionPage();
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseMvc();
