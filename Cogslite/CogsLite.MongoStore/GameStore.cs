@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CogsLite.MongoStore
 {
@@ -13,20 +14,20 @@ namespace CogsLite.MongoStore
         {
         }
 
-        public void Add(Game game)
+        public async Task Add(Game game)
         {
             var existing = FindWhere(g => g.Name == game.Name).Result;
             if (existing.Any())
                 throw new InvalidOperationException("A game with that name already exists");
 
-            Insert(game);
+            await Insert(game);
         }
 
-        public bool TryAdd(Game game)
+        public async Task<bool> TryAdd(Game game)
         {
             try
             {
-                Add(game);
+                await Add(game);
                 return true;
             }
             catch (InvalidOperationException)

@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace CogsLite.Core
 {
     public interface IImageStore
     {
-        void Add(ImageData imageData);
-        ImageData Get(Guid id);
+        Task Add(ImageData imageData);
+        Task<ImageData> Get(Guid id);
     }
 }

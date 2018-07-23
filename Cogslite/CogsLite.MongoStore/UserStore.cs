@@ -31,7 +31,7 @@ namespace CogsLite.MongoStore
                 throw new InvalidOperationException(String.Join(",", errors));
             
             user.Id = Guid.NewGuid();
-            Insert(user);
+            await Insert(user);
         }
 
         private async Task<bool> EmailAddressExistsInStore(User user)

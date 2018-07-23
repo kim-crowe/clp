@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace CogsLite.Core
 {
     public interface IBaseStore<T> where T : BaseObject
     {
-        void Add(T item);
+        Task Add(T item);
         void UpdateOne(Guid id, Action<T> updateAction);
     }
 }

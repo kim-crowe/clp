@@ -4,6 +4,7 @@ using MongoDB.Driver.GridFS;
 using MongoDB.Driver;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace CogsLite.MongoStore
 {
@@ -13,12 +14,12 @@ namespace CogsLite.MongoStore
         {
         }
 
-        public void Add(ImageData imageData)
+        public async Task Add(ImageData imageData)
         {
-            Insert(imageData);            
+            await Insert(imageData);
         }
 
-        public ImageData Get(Guid id)
+        public async Task<ImageData> Get(Guid id)
         {
             return FindById(id);
         }

@@ -54,12 +54,17 @@ namespace CogsLite.MongoStore
             return Collection.Find(CreateFilter(x => x.Id == id)).SingleOrDefault();
         }
 
-        protected void Insert(T item)
+        protected async Task<T> FindByIdAsync(Guid id)
+        {
+            return (await Collection.FindAsync(CreateFilter(x => x.Id == id))).SingleOrDefault();
+        }
+
+        protected async Task Insert(T item)
         {
             var existing = FindById(item.Id);
             if(existing != null)
                 throw new InvalidOperationException("An item with the object id already exists");
-            Collection.InsertOne(item);
+            await Collection.InsertOneAsync(item);
         }
 
         protected void Update(T item)

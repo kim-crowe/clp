@@ -1,14 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using CogsLite.Core;
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.Model;
+using System.Threading.Tasks;
 
 namespace CogsLite.AwsStore
 {
     public class AwsGameStore : IGameStore
     {
-        public void Add(Game item)
+        private readonly IAmazonDynamoDB _dynamoService;
+
+        public AwsGameStore(IAmazonDynamoDB dynamoService)
         {
-            throw new NotImplementedException();
+            _dynamoService = dynamoService ?? throw new ArgumentNullException(nameof(dynamoService));
+        }
+
+        public async Task Add(Game item)
+        {
+            var putItemRequest = new PutItemRequest
+            {
+                TableName = "Cogs.Games",
+                Item = item.ToDynamoItem()
+            };
+
+            await _dynamoService.PutItemAsync(putItemRequest);            
         }
 
         public IEnumerable<Game> Get()
@@ -21,7 +37,7 @@ namespace CogsLite.AwsStore
             throw new NotImplementedException();
         }
 
-        public bool TryAdd(Game game)
+        public Task<bool> TryAdd(Game game)
         {
             throw new NotImplementedException();
         }

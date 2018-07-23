@@ -27,7 +27,7 @@ namespace CogsLite.MongoStore
             var existing = FindById(deck.Id);
             if(existing == null)
             {
-                Insert(deck);
+                Insert(deck).GetAwaiter().GetResult();
             }
             else
             {

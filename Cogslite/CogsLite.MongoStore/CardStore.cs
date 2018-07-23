@@ -1,8 +1,8 @@
 ﻿using CogsLite.Core;
 using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CogsLite.MongoStore
 {
@@ -12,9 +12,9 @@ namespace CogsLite.MongoStore
         {
         }
 
-        public void Add(Card card)
+        public async Task Add(Card card)
         {
-            Insert(card);
+            await Insert(card);
         }
 
         public IEnumerable<Card> Get(Guid gameId)

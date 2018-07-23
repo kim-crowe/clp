@@ -52,7 +52,7 @@ namespace Cogslite.Pages
 			{
 				for (int i = 0; i < item.Amount; i++)
 				{
-					yield return _imageStore.Get(item.CardId).Data;
+					yield return _imageStore.Get(item.CardId).GetAwaiter().GetResult().Data;
 				}
 			}
 		}

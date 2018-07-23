@@ -37,7 +37,7 @@ namespace Cogslite.Pages
 				CardCount = 0
             };
 
-            if (!_gameStore.TryAdd(newGame))
+            if (! await _gameStore.TryAdd(newGame))
             {
                 return RedirectToAction("Join", new { message = "A game with this name already exists", name});
             }
