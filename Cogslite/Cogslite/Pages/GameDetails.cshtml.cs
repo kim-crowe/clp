@@ -53,7 +53,7 @@ namespace Cogslite.Pages
                         OriginalFileName = image.FileName,
                         Data = ms.GetBuffer()
                     };
-                    _imageStore.Add(imageData);
+                    await _imageStore.Add(imageData);
                 }
             }
                 

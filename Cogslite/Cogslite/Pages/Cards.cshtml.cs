@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Cogslite.DataModels;
 using CogsLite.Core;
 using GorgleDevs.Mvc;
@@ -31,19 +32,19 @@ namespace Cogslite.Pages
 
 		public bool IsGameOwner => _isGameOwner;
 
-        public void OnGet(Guid gameId)
+        public async Task OnGet(Guid gameId)
         {
-            _game = _gameStore.GetSingle(gameId);
-			var cards = _cardStore.Get(gameId);
+            _game = await _gameStore.GetSingle(gameId);
+			var cards = await _cardStore.Get(gameId);
 			_tags = cards.Where(c => c.Tags != null).SelectMany(c => c.Tags).Distinct().ToList();
 			_isGameOwner = IsSignedIn && _game.Owner.Id == SignedInUser.Id;
         }		
 
-		public IActionResult OnPostCardSearch(Guid gameId, [FromBody] CardSearch cardSearch)
+		public async Task<IActionResult> OnPostCardSearch(Guid gameId, [FromBody] CardSearch cardSearch)
 		{
 			var pageIndex = cardSearch.Page - 1;
-			_game = _gameStore.GetSingle(gameId);
-			var cards = _cardStore.Get(gameId).ToList();
+			_game = await _gameStore.GetSingle(gameId);
+			var cards = ( await _cardStore.Get(gameId)).ToList();
 
 			if (!String.IsNullOrEmpty(cardSearch.CardType))
 			{

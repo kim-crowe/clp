@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cogslite.Pages
 {
@@ -22,12 +23,12 @@ namespace Cogslite.Pages
 
         public Game Game => _game;
 
-        public void OnGet(Guid id)
+        public async Task OnGet(Guid id)
         {
-            _game = _gameStore.Get().SingleOrDefault(g => g.Id == id);
+            _game = (await _gameStore.Get()).SingleOrDefault(g => g.Id == id);
         }
 
-        public IActionResult OnPostAsync(Guid gameId, int cardsPerRow, int cardCount, IFormFile cardSheet, IFormFile infoSheet)
+        public async Task<IActionResult> OnPostAsync(Guid gameId, int cardsPerRow, int cardCount, IFormFile cardSheet, IFormFile infoSheet)
         {
 			var cards = new Card[] { };
 			if(infoSheet != null)
@@ -40,12 +41,12 @@ namespace Cogslite.Pages
 
             using (var imageSlicer = new ImageSlicer(cardsPerRow, cardCount, cardSheet.OpenReadStream()))
             {
-                _game = _gameStore.Get().SingleOrDefault(g => g.Id == gameId);
+                _game = ( await _gameStore.Get()).SingleOrDefault(g => g.Id == gameId);
 
                 if(_game.CardSize == null)
                 {
                     _game.CardSize = imageSlicer.CardSize;
-                    _gameStore.UpdateOne(_game.Id, g => g.CardSize = imageSlicer.CardSize);
+                    await _gameStore.UpdateOne(_game.Id, g => g.CardSize = imageSlicer.CardSize);
                 }
                 else if(_game.CardSize != imageSlicer.CardSize)
                 {
@@ -61,21 +62,21 @@ namespace Cogslite.Pages
 					card.GameId = gameId;
 					card.CreatedOn = DateTime.Now;					
 
-                    _cardStore.Add(card);
-                    _imageStore.Add(new ImageData { Id = card.Id, Data = imageData, OriginalFileName = String.Empty });
+                    await _cardStore.Add(card);
+                    await _imageStore.Add(new ImageData { Id = card.Id, Data = imageData, OriginalFileName = String.Empty });
 					index++;
                 }
 
-				UpdateGameData(gameId);
+				await UpdateGameData(gameId);
 
                 return RedirectToPage("/Cards", new { gameId });
             }
         }
 
-		private void UpdateGameData(Guid gameId)
+		private async Task UpdateGameData(Guid gameId)
 		{
-			var allCards = _cardStore.Get(gameId);
-			_gameStore.UpdateOne(gameId, g =>
+			var allCards = await _cardStore.Get(gameId);
+			await _gameStore.UpdateOne(gameId, g =>
 			{
 				g.CardTypes = allCards.Select(c => c.Type).Distinct().ToArray();
 				g.CardCount = allCards.Count();

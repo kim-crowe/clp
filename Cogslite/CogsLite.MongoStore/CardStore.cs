@@ -17,9 +17,9 @@ namespace CogsLite.MongoStore
             await Insert(card);
         }
 
-        public IEnumerable<Card> Get(Guid gameId)
+        public async Task<IEnumerable<Card>> Get(Guid gameId)
         {
-            return FindWhere(c => c.GameId == gameId).Result;            
+            return await FindWhere(c => c.GameId == gameId);
         }
 
 		public Card GetSingle(Guid cardId)

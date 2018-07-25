@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CogsLite.Core
 {
     public interface ICardStore : IBaseStore<Card>
     {
-        IEnumerable<Card> Get(Guid gameId);
+        Task<IEnumerable<Card>> Get(Guid gameId);
     }
 }

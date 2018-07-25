@@ -67,21 +67,21 @@ namespace CogsLite.MongoStore
             await Collection.InsertOneAsync(item);
         }
 
-        protected void Update(T item)
+        protected async Task Update(T item)
         {
             var existing = FindById(item.Id);
             if(existing == null)
                 throw new InvalidOperationException("Unable to find item to replace");
-            Collection.ReplaceOne(CreateFilter(x => x.Id == item.Id), item);
+            await Collection.ReplaceOneAsync(CreateFilter(x => x.Id == item.Id), item);
         }
 
-        public void UpdateOne(Guid itemId, Action<T> action)
+        public async Task UpdateOne(Guid itemId, Action<T> action)
         {
             var item = FindById(itemId);
             if (item == null)
                 throw new InvalidOperationException("Unable to find item");
             action(item);
-            Update(item);
+            await Update(item);
         }
 
         protected IMongoCollection<T> Collection => _getCollection.Value;    

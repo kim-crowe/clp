@@ -36,14 +36,14 @@ namespace CogsLite.MongoStore
             }
         }
 
-        public IEnumerable<Game> Get()
+        public async Task<IEnumerable<Game>> Get()
         {            
-            return Collection.Find(FilterDefinition<Game>.Empty).ToList();
+            return (await Collection.FindAsync(FilterDefinition<Game>.Empty)).ToList();
         }
 
-        public Game GetSingle(Guid gameId)
+        public async Task<Game> GetSingle(Guid gameId)
         {
-            return FindById(gameId);            
+            return await FindByIdAsync(gameId);            
         }
     }
 }    

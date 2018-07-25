@@ -22,16 +22,18 @@ namespace CogsLite.AwsStore
 
     public static class DomainObjectExtensions
     {
-        public static Dictionary<string, AttributeValue> ToDynamoItem(this Game game)
+        public static Entities.CogsGame ToDynamoEntity(this Game game)
         {
-            return new Dictionary<string, AttributeValue>
+            return new Entities.CogsGame
             {
-                { "Id", new AttributeValue(game.Id.ToString()) },
-                { "Name", new AttributeValue(game.Name) },
-                { "CardTypes", new AttributeValue(game.CardTypes.ToList()) },
-                { "CardCount", new AttributeValue { N = game.CardCount.ToString() } },
-                { "CreatedOn", new AttributeValue(game.CreatedOn.ToString("dd-MM-yyyy") )  }
+                Id = game.Id.ToString(),
+                Name = game.Name,
+                CardCount = game.CardCount,
+                CardSize = game.CardSize,
+                CardTypes = game.CardTypes,
+                CreatedOn = game.CreatedOn,
+                OwnerId = game.Owner.Id.ToString()
             };
-        }
-    }
+        }        
+    }    
 }

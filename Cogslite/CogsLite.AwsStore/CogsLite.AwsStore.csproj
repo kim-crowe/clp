@@ -5,6 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="3.3.10.4" />
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.10.3" />
     <PackageReference Include="AWSSDK.S3" Version="3.3.20" />

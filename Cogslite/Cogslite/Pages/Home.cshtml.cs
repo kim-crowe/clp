@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Cogslite.DataModels;
 using CogsLite.Core;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +21,9 @@ namespace Cogslite.Pages
             
 		}
 
-		public IActionResult OnPostSearch([FromBody]GameSearch searchData)
+		public async Task<IActionResult> OnPostSearch([FromBody]GameSearch searchData)
 		{
-			var games = _gameStore.Get().Where(g => g.Name.ToLower().Contains(searchData.SearchText.ToLower())).Select(g => new
+			var games = (await _gameStore.Get()).Where(g => g.Name.ToLower().Contains(searchData.SearchText.ToLower())).Select(g => new
 			{
 				id = g.Id,
 				name = g.Name,

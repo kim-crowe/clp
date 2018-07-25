@@ -31,7 +31,7 @@ namespace CogsLite.MongoStore
             }
             else
             {
-                Update(deck);
+                Update(deck).GetAwaiter().GetResult();
             }
         }
     }

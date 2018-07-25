@@ -21,7 +21,7 @@ namespace CogsLite.MongoStore
 
         public async Task<ImageData> Get(Guid id)
         {
-            return FindById(id);
+            return await FindByIdAsync(id);
         }
     }
 }

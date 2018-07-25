@@ -1,50 +1,71 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using CogsLite.Core;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
-using System.Threading.Tasks;
+using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.DocumentModel;
+using AutoMapper;
 
 namespace CogsLite.AwsStore
 {
-    public class AwsGameStore : IGameStore
-    {
-        private readonly IAmazonDynamoDB _dynamoService;
-
-        public AwsGameStore(IAmazonDynamoDB dynamoService)
-        {
-            _dynamoService = dynamoService ?? throw new ArgumentNullException(nameof(dynamoService));
+    public class AwsGameStore : AwsBaseStore<Game, Entities.CogsGame>, IGameStore
+    {        
+        public AwsGameStore(IDynamoDBContext dbContext)
+            : base(dbContext)
+        {                 
         }
 
-        public async Task Add(Game item)
+        public async Task Add(Game game)
         {
-            var putItemRequest = new PutItemRequest
+            await PutItem(game);
+        }
+
+        public async Task<IEnumerable<Game>> Get()
+        {
+            return await Scan();            
+        }
+
+        public async Task<Game> GetSingle(Guid gameId)
+        {
+            return await FindById(gameId);
+        }
+
+        public async Task<bool> TryAdd(Game game)
+        {
+            try
             {
-                TableName = "Cogs.Games",
-                Item = item.ToDynamoItem()
-            };
-
-            await _dynamoService.PutItemAsync(putItemRequest);            
+                await Add(game);
+                return true;
+            }
+            catch(Exception)
+            {
+                return false;
+            }
         }
 
-        public IEnumerable<Game> Get()
+        public async Task UpdateOne(Guid id, Action<Game> updateAction)
         {
-            throw new NotImplementedException();
+            // TODO: Consider an approach that only sends up the data changes
+            var game = await GetSingle(id);
+            updateAction(game);
+            await PutItem(game);
         }
 
-        public Game GetSingle(Guid gameId)
+        protected override IMapper GetMapper()
         {
-            throw new NotImplementedException();
-        }
+            var mapperConfiguration = new MapperConfiguration(cfg => 
+            {
+                cfg.CreateMap<Game, Entities.CogsGame>()
+                    .ForMember(x => x.OwnerId, opts => opts.MapFrom(x => x.Owner.Id.ToString()))
+                    .ForMember(x => x.CreatedOn, opts => opts.MapFrom(x => x.CreatedOn.ToString("dd-MMM-yyyy")));
 
-        public Task<bool> TryAdd(Game game)
-        {
-            throw new NotImplementedException();
-        }
+                cfg.CreateMap<Entities.CogsGame, Game>();
+            });
 
-        public void UpdateOne(Guid id, Action<Game> updateAction)
-        {
-            throw new NotImplementedException();
+            return mapperConfiguration.CreateMapper();
         }
     }
 }
