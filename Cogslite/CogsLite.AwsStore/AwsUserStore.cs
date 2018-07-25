@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Amazon.CognitoIdentityProvider;
 using Amazon.CognitoIdentityProvider.Model;
 using CogsLite.Core;
+using Microsoft.Extensions.Options;
 
 namespace CogsLite.AwsStore
 {
@@ -14,11 +15,11 @@ namespace CogsLite.AwsStore
         private readonly string _clientId;
         private readonly string _userPoolId;
 
-        public AwsUserStore(IAmazonCognitoIdentityProvider identityProvider, string clientId, string userPoolId)
+        public AwsUserStore(IAmazonCognitoIdentityProvider identityProvider, IOptions<UserStoreOptions> options)
         {
             _identityProvider = identityProvider ?? throw new ArgumentNullException(nameof(identityProvider));
-            _clientId = clientId;
-            _userPoolId = userPoolId;
+            _clientId = options.Value.ClientId;
+            _userPoolId = options.Value.UserPoolId;
         }
 
         public async Task<Member> GetByEmailAddress(String emailAddress)
@@ -31,7 +32,7 @@ namespace CogsLite.AwsStore
 
             var response = await _identityProvider.ListUsersAsync(listUsersRequest);            
             if (response.Users.Count == 1)
-                return MapperExtensions.UserTypeMapper.Map<Member>(response.Users.First());
+                return response.Users.First().ToMember();
 
             return null;
         }
@@ -90,5 +91,11 @@ namespace CogsLite.AwsStore
                 return null;
             }
         }
+    }
+
+    public class UserStoreOptions
+    {
+        public string ClientId { get; set; }
+        public string UserPoolId { get; set; }
     }
 }

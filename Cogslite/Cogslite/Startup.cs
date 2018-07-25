@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using CogsLite.AwsStore;
 
 namespace Cogslite
 {
@@ -48,12 +49,10 @@ namespace Cogslite
 				options.PageViewLocationFormats.Add("/Pages/Dialogs/{0}.cshtml");				
 			});
 
-			services.AddTransient<IUserStore, UserStore>();
-            services.AddTransient<IGameStore, GameStore>();
-            services.AddTransient<IImageStore, ImageStore>();
-            services.AddTransient<ICardStore, CardStore>();
-            services.AddTransient<IDeckStore, DeckStore>();
-        }
+            var awsOptions = Configuration.GetAWSOptions();            
+            services.ConfigureCognito(Configuration);
+			services.AddAwsStoresForCogs(awsOptions);
+        }        
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

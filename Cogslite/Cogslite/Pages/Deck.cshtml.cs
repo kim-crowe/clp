@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Cogslite.DataModels;
 using CogsLite.Core;
 using Microsoft.AspNetCore.Mvc;
@@ -18,30 +19,32 @@ namespace Cogslite.Pages
 			_imageStore = imageStore ?? throw new ArgumentNullException(nameof(imageStore));
 		}
 
-		public IActionResult OnGetList(Guid gameId)
+		public async Task<IActionResult> OnGetList(Guid gameId)
 		{
 			if (SignedInUser == null)
 				return new JsonResult(new DeckData[0]);
 
-			return new JsonResult(_deckStore.ByGameAndOwner(gameId, SignedInUser.Id).Select(DeckData.FromDeck));							
+			var decks = await _deckStore.ByGameAndOwner(gameId, SignedInUser.Id);
+			return new JsonResult(decks.Select(DeckData.FromDeck));
 		}
 
-		public IActionResult OnGet(Guid deckId)
-		{
-			return new JsonResult(DeckData.FromDeck(_deckStore.Get(deckId)));
+		public async Task<IActionResult> OnGet(Guid deckId)
+		{			
+			var deck = await _deckStore.Get(SignedInUser.Id, deckId);
+			return new JsonResult(DeckData.FromDeck(deck));
 		}
 
-		public IActionResult OnPostDeck([FromBody]DeckData deck)
+		public async Task<IActionResult> OnPostDeck([FromBody]DeckData deck)
 		{
 			var theDeck = deck.ToDeck();
 			theDeck.Owner = SignedInUser;
-			_deckStore.Save(theDeck);
+			await _deckStore.Save(theDeck);
 			return new JsonResult(DeckData.FromDeck(theDeck));
 		}		
 
-		public IActionResult OnGetSheet(Guid deckId)
+		public async Task<IActionResult> OnGetSheet(Guid deckId)
 		{		
-			var deck = _deckStore.Get(deckId);
+			var deck = await _deckStore.Get(SignedInUser.Id, deckId);
 			var cardCount = deck.Items.Sum(i => i.Amount);
 			return new FileContentResult(ImageSlicer.Composite(DataImages(deck), cardCount), "image/png");
 		}

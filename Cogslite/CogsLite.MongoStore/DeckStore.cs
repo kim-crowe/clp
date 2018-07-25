@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using CogsLite.Core;
 using Microsoft.Extensions.Configuration;
 
@@ -12,26 +13,26 @@ namespace CogsLite.MongoStore
 
         }
 
-        public Deck Get(Guid deckId)
+        public async Task<Deck> Get(Guid ownerId, Guid deckId)
         {
-            return FindById(deckId);
+            return await FindByIdAsync(deckId);
         }
 
-		public IEnumerable<Deck> ByGameAndOwner(Guid gameId, Guid ownerId)
+		public async Task<IEnumerable<Deck>> ByGameAndOwner(Guid gameId, Guid ownerId)
 		{
-			return FindWhere(d => d.GameId == gameId && d.Owner.Id == ownerId).Result;
+			return await FindWhere(d => d.GameId == gameId && d.Owner.Id == ownerId);
 		}
 
-        public void Save(Deck deck)
+        public async Task Save(Deck deck)
         {            
-            var existing = FindById(deck.Id);
+            var existing = await FindByIdAsync(deck.Id);
             if(existing == null)
             {
-                Insert(deck).GetAwaiter().GetResult();
+                await Insert(deck);
             }
             else
             {
-                Update(deck).GetAwaiter().GetResult();
+                await Update(deck);
             }
         }
     }

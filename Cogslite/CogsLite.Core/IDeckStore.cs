@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CogsLite.Core
 {
 	public interface IDeckStore
 	{
-		void Save(Deck deck);
-		Deck Get(Guid deckId);
-		IEnumerable<Deck> ByGameAndOwner(Guid gameId, Guid ownerId);
+		Task Save(Deck deck);
+		Task<Deck> Get(Guid ownerId, Guid deckId);
+		Task<IEnumerable<Deck>> ByGameAndOwner(Guid gameId, Guid ownerId);
 	}
 }
