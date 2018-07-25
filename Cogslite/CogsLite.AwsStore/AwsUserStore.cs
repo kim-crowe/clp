@@ -31,7 +31,7 @@ namespace CogsLite.AwsStore
 
             var response = await _identityProvider.ListUsersAsync(listUsersRequest);            
             if (response.Users.Count == 1)
-                return response.Users.First().ToMember();
+                return MapperExtensions.UserTypeMapper.Map<Member>(response.Users.First());
 
             return null;
         }

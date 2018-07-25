@@ -58,6 +58,23 @@ namespace CogsLite.AwsStore
 
         protected IDynamoDBContext DbContext => _dbContext;
 
-        protected abstract IMapper GetMapper();
+        protected IMapper GetMapper()
+        {
+            var config = new MapperConfiguration(c => 
+            {
+                var outboundMap = c.CreateMap<TData, TEntity>();
+                CreateOutboundMap(outboundMap);
+
+                var inboundMap = c.CreateMap<TEntity, TData>();
+                CreateInboundMap(inboundMap);
+            });
+
+            return config.CreateMapper();
+        }
+
+        protected abstract void CreateOutboundMap(IMappingExpression<TData, TEntity> mapping);
+
+        protected abstract void CreateInboundMap(IMappingExpression<TEntity, TData> mapping);
+        
     }
 }

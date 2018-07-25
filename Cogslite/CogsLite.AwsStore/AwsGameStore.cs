@@ -52,20 +52,20 @@ namespace CogsLite.AwsStore
             var game = await GetSingle(id);
             updateAction(game);
             await PutItem(game);
-        }
+        }        
 
-        protected override IMapper GetMapper()
+        protected override void CreateOutboundMap(IMappingExpression<Game, Entities.CogsGame> mapping)
         {
-            var mapperConfiguration = new MapperConfiguration(cfg => 
-            {
-                cfg.CreateMap<Game, Entities.CogsGame>()
-                    .ForMember(x => x.OwnerId, opts => opts.MapFrom(x => x.Owner.Id.ToString()))
-                    .ForMember(x => x.CreatedOn, opts => opts.MapFrom(x => x.CreatedOn.ToString("dd-MMM-yyyy")));
-
-                cfg.CreateMap<Entities.CogsGame, Game>();
-            });
-
-            return mapperConfiguration.CreateMapper();
+            mapping
+                .MapMember(x => x.Id, y => y.Id.ToString())
+                .MapMember(x => x.OwnerId, y => y.Owner.Id.ToString());                    
         }
+
+        protected override void CreateInboundMap(IMappingExpression<Entities.CogsGame, Game> mapping)
+        {
+            mapping
+                .MapMember(x => x.Id, y => Guid.Parse(y.Id))
+                .MapMember(x => x.Owner, y => new Member { Id = Guid.Parse(y.Id) });            
+        }        
     }
 }

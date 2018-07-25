@@ -1,39 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Amazon.CognitoIdentityProvider.Model;
 using Amazon.DynamoDBv2.Model;
+using AutoMapper;
 using CogsLite.Core;
 
 namespace CogsLite.AwsStore
 {
-    public static class UserTypeExtensions
-    {
-        public static Member ToMember(this UserType cognitoUser)
+    public static class MapperExtensions
+    {        
+        public static Member ToMember(this UserType userType)
         {
-            return new Member
-            {
-                Username = cognitoUser.Username,
-                EmailAddress = cognitoUser.Attributes.Single(att => att.Name == "email").Value,
-                Id = Guid.Parse(cognitoUser.Attributes.Single(att => att.Name == "id").Value)
-            };
+            return UserTypeMapper.Map<Member>(userType);
         }
-    }
-
-    public static class DomainObjectExtensions
-    {
-        public static Entities.CogsGame ToDynamoEntity(this Game game)
+        public static IMappingExpression<TIn, TOut> MapMember<TIn, TOut, TMember>(this IMappingExpression<TIn, TOut> mapping, Expression<Func<TOut, TMember>> propExpr, Func<TIn, TMember> expr)
         {
-            return new Entities.CogsGame
+            return mapping.ForMember(propExpr, opts => opts.ResolveUsing(expr));
+        }
+
+        public static IMapper UserTypeMapper => _getMapper.Value;
+
+        private readonly static Lazy<IMapper> _getMapper = new Lazy<IMapper>(GetUserTypeMapper);
+
+        private static IMapper GetUserTypeMapper()
+        {
+            var mapperConfig = new MapperConfiguration(c => 
             {
-                Id = game.Id.ToString(),
-                Name = game.Name,
-                CardCount = game.CardCount,
-                CardSize = game.CardSize,
-                CardTypes = game.CardTypes,
-                CreatedOn = game.CreatedOn,
-                OwnerId = game.Owner.Id.ToString()
-            };
-        }        
-    }    
+                c.CreateMap<UserType, Member>()
+                    .MapMember(x => x.EmailAddress, y => y.Attributes.Single(a => a.Name == "email").Value)
+                    .MapMember(x => x.Id, y => Guid.Parse(y.Attributes.Single(a => a.Name == "id").Value));
+            });
+
+            return mapperConfig.CreateMapper();
+        }
+    }        
 }

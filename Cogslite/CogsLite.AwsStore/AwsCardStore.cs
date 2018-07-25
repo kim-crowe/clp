@@ -35,9 +35,18 @@ namespace CogsLite.AwsStore
             await PutItem(card);
         }
 
-        protected override IMapper GetMapper()
+        protected override void CreateInboundMap(IMappingExpression<Entities.CogsCard, Card> mapping)
         {
-            throw new NotImplementedException();
+            mapping                
+                .MapMember(x => x.GameId, y => Guid.Parse(y.GameId))
+                .MapMember(x => x.Id, y => Guid.Parse(y.Id));
+        }
+
+        protected override void CreateOutboundMap(IMappingExpression<Card, Entities.CogsCard> mapping)
+        {
+            mapping
+                .MapMember(x => x.GameId, y => y.GameId.ToString())
+                .MapMember(x => x.Id, y => y.Id.ToString());
         }
     }
 }
