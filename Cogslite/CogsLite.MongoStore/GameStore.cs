@@ -41,7 +41,7 @@ namespace CogsLite.MongoStore
             return (await Collection.FindAsync(FilterDefinition<Game>.Empty)).ToList();
         }
 
-        public async Task<Game> GetSingle(Guid gameId)
+        public async Task<Game> GetSingle(Guid ownerId, Guid gameId)
         {
             return await FindByIdAsync(gameId);            
         }

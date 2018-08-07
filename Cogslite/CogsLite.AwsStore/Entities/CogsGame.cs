@@ -9,9 +9,14 @@ namespace CogsLite.AwsStore.Entities
     public class CogsGame
     {
         [DynamoDBHashKey]
-        public string Id { get; set; }
-        public string Name { get; set; }
         public string OwnerId { get; set; }
+
+        [DynamoDBRangeKey]
+        public string Id { get; set; }
+
+        public string Name { get; set; }        
+
+        public Member Owner { get; set; }
         public DateTime CreatedOn { get; set; }
         public JsonSize CardSize {get; set;}
 		public string[] CardTypes { get; set; }

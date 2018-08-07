@@ -30,7 +30,7 @@ namespace CogsLite.AwsStore
             {
                 c.CreateMap<UserType, Member>()
                     .MapMember(x => x.EmailAddress, y => y.Attributes.Single(a => a.Name == "email").Value)
-                    .MapMember(x => x.Id, y => Guid.Parse(y.Attributes.Single(a => a.Name == "id").Value));
+                    .MapMember(x => x.Id, y => Guid.Parse(y.Attributes.Single(a => a.Name == "sub").Value));
             });
 
             return mapperConfig.CreateMapper();

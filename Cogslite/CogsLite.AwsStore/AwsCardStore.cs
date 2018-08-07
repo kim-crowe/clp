@@ -28,9 +28,9 @@ namespace CogsLite.AwsStore
             return await Query(gameId);
         }
 
-        public async Task UpdateOne(Guid id, Action<Card> updateAction)
+        public async Task UpdateOne(Guid gameId, Guid cardId, Action<Card> updateAction)
         {
-            var card = await FindById(id);
+            var card = await FindById(gameId, cardId);
             updateAction(card);
             await PutItem(card);
         }

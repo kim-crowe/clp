@@ -8,6 +8,6 @@ namespace CogsLite.Core
     {
         Task<bool> TryAdd(Game game);
         Task<IEnumerable<Game>> Get();
-        Task<Game> GetSingle(Guid gameId);
+        Task<Game> GetSingle(Guid ownerId, Guid gameId);
     }
 }

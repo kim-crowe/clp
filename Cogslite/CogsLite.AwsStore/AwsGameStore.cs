@@ -28,9 +28,9 @@ namespace CogsLite.AwsStore
             return await Scan();            
         }
 
-        public async Task<Game> GetSingle(Guid gameId)
+        public async Task<Game> GetSingle(Guid ownerId, Guid gameId)
         {
-            return await FindById(gameId);
+            return await FindById(ownerId, gameId);
         }
 
         public async Task<bool> TryAdd(Game game)
@@ -46,10 +46,10 @@ namespace CogsLite.AwsStore
             }
         }
 
-        public async Task UpdateOne(Guid id, Action<Game> updateAction)
+        public async Task UpdateOne(Guid ownerId, Guid gameId, Action<Game> updateAction)
         {
             // TODO: Consider an approach that only sends up the data changes
-            var game = await GetSingle(id);
+            var game = await GetSingle(ownerId, gameId);
             updateAction(game);
             await PutItem(game);
         }        
@@ -63,9 +63,7 @@ namespace CogsLite.AwsStore
 
         protected override void CreateInboundMap(IMappingExpression<Entities.CogsGame, Game> mapping)
         {
-            mapping
-                .MapMember(x => x.Id, y => Guid.Parse(y.Id))
-                .MapMember(x => x.Owner, y => new Member { Id = Guid.Parse(y.Id) });            
+            mapping.MapMember(x => x.Id, y => Guid.Parse(y.Id));
         }        
     }
 }

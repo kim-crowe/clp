@@ -32,18 +32,18 @@ namespace Cogslite.Pages
 
 		public bool IsGameOwner => _isGameOwner;
 
-        public async Task OnGet(Guid gameId)
+        public async Task OnGet(Guid ownerId, Guid gameId)
         {
-            _game = await _gameStore.GetSingle(gameId);
+            _game = await _gameStore.GetSingle(ownerId, gameId);
 			var cards = await _cardStore.Get(gameId);
 			_tags = cards.Where(c => c.Tags != null).SelectMany(c => c.Tags).Distinct().ToList();
 			_isGameOwner = IsSignedIn && _game.Owner.Id == SignedInUser.Id;
         }		
 
-		public async Task<IActionResult> OnPostCardSearch(Guid gameId, [FromBody] CardSearch cardSearch)
+		public async Task<IActionResult> OnPostCardSearch(Guid ownerId, Guid gameId, [FromBody] CardSearch cardSearch)
 		{
 			var pageIndex = cardSearch.Page - 1;
-			_game = await _gameStore.GetSingle(gameId);
+			_game = await _gameStore.GetSingle(ownerId, gameId);
 			var cards = ( await _cardStore.Get(gameId)).ToList();
 
 			if (!String.IsNullOrEmpty(cardSearch.CardType))
@@ -86,7 +86,7 @@ namespace Cogslite.Pages
 
 		public IActionResult OnPostCardUpdate([FromBody] CardUpdate cardUpdate)
 		{
-			_cardStore.UpdateOne(cardUpdate.Id, c =>
+			_cardStore.UpdateOne(ShortGuid.Parse(cardUpdate.GameId), cardUpdate.Id, c =>
 			{
 				c.Name = cardUpdate.Name;
 				c.Type = cardUpdate.Type;				

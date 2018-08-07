@@ -75,7 +75,7 @@ namespace CogsLite.MongoStore
             await Collection.ReplaceOneAsync(CreateFilter(x => x.Id == item.Id), item);
         }
 
-        public async Task UpdateOne(Guid itemId, Action<T> action)
+        public async Task UpdateOne(Guid hashKey, Guid itemId, Action<T> action)
         {
             var item = FindById(itemId);
             if (item == null)

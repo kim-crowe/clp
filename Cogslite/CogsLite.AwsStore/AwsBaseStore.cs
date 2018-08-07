@@ -50,9 +50,9 @@ namespace CogsLite.AwsStore
             return items;
         }
 
-        protected async Task<TData> FindById(Guid id)
+        protected async Task<TData> FindById(Guid hashKey, Guid rangeKey)
         {
-            var entity = await _dbContext.LoadAsync<TEntity>(id.ToString());
+            var entity = await _dbContext.LoadAsync<TEntity>(hashKey, rangeKey);
             return _getMapper.Value.Map<TData>(entity);
         }
 

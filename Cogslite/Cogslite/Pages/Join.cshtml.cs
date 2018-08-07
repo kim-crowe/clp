@@ -2,6 +2,7 @@
 using CogsLite.Core;
 using Microsoft.AspNetCore.Mvc;
 using GorgleDevs.Mvc;
+using System.Threading.Tasks;
 
 namespace Cogslite.Pages
 {
@@ -23,7 +24,7 @@ namespace Cogslite.Pages
             ViewData["DisplayName"] = displayName;
         }
 
-        public IActionResult OnPost(string emailAddress, string displayName, string password, string confirmPassword)
+        public async Task<IActionResult> OnPost(string emailAddress, string displayName, string password, string confirmPassword)
         {
 			if (password != confirmPassword)
                 return RedirectToAction("Join", new { message = "Password and confirmation password do not match", emailAddress, displayName});
@@ -36,7 +37,7 @@ namespace Cogslite.Pages
 
 			try
             {
-                _userStore.Add(new User
+                await _userStore.Add(new User
                 {
                     EmailAddress = emailAddress,
                     Username = displayName,

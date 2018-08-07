@@ -15,7 +15,7 @@
             </button>
             <strong>@ViewData["Message"]</strong>
         </div>
-        <form method="post" class="form-signin">
+        <form method="post" class="form-signin" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="name"><b>Game Name</b></label>
                 <input type="text" name="name" value="@ViewData["Name"]" required class="form-control" />

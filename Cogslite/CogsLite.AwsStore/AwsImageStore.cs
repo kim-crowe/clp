@@ -11,6 +11,7 @@ namespace CogsLite.AwsStore
 {
     public class AwsImageStore : IImageStore
     {
+        private const string BucketName = "cogs-images";
         private readonly IAmazonS3 _s3Service;
 
         public AwsImageStore(IAmazonS3 s3Service)
@@ -22,7 +23,7 @@ namespace CogsLite.AwsStore
         {
             var putRequest = new PutObjectRequest
             {
-                BucketName = "CogsImages",
+                BucketName = BucketName,
                 Key = imageData.Id.ToString(),
                 InputStream = new MemoryStream(imageData.Data),                
             };
@@ -30,13 +31,16 @@ namespace CogsLite.AwsStore
             putRequest.Metadata.Add("FileName", imageData.OriginalFileName);
 
             var response = await _s3Service.PutObjectAsync(putRequest);
+
+            Console.WriteLine(response.HttpStatusCode);
+            Console.WriteLine(response.ToString());
         }
 
         public async Task<ImageData> Get(Guid id)
         {
             var getRequest = new GetObjectRequest
             {
-                BucketName = "CogsImages",
+                BucketName = BucketName,
                 Key = id.ToString(),
             };
 

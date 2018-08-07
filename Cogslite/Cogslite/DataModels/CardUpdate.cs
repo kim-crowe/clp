@@ -10,6 +10,8 @@ namespace Cogslite.DataModels
     {
 		public String CardId { get; set; }
 		public Guid Id => ShortGuid.Parse(CardId);
+
+		public String GameId { get; set; }
 		public string Name { get; set; }
 		public string Type { get; set; }		
     }

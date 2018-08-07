@@ -25,12 +25,13 @@ namespace CogsLite.AwsStore
         public async Task<Member> GetByEmailAddress(String emailAddress)
         {
             var listUsersRequest = new ListUsersRequest
-            {
+            {            
                 UserPoolId = _userPoolId,
                 Filter = $"email=\"{emailAddress}\""
             };
 
-            var response = await _identityProvider.ListUsersAsync(listUsersRequest);            
+            var response = await _identityProvider.ListUsersAsync(listUsersRequest);
+            Console.WriteLine(response.Users.Count);
             if (response.Users.Count == 1)
                 return response.Users.First().ToMember();
 
@@ -61,25 +62,27 @@ namespace CogsLite.AwsStore
                 Password = user.Password,
                 UserAttributes = new List<AttributeType>
                 {
-                    new AttributeType { Name = "id", Value = Guid.NewGuid().ToString() },
                     new AttributeType { Name = "email", Value = user.EmailAddress }
                 }
             };
 
-            var response = await _identityProvider.SignUpAsync(signupRequest);            
+            var response = await _identityProvider.SignUpAsync(signupRequest);
         }
 
         public async Task<Member> SignIn(string emailAddress, string password)
         {
             try
             {
+                var user = await GetByEmailAddress(emailAddress);
+                Console.WriteLine(user.Username);
+
                 var authReq = new AdminInitiateAuthRequest
                 {
                     UserPoolId = _userPoolId,
                     ClientId = _clientId,
                     AuthFlow = AuthFlowType.ADMIN_NO_SRP_AUTH
                 };
-                authReq.AuthParameters.Add("USERNAME", emailAddress);
+                authReq.AuthParameters.Add("USERNAME", user.Username);
                 authReq.AuthParameters.Add("PASSWORD", password);
 
                 var authResponse = await _identityProvider.AdminInitiateAuthAsync(authReq);

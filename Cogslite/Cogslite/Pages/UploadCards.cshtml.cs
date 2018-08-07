@@ -28,7 +28,7 @@ namespace Cogslite.Pages
             _game = (await _gameStore.Get()).SingleOrDefault(g => g.Id == id);
         }
 
-        public async Task<IActionResult> OnPostAsync(Guid gameId, int cardsPerRow, int cardCount, IFormFile cardSheet, IFormFile infoSheet)
+        public async Task<IActionResult> OnPostAsync(Guid ownerId, Guid gameId, int cardsPerRow, int cardCount, IFormFile cardSheet, IFormFile infoSheet)
         {
 			var cards = new Card[] { };
 			if(infoSheet != null)
@@ -41,12 +41,12 @@ namespace Cogslite.Pages
 
             using (var imageSlicer = new ImageSlicer(cardsPerRow, cardCount, cardSheet.OpenReadStream()))
             {
-                _game = ( await _gameStore.Get()).SingleOrDefault(g => g.Id == gameId);
+                _game = ( await _gameStore.GetSingle(ownerId, gameId));
 
                 if(_game.CardSize == null)
                 {
                     _game.CardSize = imageSlicer.CardSize;
-                    await _gameStore.UpdateOne(_game.Id, g => g.CardSize = imageSlicer.CardSize);
+                    await _gameStore.UpdateOne(ownerId, gameId, g => g.CardSize = imageSlicer.CardSize);
                 }
                 else if(_game.CardSize != imageSlicer.CardSize)
                 {
@@ -67,16 +67,16 @@ namespace Cogslite.Pages
 					index++;
                 }
 
-				await UpdateGameData(gameId);
+				await UpdateGameData(ownerId, gameId);
 
                 return RedirectToPage("/Cards", new { gameId });
             }
         }
 
-		private async Task UpdateGameData(Guid gameId)
+		private async Task UpdateGameData(Guid ownerId, Guid gameId)
 		{
 			var allCards = await _cardStore.Get(gameId);
-			await _gameStore.UpdateOne(gameId, g =>
+			await _gameStore.UpdateOne(ownerId, gameId, g =>
 			{
 				g.CardTypes = allCards.Select(c => c.Type).Distinct().ToArray();
 				g.CardCount = allCards.Count();
