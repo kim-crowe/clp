@@ -17,6 +17,7 @@ namespace Cogslite.Pages
         
         private Game _game;
 		private List<string> _tags;
+		private List<string> _types;
 		private bool _isGameOwner;
 
         public CardsPageModel(IGameStore gameStore, ICardStore cardStore, IImageStore imageStore)
@@ -30,6 +31,8 @@ namespace Cogslite.Pages
 
 		public IEnumerable<string> Tags => _tags;
 
+		public IEnumerable<string> CardTypes => _types;
+
 		public bool IsGameOwner => _isGameOwner;
 
         public async Task OnGet(Guid ownerId, Guid gameId)
@@ -37,6 +40,7 @@ namespace Cogslite.Pages
             _game = await _gameStore.GetSingle(ownerId, gameId);
 			var cards = await _cardStore.Get(gameId);
 			_tags = cards.Where(c => c.Tags != null).SelectMany(c => c.Tags).Distinct().ToList();
+			_types = cards.Where(c => c.Type != null).Select(c => c.Type).Distinct().ToList();
 			_isGameOwner = IsSignedIn && _game.Owner.Id == SignedInUser.Id;
         }		
 
@@ -84,12 +88,12 @@ namespace Cogslite.Pages
 			return new JsonResult(result);
 		}		
 
-		public IActionResult OnPostCardUpdate([FromBody] CardUpdate cardUpdate)
+		public async Task<IActionResult> OnPostCardUpdate([FromBody] CardUpdate cardUpdate)
 		{
-			_cardStore.UpdateOne(ShortGuid.Parse(cardUpdate.GameId), cardUpdate.Id, c =>
+			await _cardStore.UpdateOne(ShortGuid.Parse(cardUpdate.GameId), cardUpdate.Id, c =>
 			{
 				c.Name = cardUpdate.Name;
-				c.Type = cardUpdate.Type;				
+				c.Type = cardUpdate.Type;
 			});
 
 			return new JsonResult(true);

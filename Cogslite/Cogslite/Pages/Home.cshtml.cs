@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Cogslite.DataModels;
 using CogsLite.Core;
 using Microsoft.AspNetCore.Mvc;
+using GorgleDevs.Mvc;
 
 namespace Cogslite.Pages
 {
@@ -25,7 +26,8 @@ namespace Cogslite.Pages
 		{
 			var games = (await _gameStore.Get()).Where(g => g.Name.ToLower().Contains(searchData.SearchText.ToLower())).Select(g => new
 			{
-				id = g.Id,
+				id = g.Id.ToShortGuid(),
+				ownerId = g.Owner.Id.ToShortGuid(),
 				name = g.Name,
 				userName = g.Owner.Username,
 				createdOn = g.CreatedOn.ToString("yyyy-MM-dd"),

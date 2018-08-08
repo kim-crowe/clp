@@ -3,8 +3,8 @@
         cardService: function ($http) {
             return {
                 $http: $http,
-                getCards: function (gameId, search) {
-                    return this.$http.post('/Cards?handler=CardSearch&gameId=' + gameId, search);                    
+                getCards: function (ownerId, gameId, search) {
+                    return this.$http.post('/Cards?handler=CardSearch&ownerId=' + ownerId + '&gameId=' + gameId, search);                    
                 },
                 updateCard: function (card) {
                     return this.$http.post('/Cards?handler=CardUpdate', card);

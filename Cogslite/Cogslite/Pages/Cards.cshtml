@@ -15,6 +15,7 @@
 }
 <input type="hidden" id="af-token" value="@Html.AntiForgeryTokenOnly()" />
 <input type="hidden" id="game-id" value="@Model.Game.Id.ToShortGuid()" />
+<input type="hidden" id="owner-id" value="@Model.Game.Owner.Id.ToShortGuid()" />
 <input type="hidden" id="is-signed-in" value="@Model.IsSignedIn" />
 <input type="hidden" id="is-game-owner" value="@Model.IsGameOwner" />
 <div id="cardApp">
@@ -39,7 +40,7 @@
             <div class="form-group mt-2 mx-2">
                 <b-select class="form-control" v-on:input="onCardTypeChanged">
                     <option value="">All card types</option>
-                    @foreach (var type in Model.Game.CardTypes)
+                    @foreach (var type in Model.CardTypes)
                     {
                         <option value="@type">@type</option>
                     }

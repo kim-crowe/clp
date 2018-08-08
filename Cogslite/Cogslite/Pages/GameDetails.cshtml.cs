@@ -33,7 +33,6 @@ namespace Cogslite.Pages
 				Name = name,
 				CreatedOn = DateTime.Now,
 				Owner = SignedInUser,
-				CardTypes = new string[0],
 				CardCount = 0
             };
 

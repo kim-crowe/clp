@@ -78,7 +78,6 @@ namespace Cogslite.Pages
 			var allCards = await _cardStore.Get(gameId);
 			await _gameStore.UpdateOne(ownerId, gameId, g =>
 			{
-				g.CardTypes = allCards.Select(c => c.Type).Distinct().ToArray();
 				g.CardCount = allCards.Count();
 			});
 		}

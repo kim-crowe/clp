@@ -30,7 +30,7 @@ var gamesVue = new Vue({
             });
         },
         gameUrl: function (game) {
-            return "/Cards?gameId=" + game.id;
+            return "/Cards?ownerId=" + game.ownerId + "&gameId=" + game.id;
         },
         imageUrl: function (game) {
             return "/Image?imageId=" + game.id;

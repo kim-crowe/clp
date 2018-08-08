@@ -5,6 +5,7 @@ var cardsVue = new Vue({
     mixins: [cardServiceFactory, deckServiceFactory, debouncer],
     data: {
         gameId: '',
+        ownerId: '',
         isSignedIn: false,
         isGameOwner: false,
         numberOfPages: 1,
@@ -18,6 +19,7 @@ var cardsVue = new Vue({
     },
     created: function () {
         this.gameId = $('#game-id').val();
+        this.ownerId = $('#owner-id').val();
         this.isSignedIn = $('#is-signed-in').val();
         this.isGameOwner = $('#is-game-owner').val();
         this.refreshCards();
@@ -56,7 +58,7 @@ var cardsVue = new Vue({
             this.deckFilterActive = opt;
         },
         refreshCards: function () {
-            this.cardService(this.$http).getCards(this.gameId, this.search).then(data => {                
+            this.cardService(this.$http).getCards(this.ownerId, this.gameId, this.search).then(data => {                
                 this.cards = data.body.cards;
                 this.numberOfPages = data.body.numberOfPages;
             });
@@ -103,7 +105,7 @@ var cardsVue = new Vue({
                 onConfirm: function (model, vue) {
                     card.name = model.name;
                     card.type = model.type;
-                    vue.cardService(vue.$http).updateCard({CardId: card.id, Name: card.name, Type: card.type});
+                    vue.cardService(vue.$http).updateCard({GameId: vue.gameId, CardId: card.id, Name: card.name, Type: card.type});
                 }
             }
 

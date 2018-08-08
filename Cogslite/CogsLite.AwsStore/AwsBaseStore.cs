@@ -40,7 +40,7 @@ namespace CogsLite.AwsStore
         protected async Task<IEnumerable<TData>> Query(object hashKeyValue)
         {
             var items = new List<TData>();
-            var queryResults = _dbContext.QueryAsync<TEntity>(hashKeyValue);
+            var queryResults = _dbContext.QueryAsync<TEntity>(hashKeyValue.ToString());
             while(queryResults.IsDone == false)
             {
                 var set = await queryResults.GetNextSetAsync();
@@ -52,7 +52,7 @@ namespace CogsLite.AwsStore
 
         protected async Task<TData> FindById(Guid hashKey, Guid rangeKey)
         {
-            var entity = await _dbContext.LoadAsync<TEntity>(hashKey, rangeKey);
+            var entity = await _dbContext.LoadAsync<TEntity>(hashKey.ToString(), rangeKey.ToString());
             return _getMapper.Value.Map<TData>(entity);
         }
 

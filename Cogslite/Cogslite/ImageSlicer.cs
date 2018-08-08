@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using SixLabors.Primitives;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.PixelFormats;
 using System.Collections.Generic;
 using System;
 
@@ -38,7 +40,7 @@ namespace Cogslite
                 {
                     int row = i / _cardsPerRow;
                     int column = i % _cardsPerRow;
-
+                    
                     var splitImage = _image.Clone(x => x.Crop(new Rectangle(column * _cardSize.Width, row * _cardSize.Height, _cardSize.Width, _cardSize.Height)));
 
                     using (var memoryStream = new MemoryStream())
@@ -65,7 +67,7 @@ namespace Cogslite
                 var row = counter / 10;
                 var column = counter % 10;
 
-                finalImage.Mutate(x => x.DrawImage(cardImage, new Size(cardImage.Width, cardImage.Height), new Point(column * cardImage.Width, row * cardImage.Height), GraphicsOptions.Default));
+                finalImage.Mutate(x => x.DrawImage(cardImage, 1));
                 counter++;
             }
 

@@ -11,7 +11,6 @@ namespace CogsLite.Core
         public Member Owner { get; set; }
         public DateTime CreatedOn { get; set; }
         public JsonSize CardSize {get; set;}
-		public string[] CardTypes { get; set; }
 		public int CardCount { get; set; }		
     }
 }
