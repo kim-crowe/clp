@@ -5,7 +5,7 @@ namespace CogsLite.Core
 {
     public interface IImageStore
     {
-        Task Add(ImageData imageData);
-        Task<ImageData> Get(Guid id);
+        Task Add(ImageData imageData);        
+        Task<ImageData> Get(string id);
     }
 }

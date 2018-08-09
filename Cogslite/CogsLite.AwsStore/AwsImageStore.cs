@@ -25,7 +25,9 @@ namespace CogsLite.AwsStore
             {
                 BucketName = BucketName,
                 Key = imageData.Id.ToString(),
-                InputStream = new MemoryStream(imageData.Data),                
+                InputStream = new MemoryStream(imageData.Data),
+                StorageClass = new S3StorageClass("REDUCED_REDUNDANCY"),
+                CannedACL = S3CannedACL.PublicRead
             };
 
             putRequest.Metadata.Add("FileName", imageData.OriginalFileName);
@@ -36,12 +38,12 @@ namespace CogsLite.AwsStore
             Console.WriteLine(response.ToString());
         }
 
-        public async Task<ImageData> Get(Guid id)
+        public async Task<ImageData> Get(string id)
         {
             var getRequest = new GetObjectRequest
             {
                 BucketName = BucketName,
-                Key = id.ToString(),
+                Key = id,
             };
 
             var response = await _s3Service.GetObjectAsync(getRequest);

@@ -69,7 +69,7 @@ var cardsVue = new Vue({
             });
         },
         imageUrl: function (card) {
-            return "/Image?imageId=" + card.id;
+            return "https://s3.eu-west-2.amazonaws.com/cogs-images/" + card.id;
         },
         firstPage: function () {
             this.search.page = 1;

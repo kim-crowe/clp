@@ -31,11 +31,19 @@ namespace CogsLite.AwsStore
 
         protected override void CreateInboundMap(AutoMapper.IMappingExpression<Entities.CogsDeck, Deck> mapping)
         {            
+            mapping            
+                .MapMember(x => x.Owner, y => new Member{Id = y.OwnerId})
+                .MapMember(x => x.Items, 
+                    y => y.Items == null 
+                        ? new DeckItem[0] 
+                        : y.Items.Select(i => new DeckItem { CardId = Guid.Parse(i.Key), Amount = i.Value } ).ToArray());
         }
 
         protected override void CreateOutboundMap(AutoMapper.IMappingExpression<Deck, Entities.CogsDeck> mapping)
         {
-
+            mapping
+                .MapMember(x => x.OwnerId, y => y.Owner.Id)
+                .MapMember(x => x.Items, y => y.Items.ToDictionary(i => i.CardId.ToString(), i => i.Amount));
         }
     }
 }

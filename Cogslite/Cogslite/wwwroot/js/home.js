@@ -33,7 +33,7 @@ var gamesVue = new Vue({
             return "/Cards?ownerId=" + game.ownerId + "&gameId=" + game.id;
         },
         imageUrl: function (game) {
-            return "/Image?imageId=" + game.id;
+            return "https://s3.eu-west-2.amazonaws.com/cogs-images/" + game.id;
         },
         firstPage: function () {
             this.search.page = 1;

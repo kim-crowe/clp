@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using GorgleDevs.Mvc;
 
 namespace Cogslite.Pages
 {
@@ -63,13 +64,13 @@ namespace Cogslite.Pages
 					card.CreatedOn = DateTime.Now;					
 
                     await _cardStore.Add(card);
-                    await _imageStore.Add(new ImageData { Id = card.Id, Data = imageData, OriginalFileName = String.Empty });
+                    await _imageStore.Add(new ImageData { Id = card.Id.ToShortGuid(), Data = imageData, OriginalFileName = String.Empty });
 					index++;
                 }
 
 				await UpdateGameData(ownerId, gameId);
 
-                return RedirectToPage("/Cards", new { gameId });
+                return RedirectToPage("/Cards", new { ownerId, gameId });
             }
         }
 

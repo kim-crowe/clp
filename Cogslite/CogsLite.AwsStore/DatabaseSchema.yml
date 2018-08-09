@@ -34,3 +34,20 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: '5'
         WriteCapacityUnits: '5'
+CardsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Cogs.Decks
+      AttributeDefinitions:
+      - AttributeName: OwnerId
+        AttributeType: S
+      - AttributeName: Id
+        AttributeType: S      
+      KeySchema:
+      - AttributeName: OwnerId
+        KeyType: HASH
+      - AttributeName: Id
+        KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: '5'
+        WriteCapacityUnits: '5'

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using CogsLite.Core;
+using GorgleDevs.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static System.Net.Mime.MediaTypeNames;
@@ -48,7 +49,7 @@ namespace Cogslite.Pages
                     image.CopyTo(ms);
                     var imageData = new ImageData
                     {
-                        Id = newGame.Id,
+                        Id = newGame.Id.ToShortGuid(),
                         OriginalFileName = image.FileName,
                         Data = ms.GetBuffer()
                     };

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cogslite.DataModels;
 using CogsLite.Core;
+using GorgleDevs.Mvc;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cogslite.Pages
@@ -55,7 +56,7 @@ namespace Cogslite.Pages
 			{
 				for (int i = 0; i < item.Amount; i++)
 				{
-					yield return _imageStore.Get(item.CardId).GetAwaiter().GetResult().Data;
+					yield return _imageStore.Get(item.CardId.ToShortGuid()).GetAwaiter().GetResult().Data;
 				}
 			}
 		}
