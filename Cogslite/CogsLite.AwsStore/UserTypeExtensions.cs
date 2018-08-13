@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Amazon.CognitoIdentityProvider.Model;
 using Amazon.DynamoDBv2.Model;
+using Amazon.S3.Model;
 using AutoMapper;
 using CogsLite.Core;
 
@@ -34,6 +35,17 @@ namespace CogsLite.AwsStore
             });
 
             return mapperConfig.CreateMapper();
+        }
+
+        public static int GetInt32(this MetadataCollection metaData, string key)
+        {
+            if(metaData.Keys.Contains(key))
+            {
+                Int32.TryParse(metaData[key], out var result);
+                return result;
+            }
+
+            return 0;
         }
     }        
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Amazon.S3;
@@ -48,13 +49,17 @@ namespace CogsLite.AwsStore
 
             var response = await _s3Service.GetObjectAsync(getRequest);
 
+            if(response.HttpStatusCode != HttpStatusCode.OK)
+                return null;
+
             using (var binaryReader = new BinaryReader(response.ResponseStream))
             {
                 return new ImageData
                 {
                     Id = id,
                     OriginalFileName = response.Metadata["FileName"],
-                    Data = binaryReader.ReadBytes((int)response.ContentLength)
+                    Data = binaryReader.ReadBytes((int)response.ContentLength),
+                    Version = response.Metadata.GetInt32("Version")
                 };
             }
         }

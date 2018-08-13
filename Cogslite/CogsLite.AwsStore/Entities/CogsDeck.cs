@@ -21,6 +21,8 @@ namespace CogsLite.AwsStore.Entities
         
         public string Name { get; set; }
 
+        public int Version { get; set; }
+
         public Dictionary<string, int> Items { get; set; }
     }
 

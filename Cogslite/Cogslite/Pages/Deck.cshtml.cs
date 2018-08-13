@@ -39,15 +39,34 @@ namespace Cogslite.Pages
 		{
 			var theDeck = deck.ToDeck();
 			theDeck.Owner = SignedInUser;
+			theDeck.Version++;
 			await _deckStore.Save(theDeck);
 			return new JsonResult(DeckData.FromDeck(theDeck));
 		}		
 
 		public async Task<IActionResult> OnGetSheet(Guid deckId)
-		{		
-			var deck = await _deckStore.Get(SignedInUser.Id, deckId);
-			var cardCount = deck.Items.Sum(i => i.Amount);
-			return new FileContentResult(ImageSlicer.Composite(DataImages(deck), cardCount), "image/png");
+		{	
+			var deck = await _deckStore.Get(SignedInUser.Id, deckId);	
+			var sheet = await _imageStore.Get(deckId.ToString());
+
+			if(sheet == null || sheet.Version != deck.Version)
+			{
+				var cardCount = deck.Items.Sum(i => i.Amount);
+				var cardSheetData = ImageSlicer.Composite(DataImages(deck), cardCount);
+				
+				var imageData = new ImageData
+				{
+					Id = deckId.ToString(),
+					OriginalFileName = String.Empty,
+					Version = deck.Version,
+					Data = cardSheetData
+				};
+
+				await _imageStore.Add(imageData);
+				return new FileContentResult(cardSheetData, "image/png");
+			}
+			
+			return new FileContentResult(sheet.Data, "image/png");
 		}
 
 		private IEnumerable<byte[]> DataImages(Deck deck)

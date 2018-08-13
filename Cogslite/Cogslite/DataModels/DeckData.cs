@@ -10,6 +10,8 @@ namespace Cogslite.DataModels
 		public string id { get; set; }
 		public string name { get; set; }
 		public string gameid { get; set; }
+
+		public int version { get; set; }
 		public DeckDataItem[] items { get; set; }
 		public bool hasChanges { get; set; }
 
@@ -20,6 +22,7 @@ namespace Cogslite.DataModels
 				Id = ParseOrCreateGuid(id),
 				GameId = ShortGuid.Parse(gameid),
 				Name = name,
+				Version = version,
 				Items = items.Select(i => new DeckItem
 				{
 					CardId = ShortGuid.Parse(i.id),
@@ -40,6 +43,7 @@ namespace Cogslite.DataModels
 				id = deck.Id.ToShortGuid(),
 				gameid = deck.GameId.ToShortGuid(),
 				name = deck.Name,
+				version = deck.Version,
 				items = deck.Items.Select(i => new DeckDataItem { id = i.CardId.ToShortGuid(), amount = i.Amount }).ToArray(),
 				hasChanges = false
 			};

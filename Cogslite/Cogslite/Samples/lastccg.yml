@@ -1,0 +1,16 @@
+Version: 0.1
+Title: L.A.S.T
+
+Cards:
+    - Name: Simple Run
+      Type: Contract
+      Distance: 2
+      Threat: 1
+      Effect: +1 Victory point
+      FlavourText: A simple run down the line, nothing to worry about
+    - Name: Kestrel Run
+      Type: Contarct
+      Distance: 6
+      Threat: 3
+      Effect: + 4 Victory points
+      FlavourText: I hear some guy did this in less than 8.2 parsecs or something...

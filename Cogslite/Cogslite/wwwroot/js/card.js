@@ -133,7 +133,7 @@ var cardsVue = new Vue({
                 ],
                 confirmText: 'Save deck',
                 onConfirm: function (model, parent) {
-                    parent.deck = { id: '', gameId: parent.gameId, name: model.deckName, items: [], hasChanges: true };
+                    parent.deck = { id: '', gameId: parent.gameId, name: model.deckName, items: [], version: 0, hasChanges: true };
                 }
             }
             
