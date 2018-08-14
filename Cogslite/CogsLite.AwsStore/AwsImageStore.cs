@@ -26,8 +26,7 @@ namespace CogsLite.AwsStore
             {
                 BucketName = BucketName,
                 Key = imageData.Id.ToString(),
-                InputStream = new MemoryStream(imageData.Data),
-                StorageClass = new S3StorageClass("REDUCED_REDUNDANCY"),
+                InputStream = new MemoryStream(imageData.Data),                
                 CannedACL = S3CannedACL.PublicRead
             };
 
