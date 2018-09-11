@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Http;
 
 namespace Cogslite
 {
@@ -56,6 +57,13 @@ namespace Cogslite
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.Map(
+                new PathString("/health-check"),
+                a => a.Use(async (context, next) =>
+                {
+                    await context.Response.WriteAsync("ok");
+                }));
+
             app.UseDeveloperExceptionPage();
             app.UseStaticFiles();
             app.UseAuthentication();

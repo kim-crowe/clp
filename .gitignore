@@ -6,6 +6,7 @@
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
+[Oo]ut/
 x64/
 x86/
 bld/
@@ -14,3 +15,5 @@ bld/
 [Ll]og/
 .vscode
 .vs
+
+

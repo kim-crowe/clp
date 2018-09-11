@@ -1,0 +1,138 @@
+LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:               
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+ CogsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:             
+      SecurityGroupIngress:      
+        - SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup 
+          IpProtocol: -1
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+CogsAlb:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub cogslite-alb
+      Scheme: internet-facing
+      LoadBalancerAttributes:
+        - Key: idle_timeout.timeout_seconds
+          Value: '30'
+      SecurityGroups:
+        - !Ref LoadBalancerSecurityGroup      
+
+  CogsALBListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref 'CogsTargetGroup'
+      LoadBalancerArn: !Ref 'CogsAlb'
+      Port: '80'
+      Protocol: HTTP    
+
+  ApiALBListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn: CogsALBListener
+    Properties:
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref 'CogsTargetGroup'
+      Conditions:
+        - Field: path-pattern
+          Values: [/]
+      ListenerArn: !Ref 'CogsALBListener'
+      Priority: 1
+
+  CogsTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn: CogsAlb
+    Properties:
+      Name: !Sub cogslite-target-group
+      HealthCheckIntervalSeconds: 10
+      HealthCheckPath: /health-check
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
+      Port: 80
+      Protocol: HTTP
+      UnhealthyThresholdCount: 2
+      
+  ECSAutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      LaunchConfigurationName: !Ref EcsLaunchConfig
+      MinSize: 1
+      MaxSize: 1
+      DesiredCapacity: 1      
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT15M
+    UpdatePolicy:
+      AutoScalingReplacingUpdate:
+        WillReplace: 'true'
+
+  EcsLaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      # Omit KeyName to prevent SSH
+      ImageId: ami-a44db8c3
+      SecurityGroups:
+        - !Ref CogsSecurityGroup
+      InstanceType: !Ref 'InstanceType'
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+
+          # register with ECS cluster
+          echo ECS_CLUSTER=${ECSCluster} >> /etc/ecs/ecs.config
+          yum install -y aws-cfn-bootstrap
+          /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource ECSAutoScalingGroup --region ${AWS::Region}
+
+  CogsService:
+    Type: AWS::ECS::Service
+    DependsOn: CogsALBListener
+    Properties:
+      # Use default AWSServiceRoleForECS service-linked role
+      ServiceName: !Sub cogslite-ecs
+      Cluster: !Ref 'ECSCluster'
+      DesiredCount: '1'
+      LoadBalancers:
+        - ContainerName: Coglite
+          ContainerPort: '80'
+          TargetGroupArn: !Ref 'CogsTargetGroup'
+      TaskDefinition: !Ref 'CogsTaskDefinition'
+
+  CogsTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub cogslite-task
+      ContainerDefinitions:
+        - Name: Cogslite
+          Essential: 'true'
+          Image: 425510977517.dkr.ecr.eu-west-2.amazonaws.com/cogslite
+          MemoryReservation: 1024
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref 'CloudwatchLogsGroup'
+              awslogs-region: !Ref 'AWS::Region'
+              awslogs-stream-prefix: Api
+          PortMappings:
+            - ContainerPort: 80
+  
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - CogsRole
