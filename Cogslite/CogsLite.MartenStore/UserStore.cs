@@ -1,60 +1,35 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 using CogsLite.Core;
 using Marten;
 
 namespace CogsLite.MartenStore
 {
-    public class UserStore : IUserStore
+    public class UserStore : BaseStore<User>, IUserStore
     {
-        private readonly IDocumentStore _documentStore;
-
-        public UserStore(IDocumentStore documentStore)
-        {
-            _documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
-        }
-
-        public Task Add(Game item)
-        {
-            return Task.Run(() =>
-            {
-                using(var session = _documentStore.LightweightSession())
-                {
-                    session.Store(item);
-                }
-            });
-        }
-
-        public async Task<IEnumerable<Game>> Get()
+        public UserStore(IDocumentStore documentStore) : base(documentStore)
         {            
-            using(var querySession = _documentStore.QuerySession())
-            {
-                return await querySession.Query<Game>().ToListAsync();
-            }            
         }
 
-        public async Task<Game> GetSingle(Guid gameId)
-        {
-            using(var querySession = _documentStore.QuerySession())
-            {
-                return await querySession.Query<Game>().SingleOrDefaultAsync(g => g.Id == gameId);
-            }    
+        public async Task<Member> GetByEmailAddress(string emailAddress)
+        {            
+            return await Single(u => u.EmailAddress == emailAddress);
         }
 
-        public Task<bool> TryAdd(Game game)
+        public async Task<Member> GetByUsername(string username)
         {
-            throw new NotImplementedException();
+            return await Single(u => u.Username == username);
         }
 
-        public async Task UpdateOne(Guid gameId, Action<Game> updateAction)
+        public async Task<Member> SignIn(string emailAddress, string password)
         {
-            using(var session = _documentStore.OpenSession())
-            {
-                var game = await session.Query<Game>().SingleAsync(g => g.Id == gameId);
-                updateAction(game);
-                session.Store(game);
-            }
+            var user = await GetByEmailAddress(emailAddress) as User;
+            if(user != null && user.Password == password)
+                return user;
+            
+            return null;
         }
     }
 }

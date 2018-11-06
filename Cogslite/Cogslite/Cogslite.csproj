@@ -12,7 +12,6 @@
   </ItemGroup>  
   <ItemGroup>
     <ProjectReference Include="..\CogsLite.Core\CogsLite.Core.csproj" />    
-    <ProjectReference Include="..\GorgleDevs.Mvc\GorgleDevs.Mvc.csproj" />
-    <ProjectReference Include="..\CogsLite.AwsStore\CogsLite.AwsStore.csproj" />
+    <ProjectReference Include="..\GorgleDevs.Mvc\GorgleDevs.Mvc.csproj" />    
   </ItemGroup>
 </Project>

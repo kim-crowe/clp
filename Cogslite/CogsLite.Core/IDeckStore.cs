@@ -7,7 +7,7 @@ namespace CogsLite.Core
 	public interface IDeckStore
 	{
 		Task Save(Deck deck);
-		Task<Deck> Get(Guid ownerId, Guid deckId);
+		Task<Deck> Get(Guid deckId);
 		Task<IEnumerable<Deck>> ByGameAndOwner(Guid gameId, Guid ownerId);
 	}
 }
