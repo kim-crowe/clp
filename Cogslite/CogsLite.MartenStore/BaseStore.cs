@@ -17,15 +17,13 @@ namespace CogsLite.MartenStore
             _documentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
         }
 
-        public Task Add(TEntity item)
-        {
-            return Task.Run(() =>
+        public async Task Add(TEntity item)
+        {            
+            using(var session = _documentStore.LightweightSession())
             {
-                using(var session = _documentStore.LightweightSession())
-                {
-                    session.Store(item);
-                }
-            });
+                session.Store(item);
+                await session.SaveChangesAsync();
+            }            
         }
 
         public async Task<IEnumerable<TEntity>> Get()

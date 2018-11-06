@@ -40,7 +40,7 @@ namespace Cogslite
                 options.LoginPath = "/SignIn";
             });
 
-            services.AddMarten("Server=localhost;Port=5432;Database=Cogs;User Id=postgres;Password=admin;");
+            services.AddMarten("Server=localhost;Port=5432;Database=cogs;User Id=postgres;Password=admin;");
 
 			services.AddMvc(opts =>
 			{
