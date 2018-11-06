@@ -37,7 +37,7 @@ namespace Cogslite.Pages
 
         public async Task OnGet(Guid ownerId, Guid gameId)
         {
-            _game = await _gameStore.GetSingle(ownerId, gameId);
+            _game = await _gameStore.GetSingle(gameId);
 			var cards = await _cardStore.Get(gameId);
 			_tags = cards.Where(c => c.Tags != null).SelectMany(c => c.Tags).Distinct().ToList();
 			_types = cards.Where(c => c.Type != null).Select(c => c.Type).Distinct().ToList();
@@ -47,7 +47,7 @@ namespace Cogslite.Pages
 		public async Task<IActionResult> OnPostCardSearch(Guid ownerId, Guid gameId, [FromBody] CardSearch cardSearch)
 		{
 			var pageIndex = cardSearch.Page - 1;
-			_game = await _gameStore.GetSingle(ownerId, gameId);
+			_game = await _gameStore.GetSingle(gameId);
 			var cards = ( await _cardStore.Get(gameId)).ToList();
 
 			if (!String.IsNullOrEmpty(cardSearch.CardType))
@@ -90,7 +90,7 @@ namespace Cogslite.Pages
 
 		public async Task<IActionResult> OnPostCardUpdate([FromBody] CardUpdate cardUpdate)
 		{
-			await _cardStore.UpdateOne(ShortGuid.Parse(cardUpdate.GameId), cardUpdate.Id, c =>
+			await _cardStore.UpdateOne(cardUpdate.Id, c =>
 			{
 				c.Name = cardUpdate.Name;
 				c.Type = cardUpdate.Type;

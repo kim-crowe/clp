@@ -42,12 +42,12 @@ namespace Cogslite.Pages
 
             using (var imageSlicer = new ImageSlicer(cardsPerRow, cardCount, cardSheet.OpenReadStream()))
             {
-                _game = ( await _gameStore.GetSingle(ownerId, gameId));
+                _game = ( await _gameStore.GetSingle(gameId));
 
                 if(_game.CardSize == null)
                 {
                     _game.CardSize = imageSlicer.CardSize;
-                    await _gameStore.UpdateOne(ownerId, gameId, g => g.CardSize = imageSlicer.CardSize);
+                    await _gameStore.UpdateOne(gameId, g => g.CardSize = imageSlicer.CardSize);
                 }
                 else if(_game.CardSize != imageSlicer.CardSize)
                 {
@@ -77,7 +77,7 @@ namespace Cogslite.Pages
 		private async Task UpdateGameData(Guid ownerId, Guid gameId)
 		{
 			var allCards = await _cardStore.Get(gameId);
-			await _gameStore.UpdateOne(ownerId, gameId, g =>
+			await _gameStore.UpdateOne(gameId, g =>
 			{
 				g.CardCount = allCards.Count();
 			});
