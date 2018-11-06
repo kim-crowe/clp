@@ -11,6 +11,7 @@
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0005" />
   </ItemGroup>  
   <ItemGroup>
+    <ProjectReference Include="..\CogsLite.MartenStore\CogsLite.MartenStore.csproj" />    
     <ProjectReference Include="..\CogsLite.Core\CogsLite.Core.csproj" />    
     <ProjectReference Include="..\GorgleDevs.Mvc\GorgleDevs.Mvc.csproj" />    
   </ItemGroup>

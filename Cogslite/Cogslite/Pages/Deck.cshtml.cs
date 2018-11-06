@@ -31,7 +31,7 @@ namespace Cogslite.Pages
 
 		public async Task<IActionResult> OnGet(Guid deckId)
 		{			
-			var deck = await _deckStore.Get(SignedInUser.Id, deckId);
+			var deck = await _deckStore.Get(deckId);
 			return new JsonResult(DeckData.FromDeck(deck));
 		}
 
@@ -46,7 +46,7 @@ namespace Cogslite.Pages
 
 		public async Task<IActionResult> OnGetSheet(Guid deckId)
 		{	
-			var deck = await _deckStore.Get(SignedInUser.Id, deckId);	
+			var deck = await _deckStore.Get(deckId);	
 			var sheet = await _imageStore.Get(deckId.ToString());
 
 			if(sheet == null || sheet.Version != deck.Version)

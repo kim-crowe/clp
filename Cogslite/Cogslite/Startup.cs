@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CogsLite.Core;
-using CogsLite.AwsStore;
+using CogsLite.MartenStore;
 using GorgleDevs.Mvc;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -40,6 +40,8 @@ namespace Cogslite
                 options.LoginPath = "/SignIn";
             });
 
+            services.AddMarten("Server=localhost;Port=5432;Database=Cogs;User Id=postgres;Password=admin;");
+
 			services.AddMvc(opts =>
 			{
 				opts.UseShortGuids();
@@ -47,11 +49,7 @@ namespace Cogslite
 			.AddRazorOptions(options =>
 			{
 				options.PageViewLocationFormats.Add("/Pages/Dialogs/{0}.cshtml");				
-			});
-
-            var awsOptions = Configuration.GetAWSOptions();            
-            services.ConfigureCognito(Configuration);
-			services.AddAwsStoresForCogs(awsOptions);
+			});                    			
         }        
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

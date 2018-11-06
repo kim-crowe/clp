@@ -1,0 +1,25 @@
+version: '3'
+services:
+  web:
+    build: ./Cogslite
+    image: cogs-web
+    ports: 
+      - "5000:80"
+    
+  db:
+    image: postgres:9.6 # Should match version used for Aurora DB
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=cogs    
+
+  flyway:
+    depends_on:
+      - db    
+    image: boxfuse/flyway
+    entrypoint: /bin/bash
+    command: ["-c", "until exec 3>/dev/tcp/db/5432 ; do echo waiting for db...; sleep 5; done; echo done && flyway migrate"]
+    volumes:
+      - "./Database/Migrations:/flyway/sql"
+      - "./Database/Configuration:/flyway/conf"
