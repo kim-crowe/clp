@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cogslite", "Cogslite\Cogsli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CogsLite.Core", "CogsLite.Core\CogsLite.Core.csproj", "{316CA3E1-A4DE-4E2C-A2FD-105C59B377C4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CogsLite.MongoStore", "CogsLite.MongoStore\CogsLite.MongoStore.csproj", "{57F87F7A-93CC-47DF-93C2-CBBF21451660}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CogsLite.Api", "CogsLite.Api\CogsLite.Api.csproj", "{57F87F7A-93CC-47DF-93C2-CBBF21451660}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GorgleDevs.Mvc", "GorgleDevs.Mvc\GorgleDevs.Mvc.csproj", "{4F14ED46-A44D-43AB-9A19-DDBD6892A82F}"
 EndProject
