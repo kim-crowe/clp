@@ -3,11 +3,11 @@
 var gamesVue = new Vue({
     el: '#games',
     mixins: [gameServiceFactory],
-    data: {        
+    data: {
         isSignedIn: false,
         numberOfPages: 1,
         search: { page: 1, itemsPerPage: 6, searchText: '' },
-        games: []        
+        games: []
     },
     created: function () {
         this.isSignedIn = $('#is-signed-in').val();
@@ -22,7 +22,7 @@ var gamesVue = new Vue({
         onSearchChange: function (e) {
             this.search.searchText = e.target.value;
             this.refreshGames();
-        },        
+        },
         refreshGames: function () {
             this.gameService(this.$http).getGames(this.search).then(data => {
                 this.games = data.body.games;
@@ -33,7 +33,7 @@ var gamesVue = new Vue({
             return "/Cards?ownerId=" + game.ownerId + "&gameId=" + game.id;
         },
         imageUrl: function (game) {
-            return "https://s3.eu-west-2.amazonaws.com/cogs-images/" + game.id;
+            return game.imageUrl;
         },
         firstPage: function () {
             this.search.page = 1;
@@ -54,6 +54,6 @@ var gamesVue = new Vue({
         lastPage: function () {
             this.search.page = this.numberOfPages;
             this.refreshGames();
-        }       
+        }
     }
 });

@@ -31,7 +31,8 @@ namespace Cogslite.Pages
 				name = g.Name,
 				userName = g.Owner.Username,
 				createdOn = g.CreatedOn.ToString("yyyy-MM-dd"),
-				cardCount = g.CardCount
+				cardCount = g.CardCount,
+				imageUrl = g.ImageUrl
 			}).ToList();
 
 			var pageIndex = searchData.Page - 1;

@@ -28,7 +28,7 @@ namespace Cogslite.Pages
 
         public async Task<IActionResult> OnPostAsync(string name, IFormFile image)
         {
-			Game newGame = new Game
+            Game newGame = new Game
 			{
 				Id = Guid.NewGuid(),
 				Name = name,
@@ -37,22 +37,17 @@ namespace Cogslite.Pages
 				CardCount = 0
             };
 
-            await _gameStore.Add(newGame);
-
             if (image != null)
             {
                 using (var ms = new MemoryStream())
                 {
-                    image.CopyTo(ms);
-                    var imageData = new ImageData
-                    {
-                        Id = newGame.Id.ToShortGuid(),
-                        OriginalFileName = image.FileName,
-                        Data = ms.GetBuffer()
-                    };
-                    await _imageStore.Add(imageData);
+                    image.CopyTo(ms);                    
+                    string imageType = Path.GetExtension(image.FileName);
+                    newGame.ImageUrl = await _imageStore.Add("Game", newGame.Id, imageType, ms.GetBuffer());
                 }
             }
+
+            await _gameStore.Add(newGame);
                 
             return Redirect("Home");
         }

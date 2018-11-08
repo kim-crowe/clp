@@ -64,7 +64,7 @@ namespace Cogslite.Pages
 					card.CreatedOn = DateTime.Now;					
 
                     await _cardStore.Add(card);
-                    await _imageStore.Add(new ImageData { Id = card.Id.ToShortGuid(), Data = imageData, OriginalFileName = String.Empty });
+                    await _imageStore.Add("Card", card.Id, "png", imageData);
 					index++;
                 }
 

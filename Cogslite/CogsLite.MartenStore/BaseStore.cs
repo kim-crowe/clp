@@ -49,6 +49,7 @@ namespace CogsLite.MartenStore
                 var item = await session.Query<TEntity>().SingleAsync(x => x.Id == id);
                 updateAction(item);
                 session.Store(item);
+                await session.SaveChangesAsync();
             }
         }
 

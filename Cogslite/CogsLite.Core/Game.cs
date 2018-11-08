@@ -12,5 +12,6 @@ namespace CogsLite.Core
         public DateTime CreatedOn { get; set; }
         public JsonSize CardSize {get; set;}
 		public int CardCount { get; set; }		
+        public string ImageUrl { get; set; }
     }
 }

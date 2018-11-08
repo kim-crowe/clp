@@ -18,6 +18,9 @@ db-drop:  ## Drop all migrations in the local Postgres DB
 db-down:  ## Stop the local Postgres DB
 	$(DOCKER-COMPOSE) rm -fs db
 
+run-web:
+	dotnet run --project ./Cogslite/Cogslite.csproj
+
 .PHONY: tear-down
 tear-down:  ## Forcibly destroy all running containers, including volumes and networks
 	$(DOCKER-COMPOSE) rm -sfv

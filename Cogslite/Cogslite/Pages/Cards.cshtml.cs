@@ -81,7 +81,8 @@ namespace Cogslite.Pages
 				cards = cards.Skip(pageIndex * cardSearch.ItemsPerPage).Take(cardSearch.ItemsPerPage).Select(c => new {
 					Id = c.Id.ToShortGuid(),
 					c.Name,
-					c.Type}),
+					c.Type,
+					imageUrl = c.ImageUrl}),
 				numberOfPages = pageCount
 			};
 

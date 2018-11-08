@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
 using CogsLite.Core;
@@ -6,23 +8,26 @@ namespace CogsLite.MartenStore
 {
     public class ImageStore : IImageStore
     {        
-        public Task Add(ImageData imageData)
+        public Task<string> Add(string associatedObjectType, Guid associatedObjectId, string imageType, byte[] data)
         {
-            File.WriteAllBytes($"image_data\\{imageData.Id}.dat", imageData.Data);
-            return Task.CompletedTask;
+            File.WriteAllBytes($"wwwroot\\images\\store\\{associatedObjectType}\\{associatedObjectId}.{imageType}", data);
+            var filePath = $"/images/store/{associatedObjectType}/{associatedObjectId}.{imageType}";
+            return Task.FromResult(filePath);
         }
 
-        public Task<ImageData> Get(string id)
-        {            
-            var result = new ImageData
+        public Task<byte[]> Get(string associatedObjectType, Guid associatedObjectId)
+        {
+            return Task.Run(() =>
             {
-                Id = id,
-                Data = File.ReadAllBytes($"image_data\\{id}.dat"),
-                OriginalFileName = string.Empty,
-                Version = 1
-            };
+                var file = Directory
+                    .GetFiles($"wwwroot\\images\\store\\{associatedObjectType}\\{associatedObjectId}.*")
+                    .SingleOrDefault();
 
-            return Task.FromResult(result);
+                if (file != null)
+                    return File.ReadAllBytes(file);
+                
+                return null;
+            });
         }
     }
 }

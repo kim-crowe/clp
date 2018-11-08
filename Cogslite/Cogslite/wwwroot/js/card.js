@@ -25,7 +25,7 @@ var cardsVue = new Vue({
         this.refreshCards();
         this.refreshDeckList();
     },
-    computed: {        
+    computed: {
         hasDeck: function () {
             return this.deck != null;
         },
@@ -39,8 +39,8 @@ var cardsVue = new Vue({
             else
                 return 0;
         }
-    },    
-    methods: {        
+    },
+    methods: {
         onSearchChange: function (e) {
             this.search.cardName = e.target.value;
             this.refreshCards();
@@ -49,7 +49,7 @@ var cardsVue = new Vue({
             this.search.cardType = cardType;
             this.refreshCards();
         },
-        filterByDeck: function (opt) {            
+        filterByDeck: function (opt) {
             if (opt && this.deck && this.deck.items && this.deck.items.length > 0)
                 this.search.cardIds = this.deck.items.map(function (item) { return item.id });
             else
@@ -58,7 +58,7 @@ var cardsVue = new Vue({
             this.deckFilterActive = opt;
         },
         refreshCards: function () {
-            this.cardService(this.$http).getCards(this.ownerId, this.gameId, this.search).then(data => {                
+            this.cardService(this.$http).getCards(this.ownerId, this.gameId, this.search).then(data => {
                 this.cards = data.body.cards;
                 this.numberOfPages = data.body.numberOfPages;
             });
@@ -69,7 +69,7 @@ var cardsVue = new Vue({
             });
         },
         imageUrl: function (card) {
-            return "https://s3.eu-west-2.amazonaws.com/cogs-images/" + card.id;
+            return card.imageUrl;
         },
         firstPage: function () {
             this.search.page = 1;
@@ -105,7 +105,7 @@ var cardsVue = new Vue({
                 onConfirm: function (model, vue) {
                     card.name = model.name;
                     card.type = model.type;
-                    vue.cardService(vue.$http).updateCard({GameId: vue.gameId, CardId: card.id, Name: card.name, Type: card.type});
+                    vue.cardService(vue.$http).updateCard({ GameId: vue.gameId, CardId: card.id, Name: card.name, Type: card.type });
                 }
             }
 
@@ -115,8 +115,8 @@ var cardsVue = new Vue({
             this.dialog = {
                 title: "Deck urls",
                 fields: [
-                    { name: "backUrl", type: "copytext", value: "http://"+window.location.host+"/Image?imageId="+this.gameId, label: "Card back" },
-                    { name: "deckUrl", type: "copytext", value: "http://"+window.location.host+"/Deck?handler=Sheet&deckId="+this.deck.id, label: "Cards"}
+                    { name: "backUrl", type: "copytext", value: "http://" + window.location.host + "/Image?imageId=" + this.gameId, label: "Card back" },
+                    { name: "deckUrl", type: "copytext", value: "http://" + window.location.host + "/Deck?handler=Sheet&deckId=" + this.deck.id, label: "Cards" }
                 ],
                 hideConfirmButton: true,
                 cancelText: "Close"
@@ -124,24 +124,24 @@ var cardsVue = new Vue({
 
             $('#modal1').modal();
         },
-        newDeck: function () {            
+        newDeck: function () {
 
-            this.dialog = {                
+            this.dialog = {
                 title: "Create a new deck",
                 fields: [
-                    { name: "deckName", type: "text", placeholder: "Deck name..." }                 
+                    { name: "deckName", type: "text", placeholder: "Deck name..." }
                 ],
                 confirmText: 'Save deck',
                 onConfirm: function (model, parent) {
                     parent.deck = { id: '', gameId: parent.gameId, name: model.deckName, items: [], version: 0, hasChanges: true };
                 }
             }
-            
+
             $('#modal1').modal();
         },
         loadDeck: function () {
 
-           var decksAsOptions = this.decks.map(function (deck) {
+            var decksAsOptions = this.decks.map(function (deck) {
                 return {
                     value: deck.id,
                     text: deck.name
@@ -181,7 +181,7 @@ var cardsVue = new Vue({
             if (deckEntry.amount < 1) {
                 var index = this.deck.items.indexOf(deckEntry);
                 this.deck.items.splice(index, 1);
-            }            
+            }
 
             this.deck.hasChanges = true;
         },
@@ -192,7 +192,7 @@ var cardsVue = new Vue({
             if (deckEntry)
                 deckEntry.amount++;
             else
-                this.deck.items.push({ id: card.id, amount: 1 });                
+                this.deck.items.push({ id: card.id, amount: 1 });
 
             this.deck.hasChanges = true;
         },

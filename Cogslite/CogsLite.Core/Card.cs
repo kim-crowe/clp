@@ -9,5 +9,7 @@ namespace CogsLite.Core
 		public string[] Tags { get; set; }
         public Guid GameId { get; set; }
         public DateTime CreatedOn { get; set; }
+
+        public string ImageUrl { get; set; }
     }
 }

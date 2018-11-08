@@ -47,26 +47,17 @@ namespace Cogslite.Pages
 		public async Task<IActionResult> OnGetSheet(Guid deckId)
 		{	
 			var deck = await _deckStore.Get(deckId);	
-			var sheet = await _imageStore.Get(deckId.ToString());
+			var sheet = await _imageStore.Get("Deck", deckId);
 
-			if(sheet == null || sheet.Version != deck.Version)
+			if(sheet == null)
 			{
 				var cardCount = deck.Items.Sum(i => i.Amount);
-				var cardSheetData = ImageSlicer.Composite(DataImages(deck), cardCount);
-				
-				var imageData = new ImageData
-				{
-					Id = deckId.ToString(),
-					OriginalFileName = String.Empty,
-					Version = deck.Version,
-					Data = cardSheetData
-				};
-
-				await _imageStore.Add(imageData);
+				var cardSheetData = ImageSlicer.Composite(DataImages(deck), cardCount);				
+				await _imageStore.Add("Deck", deckId, "png", cardSheetData);
 				return new FileContentResult(cardSheetData, "image/png");
 			}
 			
-			return new FileContentResult(sheet.Data, "image/png");
+			return new FileContentResult(sheet, "image/png");
 		}
 
 		private IEnumerable<byte[]> DataImages(Deck deck)
@@ -75,7 +66,7 @@ namespace Cogslite.Pages
 			{
 				for (int i = 0; i < item.Amount; i++)
 				{
-					yield return _imageStore.Get(item.CardId.ToShortGuid()).GetAwaiter().GetResult().Data;
+					yield return _imageStore.Get("Card",  item.CardId).GetAwaiter().GetResult();
 				}
 			}
 		}
