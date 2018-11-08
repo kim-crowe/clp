@@ -23,6 +23,19 @@ namespace CogsLite.Api
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
         }
 
+		[HttpPost("/api/card/{cardId}/update")]
+		public async Task<IActionResult> Update(Guid cardId, CardUpdateRequest cardUpdate)
+		{		
+			await _cardStore.UpdateOne(cardId, c =>
+			{
+				c.Name = cardUpdate.Name;
+				c.Type = cardUpdate.Type;
+			});
+
+			return new JsonResult(true);
+		}
+
+		[HttpPost("/api/games/{gameId}/card/search")]
         public async Task<IActionResult> Search(Guid gameId, CardSearchRequest searchRequest)
         {
             var pageIndex = searchRequest.Page - 1;			

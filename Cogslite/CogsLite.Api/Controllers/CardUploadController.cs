@@ -22,6 +22,7 @@ namespace CogsLite.Api
             _gameStore = gameStore ?? throw new ArgumentNullException(nameof(gameStore));
         }
 
+        [HttpPost("api/game/{gameId}/upload/")]
         public async Task<IActionResult> UploadCards(Guid gameId, int cardsPerRow, int cardCount, IFormFile cardSheet)
         {
 			var cards = new Card[] { };					

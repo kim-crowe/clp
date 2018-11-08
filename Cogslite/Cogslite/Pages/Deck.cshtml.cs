@@ -20,14 +20,14 @@ namespace Cogslite.Pages
 			_imageStore = imageStore ?? throw new ArgumentNullException(nameof(imageStore));
 		}
 
-		public async Task<IActionResult> OnGetList(Guid gameId)
-		{
-			if (SignedInUser == null)
-				return new JsonResult(new DeckData[0]);
+			public async Task<IActionResult> OnGetList(Guid gameId)
+			{
+				if (SignedInUser == null)
+					return new JsonResult(new DeckData[0]);
 
-			var decks = await _deckStore.ByGameAndOwner(gameId, SignedInUser.Id);
-			return new JsonResult(decks.Select(DeckData.FromDeck));
-		}
+				var decks = await _deckStore.ByGameAndOwner(gameId, SignedInUser.Id);
+				return new JsonResult(decks.Select(DeckData.FromDeck));
+			}
 
 		public async Task<IActionResult> OnGet(Guid deckId)
 		{			
