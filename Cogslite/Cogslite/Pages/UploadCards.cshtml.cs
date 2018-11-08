@@ -57,14 +57,13 @@ namespace Cogslite.Pages
 
 				var index = 0;
 				foreach (var imageData in imageSlicer.Slices)
-                {
-					var card = cards.Length > index ? cards[index] : new Card();
+                {                    
+                 	var card = cards.Length > index ? cards[index] : new Card();
 					card.Id = Guid.NewGuid();
 					card.GameId = gameId;
 					card.CreatedOn = DateTime.Now;					
-
-                    await _cardStore.Add(card);
-                    await _imageStore.Add("Card", card.Id, "png", imageData);
+                    card.ImageUrl = await _imageStore.Add("Card", card.Id, "png", imageData);                    
+                    await _cardStore.Add(card);                    
 					index++;
                 }
 

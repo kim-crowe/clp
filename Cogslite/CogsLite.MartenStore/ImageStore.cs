@@ -20,7 +20,7 @@ namespace CogsLite.MartenStore
             return Task.Run(() =>
             {
                 var file = Directory
-                    .GetFiles($"wwwroot\\images\\store\\{associatedObjectType}\\{associatedObjectId}.*")
+                    .GetFiles($"wwwroot\\images\\store\\{associatedObjectType}", $"{associatedObjectId}.*")
                     .SingleOrDefault();
 
                 if (file != null)
