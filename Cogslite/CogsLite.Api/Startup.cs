@@ -13,6 +13,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using GorgleDevs.Mvc;
 using CogsLite.MartenStore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CogsLite.Api
 {
@@ -28,7 +30,22 @@ namespace CogsLite.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+            Authentication.LoadKeys();
             services.AddMarten("Server=localhost;Port=5432;Database=cogs;User Id=postgres;Password=admin;");
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateLifetime = true,
+                        ValidateAudience = false,
+                        ValidateActor = false,
+                        ValidateIssuer = false,
+                        IssuerSigningKeyResolver = (t, st, kid, p) => Authentication.GetSigningKey(kid)
+                    };
+                });
 
             services
                 .AddMvc(opts => opts.UseShortGuids())
@@ -52,6 +69,11 @@ namespace CogsLite.Api
                     }));
             }
             
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
             app.UseMvc();
         }
     }

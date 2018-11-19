@@ -1,10 +1,13 @@
-﻿using CogsLite.Core;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using CogsLite.Core;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using GorgleDevs.Mvc;
+
 
 namespace Cogslite.Pages
 {
@@ -29,48 +32,57 @@ namespace Cogslite.Pages
             _game = (await _gameStore.Get()).SingleOrDefault(g => g.Id == id);
         }
 
-        public async Task<IActionResult> OnPostAsync(Guid ownerId, Guid gameId, int cardsPerRow, int cardCount, IFormFile cardSheet, IFormFile infoSheet)
+        public async Task<IActionResult> OnPostAsync(Guid ownerId, Guid gameId, int cardWidth, int cardHeight, IFormFile cardData, IFormFile images)
         {
-			var cards = new Card[] { };
-			if(infoSheet != null)
-			{
-				using (var reader = new System.IO.StreamReader(infoSheet.OpenReadStream()))
-				{
-					cards = CardList.FromString(reader.ReadToEnd()).ToArray();
-				}
-			}			
+            if(cardData == null)
+                throw new ArgumentNullException(nameof(cardData));
 
-            using (var imageSlicer = new ImageSlicer(cardsPerRow, cardCount, cardSheet.OpenReadStream()))
+			var cards = new List<Card>();
+            			
+            using (var reader = new System.IO.StreamReader(cardData.OpenReadStream()))
             {
-                _game = ( await _gameStore.GetSingle(gameId));
-
-                if(_game.CardSize == null)
+                var data = new DataTable().PopulateFromTsv(reader);
+                foreach(var row in data.Rows.Cast<DataRow>())
                 {
-                    _game.CardSize = imageSlicer.CardSize;
-                    await _gameStore.UpdateOne(gameId, g => g.CardSize = imageSlicer.CardSize);
+                    var card = new Card
+                    {
+                        Id = Guid.NewGuid(),
+                        GameId = gameId,
+                        Name = row["Name"].ToString(),
+                        Type = row["Type"].ToString(),
+                        Tags = row["Tags"].ToString().Split(","),
+                        CreatedOn = DateTime.UtcNow
+                    };
+                    cards.Add(card);
                 }
-                else if(_game.CardSize != imageSlicer.CardSize)
-                {
-                    // Problem, card sizes are different
-                    return RedirectToAction("UploadCards");
-                }				
-
-				var index = 0;
-				foreach (var imageData in imageSlicer.Slices)
-                {                    
-                 	var card = cards.Length > index ? cards[index] : new Card();
-					card.Id = Guid.NewGuid();
-					card.GameId = gameId;
-					card.CreatedOn = DateTime.Now;					
-                    card.ImageUrl = await _imageStore.Add("Card", card.Id, "png", imageData);                    
-                    await _cardStore.Add(card);                    
-					index++;
-                }
-
-				await UpdateGameData(ownerId, gameId);
-
-                return RedirectToPage("/Cards", new { ownerId, gameId });
             }
+
+            if(images != null)
+            {
+                using(var imageSlicer = new ImageSlicer(cardWidth, cardHeight, images.OpenReadStream()))
+                {
+                    int cardIndex = 0;
+                    foreach(var image in imageSlicer.Images)
+                    {
+                        if(cardIndex >= cards.Count)
+                            break;
+
+                        var card = cards[cardIndex];
+                        card.ImageUrl = await _imageStore.Add("Card", card.Id, "png", image);
+                        cardIndex++;
+                    }
+                }
+            }
+
+            foreach(var card in cards)
+            {
+                await _cardStore.Add(card);
+            }
+
+            await UpdateGameData(ownerId, gameId);
+
+            return RedirectToPage("/Cards", new { ownerId, gameId });
+            
         }
 
 		private async Task UpdateGameData(Guid ownerId, Guid gameId)

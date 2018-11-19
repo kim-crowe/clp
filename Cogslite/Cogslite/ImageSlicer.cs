@@ -10,43 +10,43 @@ namespace Cogslite
 {
     public class ImageSlicer : IDisposable
     {
-        private readonly int _cardCount;
         private readonly int _rows;
         private readonly int _cardsPerRow;
         private readonly System.Drawing.Size _cardSize;
         private readonly Image<Rgba32> _image;
 
-        public ImageSlicer(int cardsPerRow, int cardCount, Stream imageData)
+        public ImageSlicer(int cardWidth, int cardHeight, Stream imageData)
         {
-            _cardCount = cardCount;
-            _cardsPerRow = cardsPerRow;
-
-            _rows = (cardCount / cardsPerRow);
-            if (cardCount % cardsPerRow > 0)
-                _rows++;
-
+            _cardSize = new System.Drawing.Size(cardWidth, cardHeight);            
             _image = Image.Load(imageData);
 
-            _cardSize = new System.Drawing.Size(_image.Width / cardsPerRow, _image.Height / _rows);
+            if(_image.Width % cardWidth > 0)
+                throw new ArgumentException("Card width is not consistent with image width");
+
+            if(_image.Height % cardHeight > 0)
+                throw new ArgumentException("Card height is not consistent with image height");
+
+            _cardsPerRow = _image.Width / cardWidth;
+            _rows = _image.Height / cardHeight;
         }
 
         public System.Drawing.Size CardSize => _cardSize;
 
-        public IEnumerable<byte[]> Slices
+        public IEnumerable<byte[]> Images
         {
             get
             {
-                for (int i = 0; i < _cardCount; i++)
+                for (int row = 0; row < _rows; row++)
                 {
-                    int row = i / _cardsPerRow;
-                    int column = i % _cardsPerRow;
-                    
-                    var splitImage = _image.Clone(x => x.Crop(new Rectangle(column * _cardSize.Width, row * _cardSize.Height, _cardSize.Width, _cardSize.Height)));
-
-                    using (var memoryStream = new MemoryStream())
+                    for(int col = 0; col < _cardsPerRow; col++)
                     {
-                        splitImage.SaveAsPng(memoryStream);
-                        yield return memoryStream.GetBuffer();
+                        var splitImage = _image.Clone(x => x.Crop(new Rectangle(col * _cardSize.Width, row * _cardSize.Height, _cardSize.Width, _cardSize.Height)));
+
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            splitImage.SaveAsPng(memoryStream);
+                            yield return memoryStream.GetBuffer();
+                        }
                     }
                 }
             }

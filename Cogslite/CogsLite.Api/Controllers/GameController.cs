@@ -24,7 +24,7 @@ namespace CogsLite.Api.Controllers
             _gameStore = gameStore ?? throw new ArgumentNullException(nameof(gameStore));
             _imageStore = imageStore ?? throw new ArgumentNullException(nameof(imageStore));
             _userContext = userContext;            
-        }
+        }        
 
         [HttpPost("search")]
         public async Task<IActionResult> Search(GameSearchRequest searchRequest)
