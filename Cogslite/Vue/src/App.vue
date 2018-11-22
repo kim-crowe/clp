@@ -1,0 +1,81 @@
+<template>
+  <div id="app">
+    <div class="bg-cogs-primary">
+      <nav class="w-full flex items-center justify-between flex-wrap py-2 px-6 container mx-auto">
+        <span>
+          <cogs-glyph/>
+          <span class="text-cogs-secondary font-semibold text-xl tracking-tight">Cogslite</span>
+        </span>
+        <span v-if="!isSignedIn">
+          <LinkButton link="https://cogs.auth.eu-west-2.amazoncognito.com/login?response_type=token&client_id=1bf03fuqd017thrnnej7lcpeb7&redirect_uri=http%3A%2F%2Flocalhost%3A8080">Sign In</LinkButton></span>
+        <span v-if="isSignedIn">
+          <router-link class="mx-2 bg-cogs-alt inline-block rounded py-2 px-4 text-red-darker no-underline" to="/game/new">G</router-link>
+          <drop-down-button :text="profile.userName">
+            <div class="bg-white shadow rounded border overflow-hidden">
+              <a href="#" class="no-underline block px-4 py-3 border-b text-grey-darkest bg-white hover:text-white hover:bg-red-darker whitespace-no-wrap">My games</a>
+              <a href="#" class="no-underline block px-4 py-3 border-b text-grey-darkest bg-white hover:text-white hover:bg-red-darker whitespace-no-wrap">My decks</a>
+              <a href="#" class="no-underline block px-4 py-3 border-b text-grey-darkest bg-white hover:text-white hover:bg-red-darker whitespace-no-wrap">Logout</a>
+            </div>
+          </drop-down-button>
+        </span>
+      </nav>
+    </div>
+    <router-view/>
+  </div>
+</template>
+
+<script>
+import profileService from "./services/profileService";
+import LinkButton from "./components/LinkButton";
+import CogsGlyph from "./components/CogsGlyph";
+import DropDownButton from "./components/DropDownButton";
+
+export default {
+  name: "App",
+  components: { CogsGlyph, DropDownButton, LinkButton },
+  mounted: function() {
+    profileService.getProfile().then(p => (this.profile = p));
+  },
+  computed: {
+    isSignedIn: function() {
+      return this.$auth.isSignedIn();
+    }
+  },
+  data: function() {
+    return {
+      profile: {}
+    };
+  }
+};
+</script>
+
+<style>
+@import url("http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,300,400,700");
+#app {
+  font-family: "Open Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: left;
+  color: #2c3e50;
+}
+
+.bg-cogs-primary {
+  background-color: #1a0315;
+}
+
+.bg-cogs-secondary {
+  background-color: #535353;
+}
+
+.bg-cogs-alt {
+  background-color: #dcae1d;
+}
+
+.text-cogs-secondary {
+  color: #dcae1d;
+}
+
+.text-cogs-primary {
+  color: #984b43;
+}
+</style>
