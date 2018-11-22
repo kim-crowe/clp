@@ -2,10 +2,12 @@
 
 namespace CogsLite.Core
 {
-    public class Member : BaseObject
+    public class Member
     {
+        public Guid Id { get; set; }
         public string EmailAddress { get; set; }
-        public string Username { get; set; }
+        public string UserName { get; set; }
+
         public override bool Equals(object obj)
         {
             if (obj is Member member)

@@ -5,6 +5,6 @@ namespace CogsLite.Api
 {
     public interface IUserContext
     {
-        User SignedInUser { get; set; }
+        Member SignedInUser { get; }
     }
 }

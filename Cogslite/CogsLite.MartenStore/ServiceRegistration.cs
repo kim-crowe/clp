@@ -11,7 +11,6 @@ namespace CogsLite.MartenStore
         {
             var documentStore = DocumentStore.For(connectionString);
             serviceCollection.AddSingleton<IDocumentStore>(documentStore);
-            serviceCollection.AddScoped<IUserStore, UserStore>();
             serviceCollection.AddScoped<IGameStore, GameStore>();
             serviceCollection.AddScoped<ICardStore, CardStore>();
             serviceCollection.AddScoped<IDeckStore, DeckStore>();

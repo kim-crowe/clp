@@ -8,6 +8,7 @@ namespace CogsLite.Core
 	public class Game : BaseObject
     {
         public string Name { get; set; }
+        public string Description { get; set; }
         public Member Owner { get; set; }
         public DateTime CreatedOn { get; set; }
         public JsonSize CardSize {get; set;}

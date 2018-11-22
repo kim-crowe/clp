@@ -15,6 +15,10 @@ using GorgleDevs.Mvc;
 using CogsLite.MartenStore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace CogsLite.Api
 {
@@ -31,24 +35,30 @@ namespace CogsLite.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
+            services.AddHttpContextAccessor();
+
             Authentication.LoadKeys();
+            services.AddScoped<IUserContext, ClaimsIdentityUserContext>();
             services.AddMarten("Server=localhost;Port=5432;Database=cogs;User Id=postgres;Password=admin;");
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+                .AddJwtBearer(x =>
                 {
-                    options.TokenValidationParameters = new TokenValidationParameters
+                    x.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateLifetime = true,
-                        ValidateAudience = false,
-                        ValidateActor = false,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKeyResolver = (t, st, kid, v) => Authentication.GetSigningKey(kid),
                         ValidateIssuer = false,
-                        IssuerSigningKeyResolver = (t, st, kid, p) => Authentication.GetSigningKey(kid)
+                        ValidateAudience = false,
+                        ValidateLifetime = true
                     };
                 });
 
             services
-                .AddMvc(opts => opts.UseShortGuids())
+                .AddMvc(opts => 
+                {
+                  opts.UseShortGuids();
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -74,7 +84,8 @@ namespace CogsLite.Api
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
+            app.UseAuthentication();
             app.UseMvc();
-        }
+        }                
     }
 }

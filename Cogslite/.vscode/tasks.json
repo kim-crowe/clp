@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/Cogslite/Cogslite.csproj"
+                "${workspaceFolder}/Cogslite.Api/Cogslite.Api.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

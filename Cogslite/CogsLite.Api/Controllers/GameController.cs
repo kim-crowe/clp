@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CogsLite.Api.Payloads;
 using CogsLite.Core;
 using GorgleDevs.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,17 +25,19 @@ namespace CogsLite.Api.Controllers
             _gameStore = gameStore ?? throw new ArgumentNullException(nameof(gameStore));
             _imageStore = imageStore ?? throw new ArgumentNullException(nameof(imageStore));
             _userContext = userContext;            
-        }        
+        }
 
         [HttpPost("search")]
-        public async Task<IActionResult> Search(GameSearchRequest searchRequest)
+        public async Task<IActionResult> Search([FromBody] GameSearchRequest searchRequest)
         {
-            var games = (await _gameStore.Get()).Where(g => g.Name.ToLower().Contains(searchRequest.SearchText.ToLower())).Select(g => new
+            var gamesOut = (await _gameStore.Get()).Where(g => g.Name.ToLower().Contains(searchRequest.SearchText.ToLower()));
+            
+            var games = gamesOut.Select(g => new
 			{
 				id = g.Id.ToShortGuid(),
 				ownerId = g.Owner.Id.ToShortGuid(),
 				name = g.Name,
-				userName = g.Owner.Username,
+				userName = g.Owner.UserName,
 				createdOn = g.CreatedOn.ToString("yyyy-MM-dd"),
 				cardCount = g.CardCount,
 				imageUrl = g.ImageUrl
@@ -55,13 +58,15 @@ namespace CogsLite.Api.Controllers
 			return new JsonResult(result);
         }
 
+        [Authorize]
         [HttpPost("create")]
-        public async Task<IActionResult> Create(string name, IFormFile image)
+        public async Task<IActionResult> Create([FromForm] string name, [FromForm] string description, IFormFile image)
         {
             Game newGame = new Game
 			{
 				Id = Guid.NewGuid(),
 				Name = name,
+                Description = description,
 				CreatedOn = DateTime.Now,
 				Owner = _userContext.SignedInUser,
 				CardCount = 0
