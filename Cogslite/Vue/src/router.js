@@ -19,6 +19,11 @@ export default new Router({
       component: () => import('./views/NewGame.vue'),
     },
     {
+      path: '/game/:gameId/cards/add',
+      name: 'add-cards',
+      component: () => import("./views/AddCards.vue"),
+    },
+    {
       path: '/game/:gameId/cards',
       name: 'cards',
       // route level code-splitting

@@ -43,12 +43,17 @@ export default {
       this.filter = e.target.value;
     },
     refreshGames: function() {
-      this.games = gamesService.getGames();
+      gamesService.getGames().then(d => {
+        this.games = d.games;
+      });
     }
   },
   computed: {
     filteredGames: function() {
-      return this.games.filter(g => g.name.startsWith(this.filter));
+      if (this.games) {
+        return this.games.filter(g => g.name.startsWith(this.filter));
+      }
+      return [];
     }
   },
   data: function() {

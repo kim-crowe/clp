@@ -85,6 +85,7 @@ namespace CogsLite.Api
                 .AllowAnyHeader());
 
             app.UseAuthentication();
+            app.UseStaticFiles();
             app.UseMvc();
         }                
     }

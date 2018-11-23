@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto my-6">
-    <div class="w-full max-w-md mx-auto">
+    <div class="w-full max-w-md mx-auto" v-show="!success">
       <div class="font-bold text-2xl p-1">Create a new game</div>
       <div class="p-1 pb-4 border-b">You can create and manage cards for your game once it is created</div>
       <label class="block my-2" for="name">Name</label>
@@ -25,6 +25,16 @@
         <button class="bg-red focus:outline-none text-white py-2 px-4 ml-2 rounded" type="button">Cancel</button>
       </div>
     </div>
+    <div class="w-full max-w-md mx-auto" v-show="success">
+      <div class="bg-green-lightest border-l-4 border-green text-green-dark p-4 my-2" role="alert">
+        <p class="font-bold">Success</p>
+        <p>Your game has been created, go forth and make awesome.</p>
+      </div>
+      <div class="my-2">
+        <img v-bind:src="imagePreview" class="rounded float-left" width="90" height="130" />
+        <span class="text-3xl text-bold mx-3">{{name}}</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -34,7 +44,9 @@ import gameService from "../services/gamesService";
 export default {
   methods: {
     saveGame() {
-      gameService.saveGame(this.name, this.description, this.file);
+      gameService
+        .saveGame(this.name, this.description, this.file)
+        .then(r => (this.success = true));
     },
     handleFileUpload() {
       this.file = this.$refs.image.files[0];
@@ -63,6 +75,7 @@ export default {
   },
   data: function() {
     return {
+      success: false,
       file: null,
       imagePreview: null,
       showPreview: false
