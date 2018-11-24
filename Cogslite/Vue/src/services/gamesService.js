@@ -9,9 +9,7 @@ export default {
     formData.append("name", name);
     formData.append("description", description);
     formData.append("image", image);
-
-    alert(image);
-
+    
     return axios.post("games/create",
       formData,
       {
