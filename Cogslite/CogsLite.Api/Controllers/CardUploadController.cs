@@ -31,17 +31,7 @@ namespace CogsLite.Api
             {
                 var game = ( await _gameStore.GetSingle(gameId));
 
-                if(game.CardSize == null)
-                {
-                    game.CardSize = imageSlicer.CardSize;
-                    await _gameStore.UpdateOne(gameId, g => g.CardSize = imageSlicer.CardSize);
-                }
-                else if (game.CardSize != imageSlicer.CardSize)
-                {
-                    throw new System.InvalidOperationException("Card size error");
-                }				
-
-				var index = 0;
+                var index = 0;
 				foreach (var imageData in imageSlicer.Slices)
                 {                    
                  	var card = cards.Length > index ? cards[index] : new Card();

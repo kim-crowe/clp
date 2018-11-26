@@ -30,8 +30,6 @@ namespace CogsLite.Api
             _cardSize = new System.Drawing.Size(_image.Width / cardsPerRow, _image.Height / _rows);
         }
 
-        public System.Drawing.Size CardSize => _cardSize;
-
         public IEnumerable<byte[]> Slices
         {
             get
@@ -41,7 +39,13 @@ namespace CogsLite.Api
                     int row = i / _cardsPerRow;
                     int column = i % _cardsPerRow;
                     
-                    var splitImage = _image.Clone(x => x.Crop(new Rectangle(column * _cardSize.Width, row * _cardSize.Height, _cardSize.Width, _cardSize.Height)));
+                    var splitImage = _image.Clone(x => x
+                        .Crop(new Rectangle(column * _cardSize.Width, row * _cardSize.Height, _cardSize.Width, _cardSize.Height))
+                        .Resize(new ResizeOptions
+                        {
+                            Mode = ResizeMode.Stretch,
+                            Size = new Size(250, 350)
+                        }));
 
                     using (var memoryStream = new MemoryStream())
                     {

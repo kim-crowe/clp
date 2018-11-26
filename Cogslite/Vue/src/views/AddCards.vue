@@ -20,6 +20,10 @@
             w-24 py-2 px-4 text-grey-darker leading-tight
             focus:outline-none focus:bg-white focus:border-purple" id="description" type="number">
             <file-select @fileSelected="fileSelected" @previewReady="previewLoaded" text="Choose a card sheet"/>
+            <div>
+              <button @click="uploadCards" :class="['rounded', 'bg-green', 'px-4', 'py-2', 'text-white', 'mr-4', {'opacity-50': !isValid}, {'cursor-not-allowed': !isValid}]">Upload cards</button>
+              <button class="rounded bg-red px-4 py-2 text-white">Cancel</button>
+            </div>
         </div>
         <div class="w-1/2 my-4">
           <div class="rounded bg-grey-dark relative overflow-hidden" style="width: 250px; height: 350px;">
@@ -36,11 +40,16 @@
 </template>
 
 <script>
+import cardsService from "../services/cardsService";
 import FileSelect from "../components/FileSelect";
 
 export default {
   components: { FileSelect },
   methods: {
+    uploadCards() {
+      var gameId = this.$route.params.gameId;
+      cardsService.uploadCards(gameId, this.cardsPerRow, this.cardCount, this.file);
+    },
     fileSelected(file) {
       this.file = file;
     },
@@ -67,7 +76,6 @@ export default {
       var rowIndex = Math.floor(this.cardIndex / this.cardsPerRow);
       var columnIndex = this.cardIndex % this.cardsPerRow;
 
-      //canvas.drawImage(this.preview, 0, 0, imageWidth, imageHeight, 0, 0, 250, 350);
       canvas.drawImage(this.preview, columnIndex * imageWidth, rowIndex * imageHeight, imageWidth, imageHeight, 0, 0, 250, 350);
     },
     nextCard() {
@@ -93,6 +101,19 @@ export default {
       showPreview: false,
       file: null,
       cardIndex: 0
+    }
+  },
+  computed: {
+    isValid: function() {
+      return this.showPreview && this.cardsPerRow > 0 && this.cardCount > 0;
+    }
+  },
+  watch: {
+    cardsPerRow: function() {
+      this.updatePreview();
+    },
+    cardCount : function() {
+      this.updatePreview();
     }
   }
 }
