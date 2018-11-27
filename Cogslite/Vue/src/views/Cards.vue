@@ -2,10 +2,10 @@
   <div class="container mx-auto mt-2">
     <div class="float-left mr-2">
       <img class="rounded block" :src="gameImageUrl(game)" width="90" height="180">
-      <a
+      <router-link
         class="block rounded-full bg-cogs-secondary text-cogs-secondary px-2 py-1 my-2 text-center text-xs no-underline"
-        href="#"
-      >Add cards</a>
+        :to="{name: 'add-cards', params: {gameId: game.id}}"
+      >Add cards</router-link>
       <a
         class="block rounded-full bg-cogs-secondary text-cogs-secondary px-2 py-1 my-2 text-center text-xs no-underline"
         href="#"
@@ -13,7 +13,7 @@
     </div>
     <div class="p-2 mx-3 text-3xl font-semibold">{{game.name}}</div>
     <div>
-      <page-buttons currentPage="1" totalPages="1"/>
+      <page-buttons :currentPage="search.page" :totalPages="numberOfPages" @first="gotoFirst" @last="gotoLast" @previous="gotoPrevious" @next="gotoNext"/>
       <input type="text">
     </div>
     <ul class="list-reset flex flex-wrap px-2 py-2">
@@ -47,7 +47,32 @@ export default {
     loadCards: function() {
       cardsService.search(this.game.id, this.search).then(data => {
         this.cards = data.cards;
+        this.numberOfPages = data.numberOfPages;
       });
+    },
+    gotoPage: function(page) {
+      this.search.page = page;
+      this.loadCards();
+    },
+    gotoFirst: function() {
+      if(this.search.page > 1) {
+        this.gotoPage(1);        
+      }      
+    },
+    gotoPrevious: function() {
+      if(this.search.page > 1) {
+        this.gotoPage(this.search.page - 1);
+      }
+    },
+    gotoLast: function() {
+      if(this.search.page < this.numberOfPages) {
+        this.gotoPage(this.numberOfPages);
+      }
+    },
+    gotoNext : function() {
+      if(this.search.page < this.numberOfPages) {
+        this.gotoPage(this.search.page + 1);
+      }
     }
   },
   data: function() {
@@ -61,7 +86,8 @@ export default {
         tags: [],
         cardIds: []
       },
-      cards: []
+      cards: [],
+      numberOfPages: 1
     };
   }
 };
