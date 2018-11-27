@@ -12,6 +12,10 @@
       >Edit details</a>
     </div>
     <div class="p-2 mx-3 text-3xl font-semibold">{{game.name}}</div>
+    <div>
+      <page-buttons currentPage="1" totalPages="1"/>
+      <input type="text">
+    </div>
     <ul class="list-reset flex flex-wrap px-2 py-2">
       <li v-for="card in cards" v-bind:key="card.id">
         <card-item :card="card"/>
@@ -28,7 +32,7 @@ import cardsService from "../services/cardsService";
 
 export default {
   name: "cards",
-  components: { CardItem },
+  components: { CardItem, PageButtons },
   mounted: function() {
     var gameId = this.$route.params.gameId;
     gamesService.getGame(gameId).then(game => {

@@ -17,7 +17,7 @@
       </div>
       <ul class="flex flex-wrap w-3/4 mx-auto list-reset">
         <li v-for="game in filteredGames" v-bind:key="game.id">
-          <GameTile :game="game"/>
+          <GameTile :game="game" @select="selectGame"/>
         </li>
       </ul>
     </div>
@@ -43,6 +43,9 @@ export default {
   methods: {
     onSearch: function(e) {
       this.filter = e.target.value;
+    },
+    selectGame: function(game) {
+      this.$router.push({ name: "cards", params: { gameId: game.id } });
     },
     refreshGames: function() {
       gamesService.getGames().then(d => {

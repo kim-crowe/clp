@@ -1,10 +1,29 @@
 <template>
-  <ul class="pagination">
-      <li class="page-item"><a class="page-link" href="#" v-on:click="gotoFirst"><i class="fa fa-angle-double-left"></i></a></li>
-      <li class="page-item"><a class="page-link" href="#" v-on:click="gotoPrevious"><i class="fa fa-angle-left"></i></a></li>
-      <li class="page-item active"><a class="page-link" href="#">Page {{currentPage}} of {{totalPages}}</a></li>
-      <li class="page-item"><a class="page-link" href="#" v-on:click="gotoNext"><i class="fa fa-angle-right"></i></a></li>
-      <li class="page-item"><a class="page-link" href="#" v-on:click="gotoLast"><i class="fa fa-angle-double-right"></i></a></li>
+  <ul class="flex list-reset border border-grey-light rounded w-auto font-sans">
+    <li>
+      <a
+        class="block hover:text-white hover:bg-blue text-blue border-r border-grey-light px-3 py-2"
+        href="#"
+      >Previous</a>
+    </li>
+    <li>
+      <a
+        class="block hover:text-white hover:bg-blue text-blue border-r border-grey-light px-3 py-2"
+        href="#"
+      >1</a>
+    </li>
+    <li>
+      <a
+        class="block hover:text-white hover:bg-blue text-blue border-r border-grey-light px-3 py-2"
+        href="#"
+      >2</a>
+    </li>
+    <li>
+      <a class="block text-white bg-blue border-r border-blue px-3 py-2" href="#">3</a>
+    </li>
+    <li>
+      <a class="block hover:text-white hover:bg-blue text-blue px-3 py-2" href="#">Next</a>
+    </li>
   </ul>
 </template>
 
