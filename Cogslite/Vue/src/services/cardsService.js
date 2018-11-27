@@ -16,6 +16,6 @@ export default {
       });
   },
   search: function (gameId, search) {
-    return axios.post(`games/${gameId}/cards`, search);
+    return axios.post(`games/${gameId}/cards`, search).then(r => r.data);
   }
 }

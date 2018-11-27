@@ -70,7 +70,7 @@ namespace CogsLite.Api
 			var result = new
 			{
 				cards = cards.SelectPage(
-                    searchRequest.Page - 1,
+                    pageIndex,
                     searchRequest.ItemsPerPage,
                     c => new {
                         Id = c.Id.ToShortGuid(),
