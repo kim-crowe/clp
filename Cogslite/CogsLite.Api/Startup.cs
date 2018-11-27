@@ -39,7 +39,9 @@ namespace CogsLite.Api
 
             Authentication.LoadKeys();
             services.AddScoped<IUserContext, ClaimsIdentityUserContext>();
-            services.AddMarten("Server=localhost;Port=5432;Database=cogs;User Id=postgres;Password=admin;");
+            var dbHost = Configuration.GetValue<string>("DB_HOST") ?? "localhost";
+            var dbPort = Configuration.GetValue<string>("DB_PORT") ?? "5432";
+            services.AddMarten($"Server={dbHost};Port={dbPort};Database=cogs;User Id=postgres;Password=admin;");
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(x =>

@@ -27,6 +27,15 @@ namespace CogsLite.Api.Controllers
             _userContext = userContext;            
         }
 
+        [HttpGet("{gameId}")]
+        public async Task<IActionResult> Get(Guid gameId)
+        {
+            var game = await _gameStore.GetSingle(gameId);
+            if (game == null)
+                return NotFound();
+            return new JsonResult(game);
+        }
+
         [HttpPost("search")]
         public async Task<IActionResult> Search([FromBody] GameSearchRequest searchRequest)
         {

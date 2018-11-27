@@ -4,6 +4,12 @@ services:
     image: cogs-api
     ports: 
       - "5000:80"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+    volumes:
+      - "/c/DockerShare/imagesstore/card:/wwwroot/images/store/card"
+      - "/c/DockerShare/imagesstore/game:/wwwroot/images/store/game"
     
   db:
     image: postgres:9.6 # Should match version used for Aurora DB

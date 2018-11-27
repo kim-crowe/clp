@@ -35,10 +35,10 @@ namespace CogsLite.Api
 			return new JsonResult(true);
 		}
 
-		[HttpPost("/api/games/{gameId}/card/search")]
+		[HttpPost("/api/games/{gameId}/cards")]
         public async Task<IActionResult> Search(Guid gameId, CardSearchRequest searchRequest)
         {
-            var pageIndex = searchRequest.Page - 1;			
+            var pageIndex = searchRequest.Page - 1;
 			var cards = ( await _cardStore.Get(gameId)).ToList();
 
 			if (!String.IsNullOrEmpty(searchRequest.CardType))
@@ -70,7 +70,7 @@ namespace CogsLite.Api
 			var result = new
 			{
 				cards = cards.SelectPage(
-                    searchRequest.Page,
+                    searchRequest.Page - 1,
                     searchRequest.ItemsPerPage,
                     c => new {
                         Id = c.Id.ToShortGuid(),

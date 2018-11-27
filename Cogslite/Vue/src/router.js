@@ -26,10 +26,7 @@ export default new Router({
     {
       path: '/game/:gameId/cards',
       name: 'cards',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/Cards.vue'),
+      component: () => import('./views/Cards.vue'),
     }
   ]
 });
