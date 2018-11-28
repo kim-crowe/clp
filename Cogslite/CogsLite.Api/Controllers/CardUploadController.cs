@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CogsLite.Api
 {
+    [ApiController]
     public class CardUploadController : ControllerBase
     {
         private readonly ICardStore _cardStore;
@@ -23,7 +24,7 @@ namespace CogsLite.Api
         }
 
         [HttpPost("api/game/{gameId}/upload/")]
-        public async Task<IActionResult> UploadCards(Guid gameId, int cardsPerRow, int cardCount, IFormFile cardSheet)
+        public async Task<IActionResult> UploadCards(Guid gameId, [FromForm] int cardsPerRow, [FromForm] int cardCount, IFormFile cardSheet)
         {
 			var cards = new Card[] { };					
 
@@ -38,7 +39,7 @@ namespace CogsLite.Api
 					card.Id = Guid.NewGuid();
 					card.GameId = gameId;
 					card.CreatedOn = DateTime.Now;					
-                    card.ImageUrl = await _imageStore.Add("Card", card.Id, "png", imageData);                    
+                    card.ImageUrl = await _imageStore.Add("Card", card.Id, "png", imageData);
                     await _cardStore.Add(card);                    
 					index++;
                 }

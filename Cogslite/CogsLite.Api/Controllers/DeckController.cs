@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CogsLite.Api.Controllers
 {
+	[ApiController]
     public class DeckController : ControllerBase
     {
         private readonly IDeckStore _deckStore;
@@ -36,7 +37,7 @@ namespace CogsLite.Api.Controllers
 		}
 
         [HttpPost("/api/deck")]
-		public async Task<IActionResult> OnPostDeck([FromBody]DeckData deck)
+		public async Task<IActionResult> OnPostDeck(DeckData deck)
 		{
 			var theDeck = deck.ToDeck();
 			theDeck.Owner = _userContext.SignedInUser;

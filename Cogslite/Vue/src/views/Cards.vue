@@ -13,12 +13,39 @@
     </div>
     <div class="p-2 mx-3 text-3xl font-semibold">{{game.name}}</div>
     <div>
-      <page-buttons :currentPage="search.page" :totalPages="numberOfPages" @first="gotoFirst" @last="gotoLast" @previous="gotoPrevious" @next="gotoNext"/>
-      <input type="text">
+      <page-buttons
+        :currentPage="search.page"
+        :totalPages="numberOfPages"
+        @first="gotoFirst"
+        @last="gotoLast"
+        @previous="gotoPrevious"
+        @next="gotoNext"
+      />
+      <ul class="inline-flex list-reset border border-grey rounded w-auto ml-2">
+        <li>
+          <a
+            :class="[ {'opt-active': filterByDeck}, 'opt' ]"
+            @click="filterByDeck(true)"
+            href="#"
+          >Deck</a>
+        </li>
+        <li>
+          <a
+            :class="[ {'opt-active': !filterByDeck}, 'opt' ]"
+            @click="filterByDeck(false)"
+            href="#"
+          >All</a>
+        </li>
+      </ul>
     </div>
     <ul class="list-reset flex flex-wrap px-2 py-2">
       <li v-for="card in cards" v-bind:key="card.id">
-        <card-item :card="card"/>
+        <card-item
+          :card="card"
+          :cardCount="cardCount(card)"
+          @add="addCard(card)"
+          @remove="removeCard(card)"
+        />
       </li>
     </ul>
   </div>
@@ -29,6 +56,7 @@ import CardItem from "../components/CardItem";
 import PageButtons from "../components/PageButtons";
 import gamesService from "../services/gamesService";
 import cardsService from "../services/cardsService";
+import * as utils from "../utils/deck";
 
 export default {
   name: "cards",
@@ -50,29 +78,46 @@ export default {
         this.numberOfPages = data.numberOfPages;
       });
     },
+    filterByDeck: function(opt) {
+      if (opt && this.deck && this.deck.items && this.deck.items.length > 0)
+        this.search.cardIds = this.deck.items.map(function(item) {
+          return item.id;
+        });
+      else this.search.cardIds = [];
+      this.loadCards();
+    },
     gotoPage: function(page) {
       this.search.page = page;
       this.loadCards();
     },
     gotoFirst: function() {
-      if(this.search.page > 1) {
-        this.gotoPage(1);        
-      }      
+      if (this.search.page > 1) {
+        this.gotoPage(1);
+      }
     },
     gotoPrevious: function() {
-      if(this.search.page > 1) {
+      if (this.search.page > 1) {
         this.gotoPage(this.search.page - 1);
       }
     },
     gotoLast: function() {
-      if(this.search.page < this.numberOfPages) {
+      if (this.search.page < this.numberOfPages) {
         this.gotoPage(this.numberOfPages);
       }
     },
-    gotoNext : function() {
-      if(this.search.page < this.numberOfPages) {
+    gotoNext: function() {
+      if (this.search.page < this.numberOfPages) {
         this.gotoPage(this.search.page + 1);
       }
+    },
+    addCard: function(card) {
+      this.deck.addCard(card);
+    },
+    removeCard: function(card) {
+      this.deck.removeCard(card);
+    },
+    cardCount: function(card) {
+      return this.deck.countOf(card);
     }
   },
   data: function() {
@@ -87,8 +132,20 @@ export default {
         cardIds: []
       },
       cards: [],
-      numberOfPages: 1
+      numberOfPages: 1,
+      deck: new utils.Deck(),
+      filterByDeck: false
     };
   }
 };
 </script>
+
+<style>
+.opt-active {
+}
+.opt {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+</style>
+
