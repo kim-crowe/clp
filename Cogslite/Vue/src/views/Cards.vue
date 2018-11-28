@@ -44,8 +44,8 @@
           @remove="removeCard(card)"
         />
       </li>
-    </ul>
-  </div>
+    </ul>    
+  </div>  
 </template>
 
 <script>
@@ -150,6 +150,9 @@ export default {
   padding-bottom: 1rem;
   width: 50px;
   text-decoration: none;
+}
+.bg-dialog {
+  background-color: rgb(0,0,0,0,.25);
 }
 </style>
 

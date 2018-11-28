@@ -1,5 +1,15 @@
 <template>
   <div id="app">
+    <div class="fixed pin z-50 overflow-auto bg-overlay flex justify-center">
+      <div class="rounded border border-black bg-white block" style="width: 450px; height: 250px; margin-top: 300px;">
+        <div class="px-2 py-2 bg-cogs-primary text-cogs-secondary block">Load a deck</div>
+        <div class="p-6">
+          <ul class="list-reset mx-auto border border-grey h-32 overflow-auto">
+            <li v-for="opt in options" v-bind:key="opt" class="p-2 hover:bg-blue hover:text-white">{{opt}}</li>
+          </ul>
+        </div>
+      </div>
+  </div>
     <div class="bg-cogs-primary">
       <nav class="w-full flex items-center justify-between flex-wrap py-2 px-6 container mx-auto">
         <span>
@@ -45,7 +55,8 @@ export default {
   },
   data: function() {
     return {
-      profile: {}
+      profile: {},
+      options: ['Chaos starter deck', 'Lawful good', 'Trilobyte Deck', 'Experiment 001', 'Tournament 001']
     };
   }
 };
@@ -79,5 +90,9 @@ export default {
 
 .text-cogs-primary {
   color: #984b43;
+}
+
+.bg-overlay {
+  background-color: rgba(0, 0, 0, 0.4);
 }
 </style>
