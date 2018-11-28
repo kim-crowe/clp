@@ -6,14 +6,17 @@ export class Deck {
 
   removeCard(card) {
     var deckEntry = this.getDeckEntry(card);
-    deckEntry.amount--;
 
-    if (deckEntry.amount < 1) {
-      var index = this.deck.items.indexOf(deckEntry);
-      this.items.splice(index, 1);
+    if(deckEntry) {
+      deckEntry.amount--;
+
+      if (deckEntry.amount < 1) {
+        var index = this.items.indexOf(deckEntry);
+        this.items.splice(index, 1);
+      }
+
+      this.hasChanges = true;
     }
-
-    this.hasChanges = true;
   }
 
   addCard(card) {

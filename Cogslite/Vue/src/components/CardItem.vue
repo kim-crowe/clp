@@ -18,8 +18,9 @@
       </div>
     </div>
     <div
+      v-show="cardCount > 0"
       style="top: -.625rem; right: -.625rem;"
-      class="rounded-full h-6 w-6 flex items-center justify-center bg-yellow-dark text-orange-dark absolute border border-orange"
+      class="rounded-full h-6 w-6 flex items-center justify-center bg-yellow-dark text-red-darker absolute border border-red-darker"
     >{{cardCount}}</div>
     <img
       class="rounded"

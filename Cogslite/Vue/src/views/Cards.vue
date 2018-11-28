@@ -21,20 +21,17 @@
         @previous="gotoPrevious"
         @next="gotoNext"
       />
-      <ul class="inline-flex list-reset border border-grey rounded w-auto ml-2">
-        <li>
-          <a
-            :class="[ {'opt-active': filterByDeck}, 'opt' ]"
-            @click="filterByDeck(true)"
-            href="#"
-          >Deck</a>
+      <ul class="inline-flex list-reset border border-grey rounded w-auto ml-2 text-grey-dark">
+        <li
+            :class="[ {'opt-active': filterByDeck}, 'py-2', 'w-16', 'block', 'text-center', 'no-underline', 'cursor-pointer' ]"
+            @click="toggleDeckFilter(true)"
+          >Deck
         </li>
-        <li>
-          <a
-            :class="[ {'opt-active': !filterByDeck}, 'opt' ]"
-            @click="filterByDeck(false)"
+        <li
+            :class="[ {'opt-active': !filterByDeck}, 'py-2', 'w-16', 'block', 'text-center', 'no-underline', 'cursor-pointer' ]"
+            @click="toggleDeckFilter(false)"
             href="#"
-          >All</a>
+          >All
         </li>
       </ul>
     </div>
@@ -78,13 +75,16 @@ export default {
         this.numberOfPages = data.numberOfPages;
       });
     },
-    filterByDeck: function(opt) {
+    toggleDeckFilter: function(opt) {      
       if (opt && this.deck && this.deck.items && this.deck.items.length > 0)
+      {
+        this.search.page = 1
         this.search.cardIds = this.deck.items.map(function(item) {
           return item.id;
         });
-      else this.search.cardIds = [];
+      } else this.search.cardIds = [];
       this.loadCards();
+      this.filterByDeck = opt;
     },
     gotoPage: function(page) {
       this.search.page = page;
@@ -142,10 +142,14 @@ export default {
 
 <style>
 .opt-active {
+  background-color: #535353;
+  color: #dcae1d;
 }
 .opt {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  width: 50px;
+  text-decoration: none;
 }
 </style>
 
