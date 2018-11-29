@@ -9,6 +9,7 @@
       <a
         class="block rounded-full bg-cogs-secondary text-cogs-secondary px-2 py-1 my-2 text-center text-xs no-underline"
         href="#"
+        @click="loadDeck"
       >Edit details</a>
     </div>
     <div class="p-2 mx-3 text-3xl font-semibold">{{game.name}}</div>
@@ -23,16 +24,14 @@
       />
       <ul class="inline-flex list-reset border border-grey rounded w-auto ml-2 text-grey-dark">
         <li
-            :class="[ {'opt-active': filterByDeck}, 'py-2', 'w-16', 'block', 'text-center', 'no-underline', 'cursor-pointer' ]"
-            @click="toggleDeckFilter(true)"
-          >Deck
-        </li>
+          :class="[ {'opt-active': filterByDeck}, 'py-2', 'w-16', 'block', 'text-center', 'no-underline', 'cursor-pointer' ]"
+          @click="toggleDeckFilter(true)"
+        >Deck</li>
         <li
-            :class="[ {'opt-active': !filterByDeck}, 'py-2', 'w-16', 'block', 'text-center', 'no-underline', 'cursor-pointer' ]"
-            @click="toggleDeckFilter(false)"
-            href="#"
-          >All
-        </li>
+          :class="[ {'opt-active': !filterByDeck}, 'py-2', 'w-16', 'block', 'text-center', 'no-underline', 'cursor-pointer' ]"
+          @click="toggleDeckFilter(false)"
+          href="#"
+        >All</li>
       </ul>
     </div>
     <ul class="list-reset flex flex-wrap px-2 py-2">
@@ -44,8 +43,8 @@
           @remove="removeCard(card)"
         />
       </li>
-    </ul>    
-  </div>  
+    </ul>
+  </div>
 </template>
 
 <script>
@@ -75,10 +74,9 @@ export default {
         this.numberOfPages = data.numberOfPages;
       });
     },
-    toggleDeckFilter: function(opt) {      
-      if (opt && this.deck && this.deck.items && this.deck.items.length > 0)
-      {
-        this.search.page = 1
+    toggleDeckFilter: function(opt) {
+      if (opt && this.deck && this.deck.items && this.deck.items.length > 0) {
+        this.search.page = 1;
         this.search.cardIds = this.deck.items.map(function(item) {
           return item.id;
         });
@@ -118,6 +116,19 @@ export default {
     },
     cardCount: function(card) {
       return this.deck.countOf(card);
+    },
+    loadDeck: function() {
+      this.$showModal({
+        component: "views/LoadDeckDialog",
+        data: {
+          options: [
+            "Game of Throws",
+            "Biddly Beserker",
+            "Lord of Chaos",
+            "Exeriment 01"
+          ]
+        }
+      });
     }
   },
   data: function() {
@@ -152,7 +163,7 @@ export default {
   text-decoration: none;
 }
 .bg-dialog {
-  background-color: rgb(0,0,0,0,.25);
+  background-color: rgb(0, 0, 0, 0, 0.25);
 }
 </style>
 

@@ -1,32 +1,43 @@
 <template>
   <div id="app">
-    <div class="fixed pin z-50 overflow-auto bg-overlay flex justify-center">
-      <div class="rounded border border-black bg-white block" style="width: 450px; height: 250px; margin-top: 300px;">
-        <div class="px-2 py-2 bg-cogs-primary text-cogs-secondary block">Load a deck</div>
-        <div class="p-6">
-          <ul class="list-reset mx-auto border border-grey h-32 overflow-auto">
-            <li v-for="opt in options" v-bind:key="opt" class="p-2 hover:bg-blue hover:text-white">{{opt}}</li>
-          </ul>
-        </div>
-      </div>
-  </div>
+    <div class="fixed pin z-50 overflow-auto bg-overlay flex justify-center" v-show="$modal">
+      <dynamic :modal="$modal"/>
+    </div>
     <div class="bg-cogs-primary">
       <nav class="w-full flex items-center justify-between flex-wrap py-2 px-6 container mx-auto">
         <span>
           <router-link to="/" class="no-underline">
             <cogs-glyph/>
           </router-link>
-          <router-link to="/" class="text-cogs-secondary font-semibold text-xl tracking-tight no-underline">Cogslite</router-link>
+          <router-link
+            to="/"
+            class="text-cogs-secondary font-semibold text-xl tracking-tight no-underline"
+          >Cogslite</router-link>
         </span>
         <span v-if="!isSignedIn">
-          <LinkButton link="https://cogs.auth.eu-west-2.amazoncognito.com/login?response_type=token&client_id=1bf03fuqd017thrnnej7lcpeb7&redirect_uri=http%3A%2F%2Flocalhost%3A8080">Sign In</LinkButton></span>
+          <LinkButton
+            link="https://cogs.auth.eu-west-2.amazoncognito.com/login?response_type=token&client_id=1bf03fuqd017thrnnej7lcpeb7&redirect_uri=http%3A%2F%2Flocalhost%3A8080"
+          >Sign In</LinkButton>
+        </span>
         <span v-if="isSignedIn">
-          <router-link class="mx-2 bg-cogs-alt inline-block rounded py-2 px-4 text-red-darker no-underline" to="/game/new">G</router-link>
+          <router-link
+            class="mx-2 bg-cogs-alt inline-block rounded py-2 px-4 text-red-darker no-underline"
+            to="/game/new"
+          >G</router-link>
           <drop-down-button :text="profile.userName">
             <div class="bg-white shadow rounded border overflow-hidden">
-              <a href="#" class="no-underline block px-4 py-3 border-b text-grey-darkest bg-white hover:text-white hover:bg-red-darker whitespace-no-wrap">My games</a>
-              <a href="#" class="no-underline block px-4 py-3 border-b text-grey-darkest bg-white hover:text-white hover:bg-red-darker whitespace-no-wrap">My decks</a>
-              <a href="#" class="no-underline block px-4 py-3 border-b text-grey-darkest bg-white hover:text-white hover:bg-red-darker whitespace-no-wrap">Logout</a>
+              <a
+                href="#"
+                class="no-underline block px-4 py-3 border-b text-grey-darkest bg-white hover:text-white hover:bg-red-darker whitespace-no-wrap"
+              >My games</a>
+              <a
+                href="#"
+                class="no-underline block px-4 py-3 border-b text-grey-darkest bg-white hover:text-white hover:bg-red-darker whitespace-no-wrap"
+              >My decks</a>
+              <a
+                href="#"
+                class="no-underline block px-4 py-3 border-b text-grey-darkest bg-white hover:text-white hover:bg-red-darker whitespace-no-wrap"
+              >Logout</a>
             </div>
           </drop-down-button>
         </span>
@@ -41,10 +52,11 @@ import profileService from "./services/profileService";
 import LinkButton from "./components/LinkButton";
 import CogsGlyph from "./components/CogsGlyph";
 import DropDownButton from "./components/DropDownButton";
+import Dynamic from "./components/Dynamic";
 
 export default {
   name: "App",
-  components: { CogsGlyph, DropDownButton, LinkButton },
+  components: { CogsGlyph, DropDownButton, Dynamic, LinkButton },
   mounted: function() {
     profileService.getProfile().then(p => (this.profile = p));
   },
@@ -55,8 +67,7 @@ export default {
   },
   data: function() {
     return {
-      profile: {},
-      options: ['Chaos starter deck', 'Lawful good', 'Trilobyte Deck', 'Experiment 001', 'Tournament 001']
+      profile: {}
     };
   }
 };
