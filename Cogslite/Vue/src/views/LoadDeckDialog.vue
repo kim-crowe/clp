@@ -12,6 +12,8 @@
           class="p-2 hover:bg-blue hover:text-white"
         >{{opt}}</li>
       </ul>
+      <button @click="$emit('accept', {name: 'something', value: '42'})">Load</button>
+      <button @click="$emit('reject')">Cancel</button>
     </div>
   </div>
 </template>

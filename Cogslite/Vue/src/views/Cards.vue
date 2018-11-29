@@ -128,7 +128,7 @@ export default {
             "Exeriment 01"
           ]
         }
-      });
+      }).then(model => alert(JSON.stringify(model)));
     }
   },
   data: function() {
