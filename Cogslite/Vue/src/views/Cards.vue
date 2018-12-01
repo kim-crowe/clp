@@ -9,8 +9,17 @@
       <a
         class="block rounded-full bg-cogs-secondary text-cogs-secondary px-2 py-1 my-2 text-center text-xs no-underline"
         href="#"
-        @click="loadDeck"
       >Edit details</a>
+      <a
+        class="block rounded-full bg-cogs-secondary text-cogs-secondary px-2 py-1 my-2 text-center text-xs no-underline"
+        href="#"
+        @click="createDeck"
+      >Create deck</a>
+      <a
+        class="block rounded-full bg-cogs-secondary text-cogs-secondary px-2 py-1 my-2 text-center text-xs no-underline"
+        href="#"
+        @click="loadDeck"
+      >Load deck</a>
     </div>
     <div class="p-2 mx-3 text-3xl font-semibold">{{game.name}}</div>
     <div>
@@ -22,17 +31,21 @@
         @previous="gotoPrevious"
         @next="gotoNext"
       />
-      <ul class="inline-flex list-reset border border-grey rounded w-auto ml-2 text-grey-dark">
-        <li
-          :class="[ {'opt-active': filterByDeck}, 'py-2', 'w-16', 'block', 'text-center', 'no-underline', 'cursor-pointer' ]"
-          @click="toggleDeckFilter(true)"
-        >Deck</li>
-        <li
-          :class="[ {'opt-active': !filterByDeck}, 'py-2', 'w-16', 'block', 'text-center', 'no-underline', 'cursor-pointer' ]"
-          @click="toggleDeckFilter(false)"
-          href="#"
-        >All</li>
-      </ul>
+      <span v-if="deckIsLoaded">
+        <ul class="inline-flex list-reset border border-grey rounded w-auto ml-2 text-grey-dark">
+          <li
+            :class="[ {'opt-active': filterByDeck}, 'py-2', 'w-16', 'block', 'text-center', 'no-underline', 'cursor-pointer' ]"
+            @click="toggleDeckFilter(true)"
+          >Deck</li>
+          <li
+            :class="[ {'opt-active': !filterByDeck}, 'py-2', 'w-16', 'block', 'text-center', 'no-underline', 'cursor-pointer' ]"
+            @click="toggleDeckFilter(false)"
+            href="#"
+          >All</li>
+        </ul>
+        <span>{{this.deck.name}}</span>
+        <button v-show="this.deck.hasChanges" class="px-4 py-2 rounded bg-cogs-secondary text-cogs-secondary" @click="saveDeck">Save changes</button>
+      </span>
     </div>
     <ul class="list-reset flex flex-wrap px-2 py-2">
       <li v-for="card in cards" v-bind:key="card.id">
@@ -52,16 +65,23 @@ import CardItem from "../components/CardItem";
 import PageButtons from "../components/PageButtons";
 import gamesService from "../services/gamesService";
 import cardsService from "../services/cardsService";
+import deckService from "../services/deckService";
 import * as utils from "../utils/deck";
 
 export default {
   name: "cards",
   components: { CardItem, PageButtons },
+  computed: {
+    deckIsLoaded: function() {
+      return this.deck !== null;
+    }    
+  },
   mounted: function() {
     var gameId = this.$route.params.gameId;
     gamesService.getGame(gameId).then(game => {
       this.game = game;
       this.loadCards();
+      this.loadDecks();
     });
   },
   methods: {
@@ -73,6 +93,12 @@ export default {
         this.cards = data.cards;
         this.numberOfPages = data.numberOfPages;
       });
+    },
+    loadDecks: function() {
+      deckService
+        .loadDecks(this.game.id)
+        .then(data => 
+          this.decks = data.map(d => new utils.Deck(d.id, d.name, d.gameId, d.items, d.version)));
     },
     toggleDeckFilter: function(opt) {
       if (opt && this.deck && this.deck.items && this.deck.items.length > 0) {
@@ -109,26 +135,43 @@ export default {
       }
     },
     addCard: function(card) {
-      this.deck.addCard(card);
+      if(this.deck)
+        this.deck.addCard(card);
     },
     removeCard: function(card) {
-      this.deck.removeCard(card);
+      if(this.deck)
+        this.deck.removeCard(card);
     },
     cardCount: function(card) {
-      return this.deck.countOf(card);
+      if(this.deck)
+        return this.deck.countOf(card);
+      else
+        return 0;
+    },
+    createDeck: function() {
+      this.$showModal({
+        component: "modals/UserPrompt",
+        data: {
+          prompt: 'Enter a name for your deck'
+        }
+      }).then(r => this.deck = new utils.Deck('', r.value, this.game.id, [], 0));
+    },
+    saveDeck: function() {
+      deckService.saveDeck(this.deck).then(r => {
+        this.deck.version = r.version;
+        this.deck.hasChanges = false;
+        if(r.version === 1) {
+          this.decks.push(this.deck);
+        }
+      })
     },
     loadDeck: function() {
       this.$showModal({
-        component: "views/LoadDeckDialog",
+        component: "modals/LoadDeck",
         data: {
-          options: [
-            "Game of Throws",
-            "Biddly Beserker",
-            "Lord of Chaos",
-            "Exeriment 01"
-          ]
+          decks: this.decks
         }
-      }).then(model => alert(JSON.stringify(model)));
+      }).then(r => this.deck = r.selectedDeck);
     }
   },
   data: function() {
@@ -144,7 +187,8 @@ export default {
       },
       cards: [],
       numberOfPages: 1,
-      deck: new utils.Deck(),
+      deck: null,
+      decks: [],
       filterByDeck: false
     };
   }

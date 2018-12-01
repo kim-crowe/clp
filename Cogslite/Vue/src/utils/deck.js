@@ -1,7 +1,11 @@
 export class Deck {
-  constructor() {
-    this.items = [];
-    this.hasChanges = false;
+  constructor(id, name, gameId, items, version) {
+    this.id = id;
+    this.name = name;
+    this.gameId = gameId;
+    this.items = items;
+    this.version = version;
+    this.hasChanges = !id.length > 0;
   }
 
   removeCard(card) {
