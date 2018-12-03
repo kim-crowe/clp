@@ -1,0 +1,31 @@
+So we've talked about how we're going to build this thing
+We've got a highly motivated team, we've got a plan
+We're all set to start delivering value, but we know to realise that value we have to get our software in front of our users
+
+So from the start of this project the focus hasn't just been about building software, it's been about delivering value through our software, and that means
+planning it, building it, testing it, documenting it and getting it out there in front of users. 
+
+Now for us in our little bubble that seems kind of easy, we didn't really have any users other than our product owner and no-one else has really been involved, but we know that's not the way its going to be in the future. 
+
+So we took a moment to think about our customers
+
+Sure we've got Nurse, Doctor, Receptionist - blah blah, but you know what
+
+We've also got Support Staff, Database Engineer, Hosted Ops Engineer 
+
+We even went further outside the box
+
+Sales && Marketting
+
+So we created personas for those people, personas that we have and will be creating stories for, because they'll all need to use this system too.
+
+[Sample user stories on slides]
+
+As a support engineer I want to search the event log by user name so I can find the relevant information when diagnosing a support ticket
+
+As a database engineer I want to view performance stats of database calls made by the api so I can identify perforamce issues before they become a serious problem
+
+As a marketing manager I want to get usage stats from the system so that I can make targeted campaigns with real figures
+
+With these personas and stories it means we can tackle concerns such as logging, monitoring, alerts as first class citizens. 
+Often that kind of code is thrown in as an after thought, with no real consideration as to how or when it will be used,
