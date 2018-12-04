@@ -1,0 +1,19 @@
+@tailwind preflight;
+@tailwind components;
+@tailwind utilities;
+
+.btn {
+    @apply .rounded .px-4 .py-2 .inline-block .no-underline
+}
+
+.btn-cogs {
+    @apply .bg-cogs-yellow text-cogs-red
+}
+
+.btn-accept {
+    @apply .bg-green .text-white .bg-green
+}
+
+.btn-accept:hover {
+    @apply .bg-green-lighter
+}
