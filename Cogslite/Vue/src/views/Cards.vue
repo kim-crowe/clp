@@ -65,7 +65,6 @@ import CardItem from "../components/CardItem";
 import PageButtons from "../components/PageButtons";
 import gamesService from "../services/gamesService";
 import cardsService from "../services/cardsService";
-import deckService from "../services/deckService";
 import * as utils from "../utils/deck";
 
 export default {

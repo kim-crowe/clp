@@ -5,6 +5,7 @@ import auth from './auth';
 import modal from './modal';
 import App from './App.vue';
 import axios from 'axios';
+import '@/assets/main.css';
 
 Vue.use(VueResource);
 Vue.use(auth);

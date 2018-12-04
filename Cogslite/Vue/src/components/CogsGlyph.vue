@@ -1,5 +1,5 @@
 <template>
-  <span class="rounded mx-2 glyph-padding font-semibold text-xl bg-cogs-alt text-cogs-primary" >C</span>
+  <span class="rounded mx-2 glyph-padding font-semibold text-xl bg-cogs-yellow text-cogs-red">C</span>
 </template>
 
 <style scoped>
