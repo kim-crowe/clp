@@ -87,7 +87,7 @@ namespace CogsLite.Api.Controllers
                 {
                     image.CopyTo(ms);                    
                     string imageType = Path.GetExtension(image.FileName).Replace(".", "");
-                    newGame.ImageUrl = await _imageStore.Add("Game", newGame.Id, imageType, ms.GetBuffer());
+                    newGame.ImageUrl = await _imageStore.Add("Game", newGame.Id, 1, imageType, ms.GetBuffer());
                 }
             }
 

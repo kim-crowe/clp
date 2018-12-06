@@ -39,7 +39,7 @@ namespace CogsLite.Api
 					card.Id = Guid.NewGuid();
 					card.GameId = gameId;
 					card.CreatedOn = DateTime.Now;					
-                    card.ImageUrl = await _imageStore.Add("Card", card.Id, "png", imageData);
+                    card.ImageUrl = await _imageStore.Add("Card", card.Id, 1, "png", imageData);
                     await _cardStore.Add(card);                    
 					index++;
                 }

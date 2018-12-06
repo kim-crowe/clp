@@ -50,13 +50,13 @@ namespace CogsLite.Api.Controllers
 		public async Task<IActionResult> OnGetSheet(Guid deckId)
 		{	
 			var deck = await _deckStore.Get(deckId);	
-			var sheet = await _imageStore.Get("Deck", deckId);
+			var sheet = await _imageStore.Get("Deck", deck.Id, deck.Version);
 
 			if(sheet == null)
 			{
 				var cardCount = deck.Items.Sum(i => i.Amount);
 				var cardSheetData = ImageSlicer.Composite(DataImages(deck), cardCount);				
-				await _imageStore.Add("Deck", deckId, "png", cardSheetData);
+				await _imageStore.Add("Deck", deckId, deck.Version, "png", cardSheetData);
 				return new FileContentResult(cardSheetData, "image/png");
 			}
 			
@@ -69,7 +69,7 @@ namespace CogsLite.Api.Controllers
 			{
 				for (int i = 0; i < item.Amount; i++)
 				{
-					yield return _imageStore.Get("Card",  item.CardId).GetAwaiter().GetResult();
+					yield return _imageStore.Get("Card",  item.CardId, 1).GetAwaiter().GetResult();
 				}
 			}
 		}

@@ -8,14 +8,14 @@ namespace CogsLite.MartenStore
 {
     public class ImageStore : IImageStore
     {        
-        public Task<string> Add(string associatedObjectType, Guid associatedObjectId, string imageType, byte[] data)
+        public Task<string> Add(string associatedObjectType, Guid associatedObjectId, int version, string imageType, byte[] data)
         {
             File.WriteAllBytes($"wwwroot\\images\\store\\{associatedObjectType}\\{associatedObjectId}.{imageType}", data);
             var filePath = $"/images/store/{associatedObjectType}/{associatedObjectId}.{imageType}";
             return Task.FromResult(filePath);
         }
 
-        public Task<byte[]> Get(string associatedObjectType, Guid associatedObjectId)
+        public Task<byte[]> Get(string associatedObjectType, Guid associatedObjectId, int version)
         {
             return Task.Run(() =>
             {
