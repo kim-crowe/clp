@@ -12,6 +12,7 @@ namespace CogsLite.AwsStore
 {
     public class ImageStore : IImageStore
     {
+        private const string DistributionUri = "http://d7knsuvwz5w4z.cloudfront.net/";
         private const string BucketName = "cogs-images";
         private readonly IAmazonS3 _s3Service;
 
@@ -40,7 +41,7 @@ namespace CogsLite.AwsStore
                 throw new InvalidOperationException("Failed to store image");
             }
 
-            throw new NotImplementedException("Need to figure out how to return url for the image");
+            return DistributionUri + putRequest.Key;
         }
         
         public async Task<byte[]> Get(string associatedObjectType, Guid associatedObjectId, int version)

@@ -14,7 +14,6 @@ namespace CogsLite.MartenStore
             serviceCollection.AddScoped<IGameStore, GameStore>();
             serviceCollection.AddScoped<ICardStore, CardStore>();
             serviceCollection.AddScoped<IDeckStore, DeckStore>();
-            serviceCollection.AddScoped<IImageStore, ImageStore>();
             return serviceCollection;
         }
     }

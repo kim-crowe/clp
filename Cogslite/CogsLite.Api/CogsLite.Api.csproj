@@ -11,11 +11,14 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0005" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CogsLite.Core\CogsLite.Core.csproj" />
     <ProjectReference Include="..\CogsLite.MartenStore\CogsLite.MartenStore.csproj" />
+    <ProjectReference Include="..\CogsLite.LocalImageStore\CogsLite.LocalImageStore.csproj" />
+    <ProjectReference Include="..\CogsLite.S3\CogsLite.S3.csproj" />
     <ProjectReference Include="..\GorgleDevs.Mvc\GorgleDevs.Mvc.csproj" />
   </ItemGroup>
 

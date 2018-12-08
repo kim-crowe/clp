@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CogsLite.MartenStore", "Cog
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cogslite.S3", "Cogslite.S3\Cogslite.S3.csproj", "{0D7D69C2-9CD0-4A81-BC1D-2A151C465F26}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cogslite.LocalImageStore", "Cogslite.LocalImageStore\Cogslite.LocalImageStore.csproj", "{703C1951-755F-4DF2-AEC6-F42D413FEC56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{0D7D69C2-9CD0-4A81-BC1D-2A151C465F26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D7D69C2-9CD0-4A81-BC1D-2A151C465F26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D7D69C2-9CD0-4A81-BC1D-2A151C465F26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{703C1951-755F-4DF2-AEC6-F42D413FEC56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{703C1951-755F-4DF2-AEC6-F42D413FEC56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{703C1951-755F-4DF2-AEC6-F42D413FEC56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{703C1951-755F-4DF2-AEC6-F42D413FEC56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

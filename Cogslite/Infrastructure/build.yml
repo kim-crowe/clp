@@ -1,0 +1,21 @@
+variables:
+  buildConfiguration: 'Release'
+
+jobs:
+- job: build_api
+  pool:
+    vmImage: 'Ubuntu 16.04'
+  steps:
+  - script: |
+      dotnet publish -c Release -o ./out
+	    docker build -t cogs-api .
+      docker save -o $BUILD_ARTIFACTSTAGINGDIRECTORY/cogs-api.tar cogs-api
+    name: build_api
+    displayName: 'Build and publish dotnet api'
+    workingDirectory: Cogslite/Cogslite.Api
+
+  - script: |
+      cp Infrastructure/aws-ecr.yml $BUILD_ARTIFACTSTAGINGDIRECTORY/aws-ecr.yml
+    name: copy_files
+    displayName: 'Copy infra'
+  - task: PublishBuildArtifacts@1
