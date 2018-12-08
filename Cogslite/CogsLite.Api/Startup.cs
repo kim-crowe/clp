@@ -42,10 +42,10 @@ namespace CogsLite.Api
             var dbHost = Configuration.GetValue<string>("DB_HOST") ?? "localhost";
             var dbPort = Configuration.GetValue<string>("DB_PORT") ?? "5432";
             services.AddMarten($"Server={dbHost};Port={dbPort};Database=cogs;User Id=postgres;Password=admin;");
-            services.AddLocalImageStore(@"wwwroot\images\store\", "/images/store/");
+            //services.AddLocalImageStore(@"wwwroot\images\store\", "/images/store/");
             
-            // var awsOptions = Configuration.GetAWSOptions();
-            // services.AddS3ImageStore(awsOptions);
+            var awsOptions = Configuration.GetAWSOptions();
+            services.AddS3ImageStore(awsOptions);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(x =>

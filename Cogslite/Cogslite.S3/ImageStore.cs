@@ -12,7 +12,7 @@ namespace CogsLite.AwsStore
 {
     public class ImageStore : IImageStore
     {
-        private const string DistributionUri = "http://d7knsuvwz5w4z.cloudfront.net/";
+        private const string DistributionUri = @"https://d7knsuvwz5w4z.cloudfront.net/";
         private const string BucketName = "cogs-images";
         private readonly IAmazonS3 _s3Service;
 
@@ -48,36 +48,29 @@ namespace CogsLite.AwsStore
         {
             var imageKey = GetKey(associatedObjectType, associatedObjectId);
 
-            var getMetaDataRequest = new GetObjectMetadataRequest
+            var getRequest = new GetObjectRequest
             {
                 BucketName = BucketName,
-                Key = imageKey 
+                Key = imageKey,
             };
 
-            var metaDataResponse = await _s3Service.GetObjectMetadataAsync(getMetaDataRequest);
-
-            if(metaDataResponse.HttpStatusCode == HttpStatusCode.OK)
+            try
             {
-                var storedVersion = Int32.Parse(metaDataResponse.Metadata["Version"]);
-                if(storedVersion == version)
-                {
-                    var getRequest = new GetObjectRequest
+                var response = await _s3Service.GetObjectAsync(getRequest);
+                if (response.Metadata["x-amz-meta-version"] == version.ToString())
+                {                
+                    using (var binaryReader = new BinaryReader(response.ResponseStream))
                     {
-                        BucketName = BucketName,
-                        Key = imageKey,
-                    };
-
-                    var response = await _s3Service.GetObjectAsync(getRequest);
-                    if(response.HttpStatusCode == HttpStatusCode.OK)
-                    {
-                        using (var binaryReader = new BinaryReader(response.ResponseStream))
-                        {
-                            return binaryReader.ReadBytes((int)response.ContentLength);                            
-                        }
+                        return binaryReader.ReadBytes((int)response.ContentLength);                            
                     }
-                }    
+                }
             }
-            
+            catch(AmazonS3Exception ex)
+            {
+                if(ex.StatusCode != HttpStatusCode.NotFound)
+                    throw;
+            }
+
             return null;
         }        
 

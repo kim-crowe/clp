@@ -45,6 +45,7 @@
         </ul>
         <span>{{this.deck.name}}</span>
         <button v-show="this.deck.hasChanges" class="px-4 py-2 rounded bg-cogs-secondary text-cogs-secondary" @click="saveDeck">Save changes</button>
+        <a :href="`http://localhost:5000/api/deck/${this.deck.id}/sheet`">deck sheet</a>
       </span>
     </div>
     <ul class="list-reset flex flex-wrap px-2 py-2">
@@ -86,7 +87,7 @@ export default {
   },
   methods: {
     gameImageUrl: function(game) {
-      return "http://localhost:5000/" + game.imageUrl;
+      return game.imageUrl;
     },
     loadCards: function() {
       cardsService.search(this.game.id, this.search).then(data => {

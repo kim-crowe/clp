@@ -71,7 +71,7 @@ namespace CogsLite.Api
                 var row = counter / 10;
                 var column = counter % 10;
 
-                finalImage.Mutate(x => x.DrawImage(cardImage, 1));
+                finalImage.Mutate(x => x.DrawImage(cardImage, 1, new Point(column * cardImage.Width, row * cardImage.Height)));
                 counter++;
             }
 

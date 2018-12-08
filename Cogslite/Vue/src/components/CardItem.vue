@@ -38,7 +38,7 @@ export default {
   props: ["card", "cardCount"],
   methods: {
     getImageUrl: function(card) {
-      return "http://localhost:5000" + card.imageUrl;
+      return card.imageUrl;
     }
   }
 };

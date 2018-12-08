@@ -21,7 +21,7 @@ export default {
   props: ["game"],
   methods: {
     getImageUrl: function(game) {
-      return "http://localhost:5000" + game.imageUrl;
+      return game.imageUrl;
     }
   }
 };
