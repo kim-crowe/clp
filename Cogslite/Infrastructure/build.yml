@@ -7,12 +7,12 @@ jobs:
     vmImage: 'Ubuntu 16.04'
   steps:
   - script: |
-      dotnet publish -c Release -o ./out
-      docker build -t ccgworks-api .
+      dotnet publish CogsLite.Api/CogsLite.Api.csproj -c Release -o ./out
+      docker build -t ccgworks-api CogsLite.Api
       docker save -o $BUILD_ARTIFACTSTAGINGDIRECTORY/ccgworks-api.tar ccgworks-api
     name: build_api
     displayName: 'Build and publish dotnet api'
-    workingDirectory: Cogslite/CogsLite.Api
+    workingDirectory: Cogslite
 
   - script: |
       cp Infrastructure/aws-ecr.yml $BUILD_ARTIFACTSTAGINGDIRECTORY/aws-ecr.yml
@@ -29,7 +29,7 @@ jobs:
       yarn install
       yarn build
       mkdir -p $BUILD_ARTIFACTSTAGINGDIRECTORY/web/
-      cp build $BUILD_ARTIFACTSTAGINGDIRECTORY/web/      
+      cp dist $BUILD_ARTIFACTSTAGINGDIRECTORY/web/      
     name: build_web
     displayName: 'Build web'
     workingDirectory: Cogslite/Vue
