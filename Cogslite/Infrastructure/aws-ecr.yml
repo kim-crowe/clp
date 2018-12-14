@@ -7,7 +7,7 @@ LoadBalancerSecurityGroup:
           ToPort: 80
           CidrIp: 0.0.0.0/0
 
- CogsSecurityGroup:
+ CcgWorksSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:             
       SecurityGroupIngress:      
@@ -18,10 +18,10 @@ LoadBalancerSecurityGroup:
           ToPort: 80
           CidrIp: 0.0.0.0/0
 
-CogsAlb:
+CcgWorksAlb:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: !Sub cogslite-alb
+      Name: !Sub ccgworks-alb
       Scheme: internet-facing
       LoadBalancerAttributes:
         - Key: idle_timeout.timeout_seconds
@@ -29,34 +29,34 @@ CogsAlb:
       SecurityGroups:
         - !Ref LoadBalancerSecurityGroup      
 
-  CogsALBListener:
+  CcgWorksALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
         - Type: forward
-          TargetGroupArn: !Ref 'CogsTargetGroup'
-      LoadBalancerArn: !Ref 'CogsAlb'
+          TargetGroupArn: !Ref 'CcgWorksTargetGroup'
+      LoadBalancerArn: !Ref 'CcgWorksAlb'
       Port: '80'
       Protocol: HTTP    
 
   ApiALBListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    DependsOn: CogsALBListener
+    DependsOn: CcgWorksALBListener
     Properties:
       Actions:
         - Type: forward
-          TargetGroupArn: !Ref 'CogsTargetGroup'
+          TargetGroupArn: !Ref 'CcgWorksTargetGroup'
       Conditions:
         - Field: path-pattern
           Values: [/]
-      ListenerArn: !Ref 'CogsALBListener'
+      ListenerArn: !Ref 'CcgWorksALBListener'
       Priority: 1
 
-  CogsTargetGroup:
+  CcgWorksTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    DependsOn: CogsAlb
+    DependsOn: CcgWorksAlb
     Properties:
-      Name: !Sub cogslite-target-group
+      Name: !Sub ccgworks-target-group
       HealthCheckIntervalSeconds: 10
       HealthCheckPath: /health-check
       HealthCheckProtocol: HTTP
@@ -86,7 +86,7 @@ CogsAlb:
       # Omit KeyName to prevent SSH
       ImageId: ami-a44db8c3
       SecurityGroups:
-        - !Ref CogsSecurityGroup
+        - !Ref CcgWorksSecurityGroup
       InstanceType: !Ref 'InstanceType'
       IamInstanceProfile: !Ref EC2InstanceProfile
       UserData:
@@ -98,28 +98,28 @@ CogsAlb:
           yum install -y aws-cfn-bootstrap
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource ECSAutoScalingGroup --region ${AWS::Region}
 
-  CogsService:
+  CcgWorksService:
     Type: AWS::ECS::Service
-    DependsOn: CogsALBListener
+    DependsOn: CcgWorksALBListener
     Properties:
       # Use default AWSServiceRoleForECS service-linked role
-      ServiceName: !Sub cogslite-ecs
+      ServiceName: !Sub ccgworks-ecs
       Cluster: !Ref 'ECSCluster'
       DesiredCount: '1'
       LoadBalancers:
-        - ContainerName: Coglite
+        - ContainerName: CcgWorksApi
           ContainerPort: '80'
-          TargetGroupArn: !Ref 'CogsTargetGroup'
-      TaskDefinition: !Ref 'CogsTaskDefinition'
+          TargetGroupArn: !Ref 'CcgWorksTargetGroup'
+      TaskDefinition: !Ref 'CcgWorksTaskDefinition'
 
-  CogsTaskDefinition:
+  CcgWorksTaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: !Sub cogslite-task
+      Family: !Sub ccgworks-task
       ContainerDefinitions:
-        - Name: Cogslite
+        - Name: CcgWorksApi
           Essential: 'true'
-          Image: 425510977517.dkr.ecr.eu-west-2.amazonaws.com/cogslite:v1
+          Image: 425510977517.dkr.ecr.eu-west-2.amazonaws.com/ccgworks:1.0-api
           MemoryReservation: 1024
           LogConfiguration:
             LogDriver: awslogs
@@ -135,4 +135,4 @@ CogsAlb:
     Properties:
       Path: /
       Roles:
-        - CogsRole
+        - CcgWorksRole

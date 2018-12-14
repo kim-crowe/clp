@@ -32,21 +32,30 @@ namespace CogsLite.Api
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public async void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
             services.AddHttpContextAccessor();
 
             Authentication.LoadKeys();
             services.AddScoped<IUserContext, ClaimsIdentityUserContext>();
-            var dbHost = Configuration.GetValue<string>("DB_HOST") ?? "localhost";
-            var dbPort = Configuration.GetValue<string>("DB_PORT") ?? "5432";
-            services.AddMarten($"Server={dbHost};Port={dbPort};Database=cogs;User Id=postgres;Password=admin;");
-            //services.AddLocalImageStore(@"wwwroot\images\store\", "/images/store/");
-            
-            var awsOptions = Configuration.GetAWSOptions();
-            services.AddS3ImageStore(awsOptions);
 
+            var env = Configuration.GetValue<string>("ENV") ?? "local";
+            if(env == "local")
+            {
+                var dbHost = Configuration.GetValue<string>("DB_HOST") ?? "localhost";
+                var dbPort = Configuration.GetValue<string>("DB_PORT") ?? "5432";
+                services.AddMarten($"Server={dbHost};Port={dbPort};Database=cogs;User Id=postgres;Password=admin;");
+                services.AddLocalImageStore(@"wwwroot\images\store\", "/images/store/");            
+            }
+            else
+            {
+                var awsOptions = Configuration.GetAWSOptions();
+                var parameterStore = new ParameterStore(awsOptions);
+                services.AddMarten(await parameterStore.GetParameterAsync("ccgworks/connection_string"));
+                services.AddS3ImageStore(awsOptions);
+            }
+                                    
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(x =>
                 {
