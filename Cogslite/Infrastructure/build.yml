@@ -12,7 +12,7 @@ jobs:
       docker save -o $BUILD_ARTIFACTSTAGINGDIRECTORY/ccgworks-api.tar ccgworks-api
     name: build_api
     displayName: 'Build and publish dotnet api'
-    workingDirectory: Cogslite/Cogslite.Api
+    workingDirectory: Cogslite/CogsLite.Api
 
   - script: |
       cp Infrastructure/aws-ecr.yml $BUILD_ARTIFACTSTAGINGDIRECTORY/aws-ecr.yml
@@ -32,6 +32,6 @@ jobs:
       cp build $BUILD_ARTIFACTSTAGINGDIRECTORY/web/      
     name: build_web
     displayName: 'Build web'
-    workingDirectory: Vue
+    workingDirectory: Cogslite/Vue
 
   - task: PublishBuildArtifacts@1
