@@ -40,7 +40,7 @@ namespace CogsLite.Api
             Authentication.LoadKeys();
             services.AddScoped<IUserContext, ClaimsIdentityUserContext>();
 
-            var env = Configuration.GetValue<string>("ENV") ?? "local";
+            var env = Configuration.GetValue<string>("HOST") ?? "local";
             if(env == "local")
             {
                 var dbHost = Configuration.GetValue<string>("DB_HOST") ?? "localhost";

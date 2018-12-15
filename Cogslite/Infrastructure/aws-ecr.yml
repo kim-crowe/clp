@@ -119,7 +119,7 @@ CcgWorksAlb:
       ContainerDefinitions:
         - Name: CcgWorksApi
           Essential: 'true'
-          Image: 425510977517.dkr.ecr.eu-west-2.amazonaws.com/ccgworks:1.0-api
+          Image: 848502523218.dkr.ecr.eu-west-2.amazonaws.com/ccgworks:api-0.1
           MemoryReservation: 1024
           LogConfiguration:
             LogDriver: awslogs
@@ -129,6 +129,9 @@ CcgWorksAlb:
               awslogs-stream-prefix: Api
           PortMappings:
             - ContainerPort: 80
+          Environment:
+            - Name: HOST
+              Value: AWS
   
   EC2InstanceProfile:
     Type: AWS::IAM::InstanceProfile
