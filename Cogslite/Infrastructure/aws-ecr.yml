@@ -1,4 +1,10 @@
-LoadBalancerSecurityGroup:
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: Stack for hosting the ccg works api
+
+Resources:
+
+  LoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:               
       SecurityGroupIngress:
