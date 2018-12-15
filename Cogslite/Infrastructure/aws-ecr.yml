@@ -13,7 +13,7 @@ Resources:
           ToPort: 80
           CidrIp: 0.0.0.0/0
 
- CcgWorksSecurityGroup:
+  CcgWorksSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:             
       SecurityGroupIngress:      
@@ -24,7 +24,18 @@ Resources:
           ToPort: 80
           CidrIp: 0.0.0.0/0
 
-CcgWorksAlb:
+  ECSCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: CcgWorksApiCluster
+
+  CloudwatchLogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: CcgWorksApiLogs
+      RetentionInDays: 14
+
+  CcgWorksAlb:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Name: !Sub ccgworks-alb
@@ -93,7 +104,7 @@ CcgWorksAlb:
       ImageId: ami-a44db8c3
       SecurityGroups:
         - !Ref CcgWorksSecurityGroup
-      InstanceType: !Ref 'InstanceType'
+      InstanceType: t2.micro
       IamInstanceProfile: !Ref EC2InstanceProfile
       UserData:
         Fn::Base64: !Sub |
