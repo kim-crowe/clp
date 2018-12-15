@@ -21,6 +21,8 @@ jobs:
     workingDirectory: Cogslite
 
   - task: PublishBuildArtifacts@1
+    inputs:
+        artifactName: release
 
 - job: build_web
   pool:
@@ -36,3 +38,5 @@ jobs:
     workingDirectory: Cogslite/Vue
 
   - task: PublishBuildArtifacts@1
+    inputs:
+        artifactName: release
