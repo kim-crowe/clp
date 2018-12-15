@@ -25,8 +25,6 @@ jobs:
         artifactName: release
 
 - job: build_web
-  dependsOn:
-  - never
   pool:
     vmImage: 'Ubuntu 16.04'
   steps:
