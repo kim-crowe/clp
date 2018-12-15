@@ -52,7 +52,7 @@ namespace CogsLite.Api
             {
                 var awsOptions = Configuration.GetAWSOptions();
                 var parameterStore = new ParameterStore(awsOptions);
-                services.AddMarten(await parameterStore.GetParameterAsync("ccgworks/connection_string"));
+                services.AddMarten(await parameterStore.GetParameterAsync("/ccgworks/connection_string"));
                 services.AddS3ImageStore(awsOptions);
             }
                                     

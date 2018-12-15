@@ -30,6 +30,8 @@ Resources:
                 - !Sub arn:aws:ecr::${AWS::AccountId}:repository/ccgworks
             - Effect: Allow
               Action:
+                - ssm:GetParameter
+                - ssm:GetParameters
                 - ssm:GetParametersByPath
               Resource:
                 - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/*
