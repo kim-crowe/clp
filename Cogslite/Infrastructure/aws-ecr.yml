@@ -4,9 +4,43 @@ Description: Stack for hosting the ccg works api
 
 Resources:
 
+  CcgWorksRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: ccgworks-api-rol
+      Path: /ccgworks/
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [ec2.amazonaws.com]
+            Action: ['sts:AssumeRole']
+      Policies:
+        - PolicyName: ccgworks-api-pol
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+            - Effect: Allow
+              Action:
+                - ecr:BatchCheckLayerAvailability
+                - ecr:BatchGetImage
+                - ecr:GetDownloadUrlForLayer
+                - ecr:GetAuthorizationToken
+              Resource:
+                - !Sub arn:aws:ecr::${AWS::AccountId}:repository/ccgworks
+            - Effect: Allow
+              Action:
+                - ssm:GetParametersByPath
+              Resource:
+                - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/*
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
+
   LoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:               
+      GroupDescription: ECS Security Group for load balancer
+      VpcId: vpc-e262d18a
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
@@ -16,14 +50,14 @@ Resources:
   CcgWorksSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:             
-      SecurityGroupIngress:      
-        - SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup 
-          IpProtocol: -1
+      GroupDescription: ECS Security Group for cluster
+      VpcId: vpc-e262d18a
+      SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: 0.0.0.0/0
-
+          FromPort: 0
+          ToPort: 65535      
+          SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup 
+          
   ECSCluster:
     Type: AWS::ECS::Cluster
     Properties:
@@ -38,13 +72,17 @@ Resources:
   CcgWorksAlb:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: !Sub ccgworks-alb
+      Name: ccgworks-alb
       Scheme: internet-facing
       LoadBalancerAttributes:
         - Key: idle_timeout.timeout_seconds
           Value: '30'
+      Subnets:
+        - subnet-86e16eef
+        - subnet-ebb37a91
+        - subnet-f45d42b9
       SecurityGroups:
-        - !Ref LoadBalancerSecurityGroup      
+        - !Ref LoadBalancerSecurityGroup
 
   CcgWorksALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -82,10 +120,15 @@ Resources:
       Port: 80
       Protocol: HTTP
       UnhealthyThresholdCount: 2
+      VpcId: vpc-e262d18a
       
   ECSAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
+      VPCZoneIdentifier:
+        - subnet-86e16eef
+        - subnet-ebb37a91
+        - subnet-f45d42b9
       LaunchConfigurationName: !Ref EcsLaunchConfig
       MinSize: 1
       MaxSize: 1
@@ -101,7 +144,7 @@ Resources:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       # Omit KeyName to prevent SSH
-      ImageId: ami-a44db8c3
+      ImageId: ami-01bee3897bba49d78
       SecurityGroups:
         - !Ref CcgWorksSecurityGroup
       InstanceType: t2.micro
@@ -137,7 +180,7 @@ Resources:
         - Name: CcgWorksApi
           Essential: 'true'
           Image: 848502523218.dkr.ecr.eu-west-2.amazonaws.com/ccgworks:api-0.1
-          MemoryReservation: 1024
+          MemoryReservation: 900
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -155,4 +198,4 @@ Resources:
     Properties:
       Path: /
       Roles:
-        - CcgWorksRole
+        - !Ref CcgWorksRole
