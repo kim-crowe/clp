@@ -32,16 +32,11 @@ namespace CogsLite.Api
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public async void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
             services.AddHttpContextAccessor();
-            services.AddMvc(opts => 
-            {
-                opts.UseShortGuids();
-            })
-            .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
+            
             Authentication.LoadKeys();
             services.AddScoped<IUserContext, ClaimsIdentityUserContext>();
 
@@ -50,14 +45,17 @@ namespace CogsLite.Api
             {
                 var dbHost = Configuration.GetValue<string>("DB_HOST") ?? "localhost";
                 var dbPort = Configuration.GetValue<string>("DB_PORT") ?? "5432";
-                services.AddMarten($"Server={dbHost};Port={dbPort};Database=cogs;User Id=postgres;Password=admin;");
+                var user = Configuration.GetValue<string>("DB_USER") ?? "postgres";
+                var pwd = Configuration.GetValue<string>("DB_PWD") ?? "admin";
+                services.AddMarten($"Server={dbHost};Port={dbPort};Database=ccgworks;User Id={user};Password={pwd};");
                 services.AddLocalImageStore(@"wwwroot\images\store\", "/images/store/");            
             }
             else
             {
                 var awsOptions = Configuration.GetAWSOptions();
-                var parameterStore = new ParameterStore(awsOptions);
-                services.AddMarten(await parameterStore.GetParameterAsync("/ccgworks/connection_string"));
+                var parameterStore = new ParameterStore(awsOptions);                
+                var connectionString = parameterStore.GetParameterAsync("/ccgworks/connection_string").GetAwaiter().GetResult(); 
+                services.AddMarten(connectionString);
                 services.AddS3ImageStore(awsOptions);
             }
                                     
@@ -72,7 +70,13 @@ namespace CogsLite.Api
                         ValidateAudience = false,
                         ValidateLifetime = true
                     };
-                });            
+                });
+
+            services.AddMvc(opts => 
+            {
+                opts.UseShortGuids();
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

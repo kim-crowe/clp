@@ -58,7 +58,23 @@ Resources:
         - IpProtocol: tcp
           FromPort: 0
           ToPort: 65535      
-          SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup 
+          SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          CidrIp: '0.0.0.0/0'
+          FromPort: 0
+          ToPort: 65535
+
+  DbSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: ECS Security Group for database
+      VpcId: vpc-e262d18a
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5432
+          ToPort: 5432
+          SourceSecurityGroupId: !Ref CcgWorksSecurityGroup
           
   ECSCluster:
     Type: AWS::ECS::Cluster
@@ -181,7 +197,7 @@ Resources:
       ContainerDefinitions:
         - Name: CcgWorksApi
           Essential: 'true'
-          Image: 848502523218.dkr.ecr.eu-west-2.amazonaws.com/ccgworks:api-0.1
+          Image: 848502523218.dkr.ecr.eu-west-2.amazonaws.com/ccgworks:api-0.2
           MemoryReservation: 900
           LogConfiguration:
             LogDriver: awslogs

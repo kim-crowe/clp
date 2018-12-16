@@ -11,6 +11,14 @@ build-image:
 run:	
 	$(DOCKER-COMPOSE) up -d --force-recreate db api
 
+.PHONY: create-stack
+create-stack:
+	aws cloudformation create-stack --stack-name ccgworks-api --template-body file://Infrastructure/aws-ecr.yml --capabilities CAPABILITY_NAMED_IAM
+
+.PHONY: update-stack
+update-stack:
+	aws cloudformation update-stack --stack-name ccgworks-api --template-body file://Infrastructure/aws-ecr.yml --capabilities CAPABILITY_NAMED_IAM
+
 .PHONY: tear-down
 tear-down:  ## Forcibly destroy all running containers, including volumes and networks
 	$(DOCKER-COMPOSE) rm -sfv

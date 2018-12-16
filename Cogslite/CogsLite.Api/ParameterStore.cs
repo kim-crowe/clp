@@ -20,8 +20,7 @@ namespace CogsLite.Api
         {
             var request = new GetParameterRequest
             {
-                Name = key,
-                WithDecryption = true
+                Name = key                
             };
 
             var response = await _ssm.GetParameterAsync(request);
