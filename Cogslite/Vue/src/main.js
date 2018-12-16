@@ -11,8 +11,8 @@ Vue.use(auth);
 Vue.use(modal);
 
 Vue.config.productionTip = false;
-//axios.defaults.baseURL = "http://ccgworks-alb-1137454900.eu-west-2.elb.amazonaws.com/api";
-axios.defaults.baseURL = "http://localhost:5000/api";
+axios.defaults.baseURL = "http://ccgworks-alb-1137454900.eu-west-2.elb.amazonaws.com/api";
+//axios.defaults.baseURL = "http://localhost:5000/api";
 
 new Vue({
   router,
