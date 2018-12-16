@@ -36,6 +36,11 @@ namespace CogsLite.Api
         {
             services.AddCors();
             services.AddHttpContextAccessor();
+            services.AddMvc(opts => 
+            {
+                opts.UseShortGuids();
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             Authentication.LoadKeys();
             services.AddScoped<IUserContext, ClaimsIdentityUserContext>();
@@ -67,14 +72,7 @@ namespace CogsLite.Api
                         ValidateAudience = false,
                         ValidateLifetime = true
                     };
-                });
-
-            services
-                .AddMvc(opts => 
-                {
-                  opts.UseShortGuids();
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                });            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -93,6 +91,12 @@ namespace CogsLite.Api
                         await context.Response.WriteAsync("ok");
                     }));
             }
+
+            app.Map(new PathString("/info"),
+                a => a.Use(async (context, next) => 
+                {
+                    await context.Response.WriteAsync("ccgworks:api-0.1");
+                }));
             
             app.UseCors(builder => builder
                 .AllowAnyOrigin()
