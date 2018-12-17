@@ -45,8 +45,8 @@ Resources:
       VpcId: vpc-e262d18a
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
+          FromPort: 443
+          ToPort: 443
           CidrIp: 0.0.0.0/0
 
   CcgWorksSecurityGroup:
@@ -123,6 +123,30 @@ Resources:
         - Field: path-pattern
           Values: [/]
       ListenerArn: !Ref 'CcgWorksALBListener'
+      Priority: 1
+
+  ApiALBListenerHttps:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref 'CcgWorksTargetGroup'
+      LoadBalancerArn: !Ref 'CcgWorksAlb'
+      Port: 443
+      Protocol: HTTPS
+      Certificates:
+      - CertificateArn: arn:aws:acm:eu-west-2:848502523218:certificate/34b8bf1a-d7cf-48d8-817a-ebc4bd9fca78
+
+  ApiALBListenerRuleHttps:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref 'CcgWorksTargetGroup'
+      Conditions:
+        - Field: path-pattern
+          Values: [/]
+      ListenerArn: !Ref 'ApiALBListenerHttps'
       Priority: 1
 
   CcgWorksTargetGroup:

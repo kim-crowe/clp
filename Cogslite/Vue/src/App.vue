@@ -16,7 +16,7 @@
         </span>
         <span v-if="!isSignedIn">
           <LinkButton
-            link="https://cogs.auth.eu-west-2.amazoncognito.com/login?response_type=token&client_id=1bf03fuqd017thrnnej7lcpeb7&redirect_uri=http%3A%2F%2Flocalhost%3A8080"
+            link="https://cogs.auth.eu-west-2.amazoncognito.com/login?response_type=token&client_id=1bf03fuqd017thrnnej7lcpeb7&redirect_uri=http%3A%2F%2Fwww.ccg.works"
           >Sign In</LinkButton>
         </span>
         <span v-if="isSignedIn">
