@@ -11,8 +11,8 @@ Vue.use(auth);
 Vue.use(modal);
 
 Vue.config.productionTip = false;
-//axios.defaults.baseURL = "https://api.ccg.works/api";
-axios.defaults.baseURL = "http://localhost:5000/api";
+axios.defaults.baseURL = "https://api.ccg.works/api";
+//axios.defaults.baseURL = "http://localhost:5000/api";
 
 new Vue({
   router,
