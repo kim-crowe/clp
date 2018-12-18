@@ -22,6 +22,11 @@ Resources:
             Statement:
             - Effect: Allow
               Action:
+                - cognito-identity:GetSigningCertificate
+              Resource:
+                - !Sub arn:aws:cognito-identity::${AWS::AccountId}:identitypool/eu-west-2_4YYIIEtaa
+            - Effect: Allow
+              Action:
                 - ecr:BatchCheckLayerAvailability
                 - ecr:BatchGetImage
                 - ecr:GetDownloadUrlForLayer
@@ -197,7 +202,7 @@ Resources:
       ContainerDefinitions:
         - Name: CcgWorksApi
           Essential: 'true'
-          Image: 848502523218.dkr.ecr.eu-west-2.amazonaws.com/ccgworks:api-0.2
+          Image: 848502523218.dkr.ecr.eu-west-2.amazonaws.com/ccgworks:api-0.3
           MemoryReservation: 900
           LogConfiguration:
             LogDriver: awslogs
