@@ -34,10 +34,10 @@ namespace CogsLite.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var awsOptions = Configuration.GetAWSOptions();
+
             services.AddCors();
-            services.AddHttpContextAccessor();
-            
-            Authentication.LoadKeys();
+            services.AddHttpContextAccessor();            
             services.AddScoped<IUserContext, ClaimsIdentityUserContext>();
 
             var env = Configuration.GetValue<string>("HOST") ?? "local";
@@ -51,8 +51,7 @@ namespace CogsLite.Api
                 services.AddLocalImageStore(@"wwwroot\images\store\", "/images/store/");            
             }
             else
-            {
-                var awsOptions = Configuration.GetAWSOptions();
+            {                
                 var parameterStore = new ParameterStore(awsOptions);                
                 var connectionString = parameterStore.GetParameterAsync("/ccgworks/connection_string").GetAwaiter().GetResult(); 
                 services.AddMarten(connectionString);
@@ -65,7 +64,7 @@ namespace CogsLite.Api
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKeyResolver = (t, st, kid, v) => Authentication.GetSigningKey(kid),
+                        IssuerSigningKey = Authentication.GetCognitoKey(awsOptions),
                         ValidateIssuer = false,
                         ValidateAudience = false,
                         ValidateLifetime = true
