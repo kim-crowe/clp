@@ -3,7 +3,7 @@
     <div class="text-left text-3xl p-6 text-cogs-alt w-screen bg-grey-light">
       <div class="container mx-auto">
         <div class="mx-6 px-6">
-          <div>Welcome to Cogs.</div>
+          <div>Welcome to CCG Works.</div>
           <div>An awesome tool for collectible card game players.</div>
           <div>Build decks for games you love and import them in to Tabletop Simulator.</div>
         </div>

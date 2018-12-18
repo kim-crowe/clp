@@ -12,18 +12,17 @@
           <router-link
             to="/"
             class="text-cogs-secondary font-semibold text-xl tracking-tight no-underline"
-          >Cogslite</router-link>
+          >CCG Works</router-link>
         </span>
         <span v-if="!isSignedIn">
-          <LinkButton
-            link="https://cogs.auth.eu-west-2.amazoncognito.com/login?response_type=token&client_id=1bf03fuqd017thrnnej7lcpeb7&redirect_uri=http%3A%2F%2Flocalhost%3A8080"
-          >Sign In</LinkButton>
+          <a :href="signInUrl" class="inline-block rounded py-2 px-4 bg-cogs-secondary text-cogs-secondary hover:text-red-lightest no-underline">            
+          Sign In</a>
         </span>
         <span v-if="isSignedIn">
           <router-link
             class="mx-2 bg-cogs-alt inline-block rounded py-2 px-4 text-red-darker no-underline"
             to="/game/new"
-          >G</router-link>
+          ><i class="fas fa-plus"></i></router-link>
           <drop-down-button :text="profile.userName">
             <div class="bg-white shadow rounded border overflow-hidden">
               <a
@@ -53,20 +52,30 @@ import LinkButton from "./components/LinkButton";
 import CogsGlyph from "./components/CogsGlyph";
 import DropDownButton from "./components/DropDownButton";
 import Dynamic from "./components/Dynamic";
+import * as qs from 'querystring';
 
 export default {
   name: "App",
   components: { CogsGlyph, DropDownButton, Dynamic, LinkButton },
-  mounted: function() {
+  mounted: function() {    
     profileService.getProfile().then(p => (this.profile = p));
   },
   computed: {
     isSignedIn: function() {
       return this.$auth.isSignedIn();
-    }
+    },
+    signInUrl: function() {            
+      var result = "https://cogs.auth.eu-west-2.amazoncognito.com/login?" + qs.stringify(this.oauth);
+      return result.replace("__uri", encodeURI(window.location));
+    }    
   },
   data: function() {
     return {
+      oauth: {
+        response_type: "token",
+        client_id: "1bf03fuqd017thrnnej7lcpeb7",
+        redirect_uri: "__uri"
+      },
       profile: {}
     };
   }
