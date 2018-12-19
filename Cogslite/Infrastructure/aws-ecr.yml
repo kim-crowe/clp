@@ -24,7 +24,7 @@ Resources:
               Action:
                 - cognito-idp:GetSigningCertificate
               Resource:
-                - !Sub arn:aws:cognito-identity::${AWS::AccountId}:identitypool/eu-west-2_4YYIIEtaa
+                - !Sub arn:aws:cognito-idp::${AWS::AccountId}:userpool/eu-west-2_4YYIIEtaa
             - Effect: Allow
               Action:
                 - ecr:BatchCheckLayerAvailability
