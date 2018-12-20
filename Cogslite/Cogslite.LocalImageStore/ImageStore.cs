@@ -17,6 +17,7 @@ namespace CogsLite.LocalImageStore
 
         public Task<string> Add(string associatedObjectType, Guid associatedObjectId, int version, string imageType, byte[] data)
         {
+            EnsureDirectory(associatedObjectType);
             File.WriteAllBytes($"{_options.BasePath}\\{associatedObjectType}\\{associatedObjectId}.{imageType}", data);
             var imageUri = $"{_options.BaseUri}/{associatedObjectType}/{associatedObjectId}.{imageType}";
             return Task.FromResult(imageUri);
@@ -35,6 +36,15 @@ namespace CogsLite.LocalImageStore
                 
                 return null;
             });
+        }
+
+        private void EnsureDirectory(string objectType)
+        {
+            var path = $"{_options.BasePath}\\{objectType}";
+            if(Directory.Exists(path) == false)
+            {
+                Directory.CreateDirectory(path);
+            }
         }
     }
 

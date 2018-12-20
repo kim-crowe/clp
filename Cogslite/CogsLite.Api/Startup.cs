@@ -43,15 +43,17 @@ namespace CogsLite.Api
             var env = Configuration.GetValue<string>("HOST") ?? "local";
             if(env == "local")
             {
+                Console.WriteLine("Running locally");
                 var dbHost = Configuration.GetValue<string>("DB_HOST") ?? "localhost";
                 var dbPort = Configuration.GetValue<string>("DB_PORT") ?? "5432";
                 var user = Configuration.GetValue<string>("DB_USER") ?? "postgres";
                 var pwd = Configuration.GetValue<string>("DB_PWD") ?? "admin";
                 services.AddMarten($"Server={dbHost};Port={dbPort};Database=ccgworks;User Id={user};Password={pwd};");
-                services.AddLocalImageStore(@"wwwroot\images\store\", "/images/store/");            
+                services.AddLocalImageStore(@"wwwroot\images\store\", "http://localhost:5000/images/store");
             }
             else
             {                
+                Console.WriteLine("Running in AWS");
                 var parameterStore = new ParameterStore(awsOptions);                
                 var connectionString = parameterStore.GetParameterAsync("/ccgworks/connection_string").GetAwaiter().GetResult(); 
                 services.AddMarten(connectionString);

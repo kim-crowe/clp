@@ -11,6 +11,10 @@ build-image:
 run:	
 	$(DOCKER-COMPOSE) up -d --force-recreate db api
 
+.PHONY: db
+db:
+	$(DOCKER-COMPOSE) up -d db
+
 .PHONY: create-stack
 create-stack:
 	aws cloudformation create-stack --stack-name ccgworks-api --template-body file://Infrastructure/aws-ecr.yml --capabilities CAPABILITY_NAMED_IAM
